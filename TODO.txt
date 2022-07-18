@@ -1,0 +1,33 @@
+
+
+* [Python] Add text display of steps and currents.
+
+---------------
+
+
+* [Python] Accept device address from command line flag.
+* [Python] Exit demo program if lost connection. Alternatively, reconnect.
+
+* [Device] Add a procedure to save current sensor offset to non volatile memory.
+* [Device] Add command to flip direction (preferably non volatile memory)
+* [Device] Unstable step counter when X stepper is in low current mode (~0.2A)
+* [Device] Add command to set divider.
+* [Device] Add MCUBoot and BLE/DFU.
+
+----
+
+* Proper critical section protection in analyzer (how to disable preemption)?
+* Add read command for histograms.
+* In python demo program, solve forward reference issue.
+* Add write command to reset stats and to set params.
+* Reduce the time the device waits from disconnection to advertising.
+* Consider to simplify chart.
+* Add UI button to reset the data.
+* Add UI button to pause.
+* Do we need the signal filter in the analyzer?
+* Visual indication (LED) of connection and activity.
+* Clear charts on reset.
+* Add read command for capture signals.
+
+
+

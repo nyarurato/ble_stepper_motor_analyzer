@@ -1,0 +1,29 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP +3V3
+D Power symbol creates a global label with name "+3V3"
+K power-flag
+$ENDCMP
+#
+$CMP DC_DC
+F https://www.recom-power.com/pdf/Innoline/R-78Exx-0.5.pdf
+$ENDCMP
+#
+$CMP DIODE_BRIDGE
+D Full bridge rectifier
+K rectifier acdc
+F https://diotec.com/tl_files/diotec/files/pdf/datasheets/abs2.pdf
+$ENDCMP
+#
+$CMP D_Schottky_x2_KCom_AAK
+D Dual Schottky diode, common cathode on pin 3
+K diode
+F ~
+$ENDCMP
+#
+$CMP GND
+D Power symbol creates a global label with name "GNDD" , digital ground
+K power-flag
+$ENDCMP
+#
+#End Doc Library

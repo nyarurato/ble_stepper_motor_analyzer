@@ -1,0 +1,12 @@
+// Overriding the device tree of the underlying zephyr
+// nrf52dk_nrf52832 board. The original device tree is 
+// at nrf52dk_nrf52832.dts.
+
+// Not using pins 5,7 for RTS/CTS respectively.
+&uart0 {
+	status = "okay";
+	compatible = "nordic,nrf-uarte";
+	current-speed = <115200>;
+	tx-pin = <6>;
+	rx-pin = <8>;
+};

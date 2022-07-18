@@ -1,0 +1,1487 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Stepper Motor BLE Probe"
+Date ""
+Rev "DRAFT"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Wire Wire Line
+	6975 1350 6975 1325
+Wire Wire Line
+	6975 1325 6500 1325
+Wire Wire Line
+	6975 1950 6975 1975
+Wire Wire Line
+	6975 1975 6500 1975
+Wire Wire Line
+	6975 2250 6975 2225
+Wire Wire Line
+	6975 2225 6475 2225
+Wire Wire Line
+	6975 2850 6975 2900
+Wire Wire Line
+	6975 2900 6475 2900
+Wire Wire Line
+	7275 1650 7400 1650
+Wire Wire Line
+	7275 2550 7400 2550
+Wire Wire Line
+	7400 2550 7400 1650
+Wire Wire Line
+	6675 1650 6650 1650
+Wire Wire Line
+	6650 1650 6650 2100
+Wire Wire Line
+	6675 2550 6650 2550
+Wire Wire Line
+	6650 2550 6650 2100
+Connection ~ 6650 2100
+$Comp
+L Device:R_Small_US R4
+U 1 1 62785608
+P 6400 1325
+F 0 "R4" V 6100 1275 50  0000 C CNN
+F 1 "10R" V 6200 1300 50  0000 C CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 6400 1325 50  0001 C CNN
+F 3 "~" H 6400 1325 50  0001 C CNN
+F 4 "C25077" V 6300 1375 50  0000 C CNN "LCSC Part Number"
+	1    6400 1325
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C7
+U 1 1 62788E2E
+P 7600 1875
+F 0 "C7" H 7475 1975 50  0000 L CNN
+F 1 "10u 50v" H 7450 1775 50  0000 L CNN
+F 2 "stepper_probe:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 7638 1725 50  0001 C CNN
+F 3 "~" H 7600 1875 50  0001 C CNN
+F 4 "C440198" H 7600 1575 50  0000 C CNN "LCSC Part Number"
+	1    7600 1875
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7600 2025 7600 2100
+Connection ~ 7600 2100
+Wire Wire Line
+	8825 1650 9025 1650
+Wire Wire Line
+	9025 1725 9025 1650
+Connection ~ 9025 1650
+Wire Wire Line
+	9025 1650 9475 1650
+Wire Wire Line
+	9025 2025 9025 2100
+Wire Wire Line
+	8075 2025 8075 2100
+Connection ~ 8075 2100
+Wire Wire Line
+	8075 1725 8075 1650
+Connection ~ 8075 1650
+Wire Wire Line
+	8075 1650 8225 1650
+$Comp
+L stepper_probe:+3V3 #PWR024
+U 1 1 62794A9A
+P 10175 1650
+F 0 "#PWR024" H 10175 1500 50  0001 C CNN
+F 1 "+3V3" V 10190 1778 50  0000 L CNN
+F 2 "" H 10175 1650 50  0001 C CNN
+F 3 "" H 10175 1650 50  0001 C CNN
+	1    10175 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L stepper_probe:GND #PWR025
+U 1 1 62794283
+P 10250 2125
+F 0 "#PWR025" H 10250 1875 50  0001 C CNN
+F 1 "GND" H 10254 1970 50  0001 C CNN
+F 2 "" H 10250 2125 50  0001 C CNN
+F 3 "" H 10250 2125 50  0001 C CNN
+	1    10250 2125
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9025 2100 9475 2100
+Connection ~ 9025 2100
+$Comp
+L Device:C C10
+U 1 1 62799F4E
+P 9475 1875
+F 0 "C10" H 9500 1975 50  0000 L CNN
+F 1 "10u" H 9300 1775 50  0000 L CNN
+F 2 "stepper_probe:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder" H 9513 1725 50  0001 C CNN
+F 3 "~" H 9475 1875 50  0001 C CNN
+F 4 "C96446" H 9325 1700 50  0000 C CNN "LCSC Part Number"
+	1    9475 1875
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9475 1725 9475 1650
+Wire Wire Line
+	9475 2025 9475 2100
+$Comp
+L Connector:Conn_01x04_Male J1
+U 1 1 6279B2E2
+P 950 1650
+F 0 "J1" H 1100 1850 50  0000 R CNN
+F 1 "Conn_01x04_Male" H 922 1623 50  0001 R CNN
+F 2 "stepper_probe:connector_4pins_horizontal" H 950 1650 50  0001 C CNN
+F 3 "~" H 950 1650 50  0001 C CNN
+	1    950  1650
+	1    0    0    1   
+$EndComp
+$Comp
+L Connector:Conn_01x04_Male J2
+U 1 1 627A7186
+P 1275 2925
+F 0 "J2" H 1375 3100 50  0000 R CNN
+F 1 "Conn_01x04_Male" H 1850 3100 50  0001 R CNN
+F 2 "stepper_probe:connector_4pins_horizontal" H 1275 2925 50  0001 C CNN
+F 3 "~" H 1275 2925 50  0001 C CNN
+F 4 "C31753" H 1350 3200 50  0000 C CNN "LCSC Part Number"
+	1    1275 2925
+	1    0    0    1   
+$EndComp
+$Comp
+L simple_stepper_motor_analyzer:ACS70331_soic8 U1
+U 1 1 627A85BB
+P 3725 1700
+F 0 "U1" H 3925 1150 50  0000 C CNN
+F 1 "TMCS1108A4BQDT" H 4075 1250 50  0000 C CNN
+F 2 "stepper_probe:SOIC-8-N7_3.9x4.9mm_P1.27mm" H 4125 1650 50  0001 L CIN
+F 3 "" H 3725 1700 50  0001 C CNN
+	1    3725 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L simple_stepper_motor_analyzer:ACS70331_soic8 U2
+U 1 1 627AA0D1
+P 2750 2775
+F 0 "U2" H 2950 2300 50  0000 C CNN
+F 1 "TMCS1108A4BQDT" H 3200 2375 50  0000 C CNN
+F 2 "stepper_probe:SOIC-8-N7_3.9x4.9mm_P1.27mm" H 3150 2725 50  0001 L CIN
+F 3 "" H 2750 2775 50  0001 C CNN
+	1    2750 2775
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3125 1500 3075 1500
+Wire Wire Line
+	3075 1500 3075 1550
+Wire Wire Line
+	3075 1600 3125 1600
+Wire Wire Line
+	3125 1800 3075 1800
+Wire Wire Line
+	3075 1800 3075 1850
+Wire Wire Line
+	3075 1900 3125 1900
+Wire Wire Line
+	3075 1550 1150 1550
+Connection ~ 3075 1550
+Wire Wire Line
+	3075 1550 3075 1600
+Wire Wire Line
+	2150 2575 2100 2575
+Wire Wire Line
+	2100 2575 2100 2625
+Wire Wire Line
+	2100 2675 2150 2675
+Wire Wire Line
+	2150 2875 2100 2875
+Wire Wire Line
+	2100 2875 2100 2925
+Wire Wire Line
+	2100 2975 2150 2975
+Connection ~ 2100 2925
+Wire Wire Line
+	2100 2925 2100 2975
+Wire Wire Line
+	1150 1650 1975 1650
+Wire Wire Line
+	1975 1650 1975 2625
+Wire Wire Line
+	1975 2625 2100 2625
+Connection ~ 2100 2625
+Wire Wire Line
+	2100 2625 2100 2675
+Wire Wire Line
+	1475 2925 2100 2925
+Wire Wire Line
+	1475 2825 1875 2825
+Wire Wire Line
+	1875 2825 1875 1850
+Wire Wire Line
+	1875 1850 3075 1850
+Connection ~ 3075 1850
+Wire Wire Line
+	3075 1850 3075 1900
+Wire Wire Line
+	1150 1450 1775 1450
+Wire Wire Line
+	1775 1450 1775 2725
+Wire Wire Line
+	1775 2725 1475 2725
+Wire Wire Line
+	1150 1750 1675 1750
+Wire Wire Line
+	1675 1750 1675 3025
+Wire Wire Line
+	1675 3025 1475 3025
+$Comp
+L stepper_probe:GND #PWR012
+U 1 1 627B9B1A
+P 3675 2175
+F 0 "#PWR012" H 3675 1925 50  0001 C CNN
+F 1 "GND" H 3679 2020 50  0001 C CNN
+F 2 "" H 3675 2175 50  0001 C CNN
+F 3 "" H 3675 2175 50  0001 C CNN
+	1    3675 2175
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR08
+U 1 1 627B9F00
+P 2700 3250
+F 0 "#PWR08" H 2700 3000 50  0001 C CNN
+F 1 "GND" H 2704 3095 50  0001 C CNN
+F 2 "" H 2700 3250 50  0001 C CNN
+F 3 "" H 2700 3250 50  0001 C CNN
+	1    2700 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR010
+U 1 1 627BB296
+P 3150 2325
+F 0 "#PWR010" H 3150 2075 50  0001 C CNN
+F 1 "GND" H 3154 2170 50  0001 C CNN
+F 2 "" H 3150 2325 50  0001 C CNN
+F 3 "" H 3150 2325 50  0001 C CNN
+	1    3150 2325
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR014
+U 1 1 627BE8C2
+P 4125 1250
+F 0 "#PWR014" H 4125 1000 50  0001 C CNN
+F 1 "GND" H 4129 1095 50  0001 C CNN
+F 2 "" H 4125 1250 50  0001 C CNN
+F 3 "" H 4125 1250 50  0001 C CNN
+	1    4125 1250
+	1    0    0    -1  
+$EndComp
+Text Label 4500 1600 2    50   ~ 0
+CHA
+Text Label 4500 2675 2    50   ~ 0
+CHB
+Wire Wire Line
+	2775 2300 2700 2300
+Wire Wire Line
+	2700 2300 2700 2375
+Wire Wire Line
+	3075 2300 3150 2300
+Wire Wire Line
+	3150 2300 3150 2325
+Wire Wire Line
+	3675 2100 3675 2175
+Wire Wire Line
+	2700 3175 2700 3250
+Wire Wire Line
+	3750 1225 3675 1225
+Wire Wire Line
+	3675 1225 3675 1300
+Text Label 1575 1450 2    50   ~ 0
+STEPPER4
+Text Label 1575 1550 2    50   ~ 0
+STEPPER3
+Text Label 1575 1650 2    50   ~ 0
+STEPPER2
+Text Label 1575 1750 2    50   ~ 0
+STEPPER1
+Wire Wire Line
+	6300 1325 5775 1325
+Wire Wire Line
+	6300 1975 5775 1975
+Wire Wire Line
+	6275 2225 5775 2225
+Wire Wire Line
+	6275 2900 5775 2900
+Text Label 6150 1325 2    50   ~ 0
+STEPPER4
+Text Label 6150 1975 2    50   ~ 0
+STEPPER3
+Text Label 6150 2225 2    50   ~ 0
+STEPPER2
+Text Label 6150 2900 2    50   ~ 0
+STEPPER1
+$Comp
+L simple_stepper_motor_analyzer:Motor M1
+U 1 1 6284B7A9
+P 1000 3025
+F 0 "M1" H 1050 3425 50  0001 L CNN
+F 1 "Motor" H 900 3375 50  0001 L TNN
+F 2 "stepper_probe:Empty" H 1010 3115 50  0001 C CNN
+F 3 "" H 1010 3115 50  0001 C CNN
+	1    1000 3025
+	0    -1   -1   0   
+$EndComp
+Text Notes 925  1525 2    50   ~ 0
+A
+Text Notes 925  1725 2    50   ~ 0
+B
+Wire Wire Line
+	4050 1225 4125 1225
+Wire Wire Line
+	4125 1225 4125 1250
+$Comp
+L Device:LED D3
+U 1 1 62873129
+P 9325 5525
+F 0 "D3" V 9325 5475 50  0000 R CNN
+F 1 "LED" V 9273 5407 50  0001 R CNN
+F 2 "stepper_probe:LED_0402_1005Metric_Pad0.77x0.64mm_HandSolder" H 9325 5525 50  0001 C CNN
+F 3 "~" H 9325 5525 50  0001 C CNN
+F 4 "C165978" V 8950 5525 50  0000 C CNN "LCSC Part Number"
+	1    9325 5525
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R_Small_US R5
+U 1 1 6287420D
+P 9325 5200
+F 0 "R5" H 9300 5100 50  0000 R CNN
+F 1 "5K1" H 9325 5300 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 9325 5200 50  0001 C CNN
+F 3 "~" H 9325 5200 50  0001 C CNN
+F 4 "C25905" V 9425 5250 50  0000 C CNN "LCSC Part Number"
+	1    9325 5200
+	-1   0    0    1   
+$EndComp
+$Comp
+L stepper_probe:GND #PWR018
+U 1 1 6287501E
+P 9325 5750
+F 0 "#PWR018" H 9325 5500 50  0001 C CNN
+F 1 "GND" H 9329 5595 50  0001 C CNN
+F 2 "" H 9325 5750 50  0001 C CNN
+F 3 "" H 9325 5750 50  0001 C CNN
+	1    9325 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:+3V3 #PWR017
+U 1 1 628755EF
+P 9325 4950
+F 0 "#PWR017" H 9325 4800 50  0001 C CNN
+F 1 "+3V3" H 9340 5123 50  0000 C CNN
+F 2 "" H 9325 4950 50  0001 C CNN
+F 3 "" H 9325 4950 50  0001 C CNN
+	1    9325 4950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9325 5300 9325 5375
+Wire Wire Line
+	9325 5675 9325 5750
+$Comp
+L Device:Crystal Y1
+U 1 1 6288EBBE
+P 2650 6925
+F 0 "Y1" H 2650 7075 50  0000 C CNN
+F 1 "32.768Khz" H 3125 7050 50  0000 C CNN
+F 2 "stepper_probe:Crystal_SMD_3215-2Pin_3.2x1.5mm" H 2650 6925 50  0001 C CNN
+F 3 "~" H 2650 6925 50  0001 C CNN
+F 4 "C479190" H 3100 7150 50  0000 C CNN "LCSC Part Number"
+	1    2650 6925
+	1    0    0    -1  
+$EndComp
+Text Notes 9225 6900 2    79   ~ 0
+BLE STEPPER MOTOR MONITOR  v1.1
+$Comp
+L Connector_Generic:Conn_02x05_Odd_Even J5
+U 1 1 62893276
+P 8200 3775
+F 0 "J5" H 8250 4192 50  0000 C CNN
+F 1 "SWD" H 8250 4101 50  0001 C CNN
+F 2 "stepper_probe:PinHeader_2x05_P1.27mm_Vertical_SMD" H 8200 3775 50  0001 C CNN
+F 3 "~" H 8200 3775 50  0001 C CNN
+F 4 "C2935458" H 8350 4100 50  0000 C CNN "LCSC Part Number"
+	1    8200 3775
+	1    0    0    -1  
+$EndComp
+Text Notes 4300 3050 2    50   ~ 0
+Current sensors
+$Comp
+L Connector:Conn_01x02_Male J3
+U 1 1 628AD243
+P 8150 1200
+F 0 "J3" H 8075 1275 50  0000 R CNN
+F 1 "BAT" H 8000 1150 50  0001 R CNN
+F 2 "stepper_probe:PinHeader_1x02_P2.54mm_Vertical" H 8150 1200 50  0001 C CNN
+F 3 "~" H 8150 1200 50  0001 C CNN
+	1    8150 1200
+	-1   0    0    -1  
+$EndComp
+Connection ~ 9475 1650
+Connection ~ 9475 2100
+Wire Wire Line
+	7950 1300 7900 1300
+Text Notes 8350 1275 2    50   ~ 0
+BAT
+Text Notes 10375 4325 2    50   ~ 0
+SERIAL (DEV)
+Text Label 9550 3675 0    50   ~ 0
+TX
+Text Label 9550 3775 0    50   ~ 0
+RX
+Text Notes 10375 3800 0    50   ~ 0
+RX
+Text Notes 10375 3700 0    50   ~ 0
+TX\n
+Text Notes 10375 3900 0    50   ~ 0
+GND\n
+Text Notes 10375 3600 0    50   ~ 0
+3.3V\n
+Wire Wire Line
+	4000 5625 4600 5625
+Text Label 1575 4925 0    50   ~ 0
+LED2
+Text Label 1575 4625 0    50   ~ 0
+LED1
+Wire Wire Line
+	2800 6225 2800 6550
+Wire Wire Line
+	2900 6225 2900 6550
+Text Label 2900 6550 1    50   ~ 0
+CHB
+Text Label 2800 6550 1    50   ~ 0
+CHA
+Wire Wire Line
+	3200 6225 3200 6550
+Text Label 3200 6550 1    50   ~ 0
+TX
+Text Label 3400 6550 1    50   ~ 0
+RX
+$Comp
+L stepper_probe:GND #PWR06
+U 1 1 6298A12E
+P 2500 6325
+F 0 "#PWR06" H 2500 6075 50  0001 C CNN
+F 1 "GND" H 2504 6170 50  0001 C CNN
+F 2 "" H 2500 6325 50  0001 C CNN
+F 3 "" H 2500 6325 50  0001 C CNN
+	1    2500 6325
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR013
+U 1 1 6298A985
+P 3700 6325
+F 0 "#PWR013" H 3700 6075 50  0001 C CNN
+F 1 "GND" H 3704 6170 50  0001 C CNN
+F 2 "" H 3700 6325 50  0001 C CNN
+F 3 "" H 3700 6325 50  0001 C CNN
+	1    3700 6325
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2500 6225 2500 6325
+Wire Wire Line
+	3700 6225 3700 6325
+Wire Wire Line
+	4000 4225 4400 4225
+Wire Wire Line
+	4400 4225 4400 4250
+$Comp
+L stepper_probe:GND #PWR04
+U 1 1 629974E9
+P 2125 4250
+F 0 "#PWR04" H 2125 4000 50  0001 C CNN
+F 1 "GND" H 2129 4095 50  0001 C CNN
+F 2 "" H 2125 4250 50  0001 C CNN
+F 3 "" H 2125 4250 50  0001 C CNN
+	1    2125 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2200 4225 2125 4225
+Wire Wire Line
+	2125 4225 2125 4250
+$Comp
+L Device:C C3
+U 1 1 629B66ED
+P 2400 7100
+F 0 "C3" H 2250 7200 50  0000 L CNN
+F 1 "12pf" H 2200 7000 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 2438 6950 50  0001 C CNN
+F 3 "~" H 2400 7100 50  0001 C CNN
+F 4 "C26406" H 2225 6900 50  0000 C CNN "LCSC Part Number"
+	1    2400 7100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 629B708E
+P 2050 6050
+F 0 "C2" H 1825 6125 50  0000 L CNN
+F 1 "10u" H 1825 5950 50  0000 L CNN
+F 2 "stepper_probe:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder" H 2088 5900 50  0001 C CNN
+F 3 "~" H 2050 6050 50  0001 C CNN
+F 4 "C96446" H 1875 5850 50  0000 C CNN "LCSC Part Number"
+	1    2050 6050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D2
+U 1 1 629B7E29
+P 10175 5525
+F 0 "D2" V 10175 5475 50  0000 R CNN
+F 1 "LED" V 10123 5407 50  0001 R CNN
+F 2 "stepper_probe:LED_0402_1005Metric_Pad0.77x0.64mm_HandSolder" H 10175 5525 50  0001 C CNN
+F 3 "~" H 10175 5525 50  0001 C CNN
+F 4 "C165980" V 9800 5525 50  0000 C CNN "LCSC Part Number"
+	1    10175 5525
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 629B8927
+P 9750 5525
+F 0 "D1" V 9750 5475 50  0000 R CNN
+F 1 "LED" V 9698 5407 50  0001 R CNN
+F 2 "stepper_probe:LED_0402_1005Metric_Pad0.77x0.64mm_HandSolder" H 9750 5525 50  0001 C CNN
+F 3 "~" H 9750 5525 50  0001 C CNN
+F 4 "C165980" V 9375 5525 50  0000 C CNN "LCSC Part Number"
+	1    9750 5525
+	0    -1   -1   0   
+$EndComp
+$Comp
+L stepper_probe:GND #PWR03
+U 1 1 62A36546
+P 2050 6325
+F 0 "#PWR03" H 2050 6075 50  0001 C CNN
+F 1 "GND" H 2054 6170 50  0001 C CNN
+F 2 "" H 2050 6325 50  0001 C CNN
+F 3 "" H 2050 6325 50  0001 C CNN
+	1    2050 6325
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2200 5525 2050 5525
+Wire Wire Line
+	2050 5525 2050 5825
+Wire Wire Line
+	2050 6200 2050 6325
+$Comp
+L stepper_probe:+3V3 #PWR02
+U 1 1 62A3FA8F
+P 1900 5750
+F 0 "#PWR02" H 1900 5600 50  0001 C CNN
+F 1 "+3V3" H 1915 5923 50  0000 C CNN
+F 2 "" H 1900 5750 50  0001 C CNN
+F 3 "" H 1900 5750 50  0001 C CNN
+	1    1900 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:L L2
+U 1 1 62A4503B
+P 1675 5425
+F 0 "L2" V 1500 5400 50  0000 C CNN
+F 1 "10uh" V 1600 5425 50  0000 C CNN
+F 2 "stepper_probe:coil_10uh" H 1675 5425 50  0001 C CNN
+F 3 "~" H 1675 5425 50  0001 C CNN
+F 4 "C107342" V 1825 5475 50  0000 C CNN "LCSC Part Number"
+	1    1675 5425
+	0    1    -1   0   
+$EndComp
+$Comp
+L Device:L L3
+U 1 1 62A4A382
+P 1325 5425
+F 0 "L3" V 1150 5400 50  0000 C CNN
+F 1 "15nh" V 1250 5425 50  0000 C CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 1325 5425 50  0001 C CNN
+F 3 "~" H 1325 5425 50  0001 C CNN
+F 4 "C27143" V 1475 5425 50  0000 C CNN "LCSC Part Number"
+	1    1325 5425
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	1900 5750 1900 5825
+Wire Wire Line
+	1900 5825 2050 5825
+Connection ~ 2050 5825
+Wire Wire Line
+	2050 5825 2050 5900
+Wire Wire Line
+	2200 5425 1825 5425
+Wire Wire Line
+	1525 5425 1475 5425
+$Comp
+L Device:C C1
+U 1 1 62A71AC5
+P 1075 6050
+F 0 "C1" H 1190 6096 50  0000 L CNN
+F 1 "1u" H 1100 5950 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 1113 5900 50  0001 C CNN
+F 3 "~" H 1075 6050 50  0001 C CNN
+F 4 "C52923" H 1250 5850 50  0000 C CNN "LCSC Part Number"
+	1    1075 6050
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR01
+U 1 1 62A72620
+P 1075 6325
+F 0 "#PWR01" H 1075 6075 50  0001 C CNN
+F 1 "GND" H 1079 6170 50  0001 C CNN
+F 2 "" H 1075 6325 50  0001 C CNN
+F 3 "" H 1075 6325 50  0001 C CNN
+	1    1075 6325
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1075 5325 2200 5325
+Wire Wire Line
+	1175 5425 1075 5425
+Wire Wire Line
+	1075 5325 1075 5425
+Connection ~ 1075 5425
+Wire Wire Line
+	1075 5425 1075 5900
+Wire Wire Line
+	1075 6200 1075 6325
+$Comp
+L Device:C C5
+U 1 1 62AF4EEE
+P 2900 7100
+F 0 "C5" H 2975 7200 50  0000 L CNN
+F 1 "12pf" H 2975 7025 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 2938 6950 50  0001 C CNN
+F 3 "~" H 2900 7100 50  0001 C CNN
+F 4 "C26406" H 3125 6900 50  0000 C CNN "LCSC Part Number"
+	1    2900 7100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2500 6925 2400 6925
+Wire Wire Line
+	2400 6925 2400 6950
+Wire Wire Line
+	2800 6925 2900 6925
+Wire Wire Line
+	2900 6925 2900 6950
+$Comp
+L stepper_probe:GND #PWR09
+U 1 1 62B0286A
+P 2900 7275
+F 0 "#PWR09" H 2900 7025 50  0001 C CNN
+F 1 "GND" H 2904 7120 50  0001 C CNN
+F 2 "" H 2900 7275 50  0001 C CNN
+F 3 "" H 2900 7275 50  0001 C CNN
+	1    2900 7275
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR05
+U 1 1 62B02D10
+P 2400 7275
+F 0 "#PWR05" H 2400 7025 50  0001 C CNN
+F 1 "GND" H 2404 7120 50  0001 C CNN
+F 2 "" H 2400 7275 50  0001 C CNN
+F 3 "" H 2400 7275 50  0001 C CNN
+	1    2400 7275
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2400 7250 2400 7275
+Wire Wire Line
+	2900 7250 2900 7275
+Wire Wire Line
+	2700 6225 2700 6700
+Wire Wire Line
+	2700 6700 2900 6700
+Wire Wire Line
+	2900 6700 2900 6925
+Connection ~ 2900 6925
+Wire Wire Line
+	2600 6225 2600 6700
+Wire Wire Line
+	2600 6700 2400 6700
+Wire Wire Line
+	2400 6700 2400 6925
+Connection ~ 2400 6925
+$Comp
+L stepper_probe:GND #PWR019
+U 1 1 62B7A28C
+P 9750 5750
+F 0 "#PWR019" H 9750 5500 50  0001 C CNN
+F 1 "GND" H 9754 5595 50  0001 C CNN
+F 2 "" H 9750 5750 50  0001 C CNN
+F 3 "" H 9750 5750 50  0001 C CNN
+	1    9750 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR020
+U 1 1 62B7A5EE
+P 10175 5750
+F 0 "#PWR020" H 10175 5500 50  0001 C CNN
+F 1 "GND" H 10179 5595 50  0001 C CNN
+F 2 "" H 10175 5750 50  0001 C CNN
+F 3 "" H 10175 5750 50  0001 C CNN
+	1    10175 5750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9750 5675 9750 5750
+Wire Wire Line
+	10175 5675 10175 5750
+Wire Wire Line
+	9750 5100 9750 4775
+Wire Wire Line
+	10175 5100 10175 4775
+Text Label 9750 4975 1    50   ~ 0
+LED1
+Text Label 10175 4975 1    50   ~ 0
+LED2
+Wire Wire Line
+	9750 5300 9750 5375
+Wire Wire Line
+	10175 5300 10175 5375
+$Comp
+L stepper_probe:GND #PWR015
+U 1 1 62992C14
+P 4400 4250
+F 0 "#PWR015" H 4400 4000 50  0001 C CNN
+F 1 "GND" H 4404 4095 50  0001 C CNN
+F 2 "" H 4400 4250 50  0001 C CNN
+F 3 "" H 4400 4250 50  0001 C CNN
+	1    4400 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 4425 4900 4425
+Wire Wire Line
+	4000 4525 4900 4525
+Text Label 4900 4425 2    50   ~ 0
+SWDDIO
+Text Label 4900 4525 2    50   ~ 0
+SWDCLK
+$Comp
+L stepper_probe:+3V3 #PWR022
+U 1 1 62C04FD3
+P 7925 3525
+F 0 "#PWR022" H 7925 3375 50  0001 C CNN
+F 1 "+3V3" H 7940 3698 50  0000 C CNN
+F 2 "" H 7925 3525 50  0001 C CNN
+F 3 "" H 7925 3525 50  0001 C CNN
+	1    7925 3525
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR023
+U 1 1 62C0D3FD
+P 7925 4025
+F 0 "#PWR023" H 7925 3775 50  0001 C CNN
+F 1 "GND" H 7929 3870 50  0001 C CNN
+F 2 "" H 7925 4025 50  0001 C CNN
+F 3 "" H 7925 4025 50  0001 C CNN
+	1    7925 4025
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8000 3675 7925 3675
+Wire Wire Line
+	8000 3775 7925 3775
+Wire Wire Line
+	7925 3675 7925 3775
+Connection ~ 7925 3775
+Wire Wire Line
+	7925 3775 7925 3975
+Wire Wire Line
+	8000 3975 7925 3975
+Connection ~ 7925 3975
+Wire Wire Line
+	7925 3975 7925 4025
+NoConn ~ 8000 3875
+NoConn ~ 8500 3775
+NoConn ~ 8500 3875
+Wire Wire Line
+	8500 3575 8950 3575
+Wire Wire Line
+	8500 3675 8950 3675
+Text Label 8950 3575 2    50   ~ 0
+SWDDIO
+Text Label 8950 3675 2    50   ~ 0
+SWDCLK
+Text Notes 8450 4325 2    50   ~ 0
+SWD (DEV)
+NoConn ~ 2200 5025
+NoConn ~ 2200 5125
+NoConn ~ 2200 5225
+NoConn ~ 3000 6225
+NoConn ~ 3100 6225
+NoConn ~ 3300 6225
+NoConn ~ 3600 6225
+NoConn ~ 4000 4925
+NoConn ~ 4000 5125
+NoConn ~ 4000 5225
+NoConn ~ 4000 5325
+NoConn ~ 4000 4325
+Wire Wire Line
+	4000 5525 4600 5525
+Connection ~ 7400 1650
+Wire Wire Line
+	7725 1200 7950 1200
+Wire Wire Line
+	7725 1650 8075 1650
+Connection ~ 7725 1650
+Connection ~ 7600 1650
+Wire Wire Line
+	7600 1725 7600 1650
+Wire Wire Line
+	7600 1650 7725 1650
+Wire Wire Line
+	7725 1200 7725 1225
+Wire Wire Line
+	7725 1525 7725 1650
+$Comp
+L Device:D_Schottky D6
+U 1 1 62A3144F
+P 7725 1375
+F 0 "D6" V 7925 1550 50  0000 R CNN
+F 1 "1N5819WS" V 8025 1575 50  0000 R CNN
+F 2 "stepper_probe:D_SOD-323_HandSoldering" H 7725 1375 50  0001 C CNN
+F 3 "~" H 7725 1375 50  0001 C CNN
+F 4 "C191023" V 8125 1400 50  0000 C CNN "LCSC Part Number"
+	1    7725 1375
+	0    -1   -1   0   
+$EndComp
+$Comp
+L stepper_probe:DIODE_BRIDGE D4
+U 1 1 62AD0FCA
+P 6975 1650
+F 0 "D4" H 6675 1925 50  0000 L CNN
+F 1 "MB1S" H 6625 1850 50  0000 L CNN
+F 2 "stepper_probe:DIODE_BRIDGE" H 7125 1775 50  0001 L CNN
+F 3 "https://diotec.com/tl_files/diotec/files/pdf/datasheets/abs2.pdf" H 6975 1650 50  0001 C CNN
+F 4 "C232821 " H 6475 1750 50  0000 L CNN "LCSC Part Number"
+	1    6975 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:DIODE_BRIDGE D5
+U 1 1 62AD2B4F
+P 6975 2550
+F 0 "D5" H 7175 2375 50  0000 L CNN
+F 1 "MB1S" H 7175 2300 50  0000 L CNN
+F 2 "stepper_probe:DIODE_BRIDGE" H 7125 2675 50  0001 L CNN
+F 3 "https://diotec.com/tl_files/diotec/files/pdf/datasheets/abs2.pdf" H 6975 2550 50  0001 C CNN
+F 4 "C232821 " H 7175 2225 50  0000 L CNN "LCSC Part Number"
+	1    6975 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small_US R3
+U 1 1 62AD8CC5
+P 6400 1975
+F 0 "R3" V 6100 1925 50  0000 C CNN
+F 1 "10R" V 6200 1950 50  0000 C CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 6400 1975 50  0001 C CNN
+F 3 "~" H 6400 1975 50  0001 C CNN
+F 4 "C25077" V 6300 2025 50  0000 C CNN "LCSC Part Number"
+	1    6400 1975
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small_US R1
+U 1 1 62AD91EA
+P 6375 2225
+F 0 "R1" V 6475 2175 50  0000 C CNN
+F 1 "10R" V 6475 2375 50  0000 C CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 6375 2225 50  0001 C CNN
+F 3 "~" H 6375 2225 50  0001 C CNN
+F 4 "C25077" V 6575 2275 50  0000 C CNN "LCSC Part Number"
+	1    6375 2225
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small_US R2
+U 1 1 62AD9571
+P 6375 2900
+F 0 "R2" V 6475 2825 50  0000 C CNN
+F 1 "10R" V 6475 3050 50  0000 C CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 6375 2900 50  0001 C CNN
+F 3 "~" H 6375 2900 50  0001 C CNN
+F 4 "C25077" V 6600 2925 50  0000 C CNN "LCSC Part Number"
+	1    6375 2900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C8
+U 1 1 62AE4F00
+P 8075 1875
+F 0 "C8" H 8125 1975 50  0000 L CNN
+F 1 "100n 50V" H 7875 1775 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 8113 1725 50  0001 C CNN
+F 3 "~" H 8075 1875 50  0001 C CNN
+F 4 "C307331" H 8075 1575 50  0000 C CNN "LCSC Part Number"
+	1    8075 1875
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7400 1650 7500 1650
+$Comp
+L Device:C C9
+U 1 1 62AF1C75
+P 9025 1875
+F 0 "C9" H 9075 1975 50  0000 L CNN
+F 1 "100n" H 8800 1775 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 9063 1725 50  0001 C CNN
+F 3 "~" H 9025 1875 50  0001 C CNN
+F 4 "C307331" H 8850 1700 50  0000 C CNN "LCSC Part Number"
+	1    9025 1875
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C6
+U 1 1 62AF34AF
+P 3900 1225
+F 0 "C6" V 3850 1300 50  0000 L CNN
+F 1 "100n" V 3650 1150 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 3938 1075 50  0001 C CNN
+F 3 "~" H 3900 1225 50  0001 C CNN
+F 4 "C307331" V 3750 1325 50  0000 C CNN "LCSC Part Number"
+	1    3900 1225
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 62AF538B
+P 2925 2300
+F 0 "C4" V 2900 2375 50  0000 L CNN
+F 1 "100n" V 2700 2250 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 2963 2150 50  0001 C CNN
+F 3 "~" H 2925 2300 50  0001 C CNN
+F 4 "C307331" V 2775 2425 50  0000 C CNN "LCSC Part Number"
+	1    2925 2300
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C11
+U 1 1 62B00F1B
+P 9950 1875
+F 0 "C11" H 9975 1975 50  0000 L CNN
+F 1 "10u" H 9775 1775 50  0000 L CNN
+F 2 "stepper_probe:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder" H 9988 1725 50  0001 C CNN
+F 3 "~" H 9950 1875 50  0001 C CNN
+F 4 "C96446" H 9775 1700 50  0000 C CNN "LCSC Part Number"
+	1    9950 1875
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9950 1650 9950 1725
+Wire Wire Line
+	9950 2100 9950 2025
+Connection ~ 9950 2100
+Wire Wire Line
+	9950 2100 9475 2100
+Connection ~ 9950 1650
+Wire Wire Line
+	9950 1650 9475 1650
+$Comp
+L stepper_probe:DC_DC U4
+U 1 1 62B3ECA9
+P 8525 1650
+F 0 "U4" H 8525 1892 50  0000 C CNN
+F 1 "K7803MT-500R4" H 8525 1801 50  0000 C CNN
+F 2 "stepper_probe:Converter_DCDC" H 8575 1400 50  0001 L CIN
+F 3 "https://www.recom-power.com/pdf/Innoline/R-78Exx-0.5.pdf" H 8525 1650 50  0001 C CNN
+	1    8525 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8075 2100 8475 2100
+Wire Wire Line
+	8575 1950 8575 2100
+Connection ~ 8575 2100
+Wire Wire Line
+	8575 2100 9025 2100
+Wire Wire Line
+	8475 1950 8475 2100
+Connection ~ 8475 2100
+Wire Wire Line
+	8475 2100 8575 2100
+$Comp
+L Connector:Conn_01x04_Male J4
+U 1 1 628A791E
+P 10325 3675
+F 0 "J4" H 10375 3900 50  0000 C CNN
+F 1 "Serial Port" H 10500 3900 50  0001 C CNN
+F 2 "stepper_probe:PinHeader_1x04_P2.54mm_Vertical" H 10325 3675 50  0001 C CNN
+F 3 "~" H 10325 3675 50  0001 C CNN
+	1    10325 3675
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	10125 3575 10100 3575
+Wire Wire Line
+	10125 3875 10100 3875
+Wire Wire Line
+	10125 3675 10000 3675
+Wire Wire Line
+	10125 3775 10000 3775
+$Comp
+L Device:R_Small_US R8
+U 1 1 62BD5E6B
+P 9900 3675
+F 0 "R8" V 9800 3550 50  0000 C CNN
+F 1 "1K" V 9800 3700 50  0000 C CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 9900 3675 50  0001 C CNN
+F 3 "~" H 9900 3675 50  0001 C CNN
+F 4 "C11702" V 9700 3600 50  0000 C CNN "LCSC Part Number"
+	1    9900 3675
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small_US R9
+U 1 1 62BD65EC
+P 9900 3775
+F 0 "R9" V 10000 3650 50  0000 C CNN
+F 1 "1K" V 10000 3800 50  0000 C CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 9900 3775 50  0001 C CNN
+F 3 "~" H 9900 3775 50  0001 C CNN
+F 4 "C11702" V 10075 3700 50  0000 C CNN "LCSC Part Number"
+	1    9900 3775
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9800 3675 9550 3675
+Wire Wire Line
+	9800 3775 9550 3775
+$Comp
+L Device:R_Small_US R6
+U 1 1 62C197D2
+P 9750 5200
+F 0 "R6" H 9725 5100 50  0000 R CNN
+F 1 "5K1" H 9725 5275 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 9750 5200 50  0001 C CNN
+F 3 "~" H 9750 5200 50  0001 C CNN
+F 4 "C25905" V 9850 5225 50  0000 C CNN "LCSC Part Number"
+	1    9750 5200
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R_Small_US R7
+U 1 1 62C19C2B
+P 10175 5200
+F 0 "R7" H 10150 5075 50  0000 R CNN
+F 1 "5K1" H 10125 5300 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 10175 5200 50  0001 C CNN
+F 3 "~" H 10175 5200 50  0001 C CNN
+F 4 "C25905" V 10275 5225 50  0000 C CNN "LCSC Part Number"
+	1    10175 5200
+	-1   0    0    1   
+$EndComp
+$Comp
+L stepper_probe:MDBT42Q-512KV2 U3
+U 1 1 62C25ED4
+P 3100 4625
+F 0 "U3" H 3100 5440 50  0000 C CNN
+F 1 "MDBT42Q-512KV2" H 3100 5349 50  0000 C CNN
+F 2 "stepper_probe:RAYTAC_MDBT42Q" H 3100 4625 50  0001 C CNN
+F 3 "" H 3100 4625 50  0001 C CNN
+	1    3100 4625
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 62C72EBD
+P 7500 1650
+F 0 "#FLG0101" H 7500 1725 50  0001 C CNN
+F 1 "PWR_FLAG" H 7450 1800 50  0000 C CNN
+F 2 "" H 7500 1650 50  0001 C CNN
+F 3 "~" H 7500 1650 50  0001 C CNN
+	1    7500 1650
+	1    0    0    -1  
+$EndComp
+Connection ~ 7500 1650
+Wire Wire Line
+	7500 1650 7600 1650
+Wire Wire Line
+	8000 3575 7925 3575
+Wire Wire Line
+	7925 3575 7925 3525
+Text Notes 8150 2650 0    50   ~ 0
+Power Supply
+NoConn ~ 4600 5525
+NoConn ~ 4600 5625
+Text Label 4275 5625 0    50   ~ 0
+TEST1
+Text Label 4275 5525 0    50   ~ 0
+TEST2
+Wire Wire Line
+	4125 1600 4500 1600
+Wire Wire Line
+	3150 2675 4500 2675
+NoConn ~ 4000 5025
+Wire Wire Line
+	2200 4625 1575 4625
+Wire Wire Line
+	2200 4725 1575 4725
+NoConn ~ 4000 4725
+NoConn ~ 4000 4825
+Wire Wire Line
+	3400 6225 3400 6550
+Text Notes 4225 7525 0    50   ~ 0
+TODO: Consider replacing the DC/DC with an insulated one.
+$Comp
+L stepper_probe:GND #PWR011
+U 1 1 6294FC1A
+P 4925 5875
+F 0 "#PWR011" H 4925 5625 50  0001 C CNN
+F 1 "GND" H 4929 5720 50  0001 C CNN
+F 2 "" H 4925 5875 50  0001 C CNN
+F 3 "" H 4925 5875 50  0001 C CNN
+	1    4925 5875
+	1    0    0    -1  
+$EndComp
+Text Label 4275 5425 0    50   ~ 0
+DFU
+Text Notes 8100 1175 0    50   ~ 0
++
+$Comp
+L Switch:SW_Push SW1
+U 1 1 629716D2
+P 4925 5650
+F 0 "SW1" V 4925 5798 50  0000 L CNN
+F 1 "SW_Push" V 4970 5798 50  0001 L CNN
+F 2 "stepper_probe:SW_Push_SPST_NO_Alps_SKRK" H 4925 5850 50  0001 C CNN
+F 3 "~" H 4925 5850 50  0001 C CNN
+F 4 "C720477" V 5025 5975 50  0000 C CNN "LCSC Part Number"
+	1    4925 5650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4925 5425 4925 5450
+Wire Wire Line
+	4000 5425 4925 5425
+Wire Wire Line
+	4925 5850 4925 5875
+NoConn ~ 8500 3975
+$Comp
+L Graphic:Logo_Open_Hardware_Small #LOGO1
+U 1 1 62CFF40A
+P 10550 6875
+F 0 "#LOGO1" H 10550 7150 50  0001 C CNN
+F 1 "Logo_Open_Hardware_Small" H 10550 6650 50  0001 C CNN
+F 2 "" H 10550 6875 50  0001 C CNN
+F 3 "~" H 10550 6875 50  0001 C CNN
+	1    10550 6875
+	1    0    0    -1  
+$EndComp
+Text Notes 1825 4150 2    50   ~ 0
+BLE SOC
+$Comp
+L Connector:Conn_01x02_Male J6
+U 1 1 6295F498
+P 5250 4625
+F 0 "J6" H 5350 4425 50  0000 R CNN
+F 1 "BAT" H 5100 4575 50  0001 R CNN
+F 2 "stepper_probe:PinHeader_1x02_P2.54mm_Vertical" H 5250 4625 50  0001 C CNN
+F 3 "~" H 5250 4625 50  0001 C CNN
+	1    5250 4625
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 4625 5050 4625
+$Comp
+L stepper_probe:GND #PWR0101
+U 1 1 62973953
+P 5000 4750
+F 0 "#PWR0101" H 5000 4500 50  0001 C CNN
+F 1 "GND" H 5004 4595 50  0001 C CNN
+F 2 "" H 5000 4750 50  0001 C CNN
+F 3 "" H 5000 4750 50  0001 C CNN
+	1    5000 4750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5050 4725 5000 4725
+Wire Wire Line
+	5000 4725 5000 4750
+Text Label 4900 4625 2    50   ~ 0
+RESET
+Text Notes 5350 4650 2    50   ~ 0
+R
+Text Notes 5350 4750 2    50   ~ 0
+G
+$Comp
+L Memory_EEPROM:M24C02-FMN U5
+U 1 1 62D5C61F
+P 6875 5450
+F 0 "U5" H 6200 5825 50  0000 C CNN
+F 1 "M24C02-FMN" H 6400 5750 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 6875 5800 50  0001 C CNN
+F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/b0/d8/50/40/5a/85/49/6f/DM00071904.pdf/files/DM00071904.pdf/jcr:content/translations/en.DM00071904.pdf" H 6925 4950 50  0001 C CNN
+F 4 "C7562" H 6875 5450 50  0001 C CNN "LCSC Part Number"
+	1    6875 5450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9950 1650 10175 1650
+Wire Wire Line
+	9950 2100 10250 2100
+Wire Wire Line
+	10250 2100 10250 2125
+Wire Wire Line
+	6650 2100 7200 2100
+Wire Wire Line
+	2200 4925 1575 4925
+Wire Wire Line
+	2200 4825 1575 4825
+$Comp
+L stepper_probe:GND #PWR026
+U 1 1 62E0FD09
+P 6875 5800
+F 0 "#PWR026" H 6875 5550 50  0001 C CNN
+F 1 "GND" H 6879 5645 50  0001 C CNN
+F 2 "" H 6875 5800 50  0001 C CNN
+F 3 "" H 6875 5800 50  0001 C CNN
+	1    6875 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR028
+U 1 1 62E10158
+P 7325 5800
+F 0 "#PWR028" H 7325 5550 50  0001 C CNN
+F 1 "GND" H 7329 5645 50  0001 C CNN
+F 2 "" H 7325 5800 50  0001 C CNN
+F 3 "" H 7325 5800 50  0001 C CNN
+	1    7325 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR016
+U 1 1 62E10507
+P 6425 5800
+F 0 "#PWR016" H 6425 5550 50  0001 C CNN
+F 1 "GND" H 6429 5645 50  0001 C CNN
+F 2 "" H 6425 5800 50  0001 C CNN
+F 3 "" H 6425 5800 50  0001 C CNN
+	1    6425 5800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9325 4950 9325 5100
+$Comp
+L stepper_probe:+3V3 #PWR021
+U 1 1 62E10B3B
+P 6875 4950
+F 0 "#PWR021" H 6875 4800 50  0001 C CNN
+F 1 "+3V3" H 6850 5125 50  0000 C CNN
+F 2 "" H 6875 4950 50  0001 C CNN
+F 3 "" H 6875 4950 50  0001 C CNN
+	1    6875 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C12
+U 1 1 62E1111B
+P 7075 5050
+F 0 "C12" V 7000 5125 50  0000 L CNN
+F 1 "100n" V 6925 5125 50  0000 L CNN
+F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 7113 4900 50  0001 C CNN
+F 3 "~" H 7075 5050 50  0001 C CNN
+F 4 "C307331" V 6850 5175 50  0000 C CNN "LCSC Part Number"
+	1    7075 5050
+	0    1    1    0   
+$EndComp
+$Comp
+L stepper_probe:GND #PWR027
+U 1 1 62E12E1A
+P 7275 5075
+F 0 "#PWR027" H 7275 4825 50  0001 C CNN
+F 1 "GND" H 7279 4920 50  0001 C CNN
+F 2 "" H 7275 5075 50  0001 C CNN
+F 3 "" H 7275 5075 50  0001 C CNN
+	1    7275 5075
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7225 5050 7275 5050
+Wire Wire Line
+	7275 5050 7275 5075
+Wire Wire Line
+	6875 4950 6875 5050
+Wire Wire Line
+	6925 5050 6875 5050
+Connection ~ 6875 5050
+Wire Wire Line
+	6875 5050 6875 5150
+Wire Wire Line
+	7275 5550 7325 5550
+Wire Wire Line
+	7325 5550 7325 5800
+Wire Wire Line
+	6875 5750 6875 5800
+Wire Wire Line
+	6475 5350 6425 5350
+Wire Wire Line
+	6425 5350 6425 5450
+Wire Wire Line
+	6475 5450 6425 5450
+Connection ~ 6425 5450
+Wire Wire Line
+	6425 5450 6425 5550
+Wire Wire Line
+	6475 5550 6425 5550
+Connection ~ 6425 5550
+Wire Wire Line
+	6425 5550 6425 5800
+Wire Wire Line
+	7275 5350 7550 5350
+Wire Wire Line
+	7275 5450 7850 5450
+$Comp
+L Device:R_Small_US R10
+U 1 1 62E796A4
+P 7550 5125
+F 0 "R10" H 7475 5125 50  0000 R CNN
+F 1 "10K" H 7475 5050 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 7550 5125 50  0001 C CNN
+F 3 "~" H 7550 5125 50  0001 C CNN
+F 4 "C25744" H 7325 4975 50  0000 C CNN "LCSC Part Number"
+	1    7550 5125
+	-1   0    0    1   
+$EndComp
+$Comp
+L stepper_probe:+3V3 #PWR0102
+U 1 1 62D5A4DA
+P 7550 4950
+F 0 "#PWR0102" H 7550 4800 50  0001 C CNN
+F 1 "+3V3" H 7525 5125 50  0000 C CNN
+F 2 "" H 7550 4950 50  0001 C CNN
+F 3 "" H 7550 4950 50  0001 C CNN
+	1    7550 4950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 5225 7550 5350
+Connection ~ 7550 5350
+Wire Wire Line
+	7550 5350 7850 5350
+Wire Wire Line
+	7550 4950 7550 5025
+Text Label 7850 5350 2    50   ~ 0
+SDA
+Text Label 7850 5450 2    50   ~ 0
+SCL
+Text Label 1575 4725 0    50   ~ 0
+SDA
+Text Label 1575 4825 0    50   ~ 0
+SCL
+NoConn ~ 3500 6225
+$Comp
+L stepper_probe:+3V3 #PWR0103
+U 1 1 62DB77A4
+P 2700 2250
+F 0 "#PWR0103" H 2700 2100 50  0001 C CNN
+F 1 "+3V3" H 2650 2400 50  0000 C CNN
+F 2 "" H 2700 2250 50  0001 C CNN
+F 3 "" H 2700 2250 50  0001 C CNN
+	1    2700 2250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2700 2250 2700 2300
+Connection ~ 2700 2300
+$Comp
+L stepper_probe:+3V3 #PWR0104
+U 1 1 62DC2B17
+P 3675 1175
+F 0 "#PWR0104" H 3675 1025 50  0001 C CNN
+F 1 "+3V3" H 3625 1325 50  0000 C CNN
+F 2 "" H 3675 1175 50  0001 C CNN
+F 3 "" H 3675 1175 50  0001 C CNN
+	1    3675 1175
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3675 1175 3675 1225
+Connection ~ 3675 1225
+$Comp
+L power:PWR_FLAG #FLG0102
+U 1 1 62DDA38C
+P 7200 2100
+F 0 "#FLG0102" H 7200 2175 50  0001 C CNN
+F 1 "PWR_FLAG" H 7175 2025 50  0000 C CNN
+F 2 "" H 7200 2100 50  0001 C CNN
+F 3 "~" H 7200 2100 50  0001 C CNN
+	1    7200 2100
+	1    0    0    -1  
+$EndComp
+Connection ~ 7200 2100
+Wire Wire Line
+	7200 2100 7600 2100
+Text Notes 6500 6075 0    50   ~ 0
+Configuration EEPROM
+Text Notes 4250 7200 0    50   ~ 0
+Notes:\n* P26 was LED1\n* P25 was LED2\n* P09 was SENSOR_DIS
+$Comp
+L stepper_probe:+3V3 #PWR0105
+U 1 1 62EA5B3C
+P 10100 3500
+F 0 "#PWR0105" H 10100 3350 50  0001 C CNN
+F 1 "+3V3" V 10115 3628 50  0000 L CNN
+F 2 "" H 10100 3500 50  0001 C CNN
+F 3 "" H 10100 3500 50  0001 C CNN
+	1    10100 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR0106
+U 1 1 62EA6362
+P 10100 4000
+F 0 "#PWR0106" H 10100 3750 50  0001 C CNN
+F 1 "GND" H 10104 3845 50  0001 C CNN
+F 2 "" H 10100 4000 50  0001 C CNN
+F 3 "" H 10100 4000 50  0001 C CNN
+	1    10100 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10100 3500 10100 3575
+Wire Wire Line
+	10100 3875 10100 4000
+Wire Wire Line
+	7600 2100 8075 2100
+$Comp
+L stepper_probe:GND #PWR?
+U 1 1 62F7645D
+P 7900 1350
+F 0 "#PWR?" H 7900 1100 50  0001 C CNN
+F 1 "GND" H 7904 1195 50  0001 C CNN
+F 2 "" H 7900 1350 50  0001 C CNN
+F 3 "" H 7900 1350 50  0001 C CNN
+	1    7900 1350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7900 1300 7900 1350
+$EndSCHEMATC
