@@ -278,7 +278,7 @@ ENDDEF
 DEF simple_stepper_motor_analyzer_ACS70331_soic8 U 0 20 Y Y 1 F N
 F0 "U" 400 250 50 H V L CNN
 F1 "simple_stepper_motor_analyzer_ACS70331_soic8" 150 350 50 H V L CNN
-F2 "Sensor_Current:Allegro_QFN-12-10-1EP_3x3mm_P0.5mm" 400 -50 50 H I L CIN
+F2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" 400 -50 50 H I L CIN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
  Allegro*QFN*EP*3x3mm*P0.5mm*
