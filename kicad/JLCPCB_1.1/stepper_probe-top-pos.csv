@@ -1,4 +1,4 @@
-Ref,Val,Package,PosX,PosY,Rot,Side
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
 "C1","1u","C_0402_1005Metric_Pad0.74x0.62mm_HandSolder",122.622500,-64.973200,0.000000,top
 "C2","10u","C_0603_1608Metric_Pad1.08x0.95mm_HandSolder",115.760500,-65.913000,180.000000,top
 "C3","12pf","C_0402_1005Metric_Pad0.74x0.62mm_HandSolder",114.300000,-67.437000,0.000000,top
