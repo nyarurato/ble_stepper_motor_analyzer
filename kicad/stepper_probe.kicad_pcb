@@ -1713,7 +1713,7 @@
     (fp_text reference D3 (at 2.1844 0.0508) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED (at 0 1.17) (layer F.Fab)
+    (fp_text value "LED R" (at 0 1.17) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_circle (center -1.265 0) (end -1.215 0) (layer F.SilkS) (width 0.1))
@@ -1750,7 +1750,7 @@
     (fp_text reference D2 (at -1.777 -0.127 180) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED (at 0 1.17 90) (layer F.Fab)
+    (fp_text value "LED Y" (at 0 1.17 90) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_circle (center -1.265 0) (end -1.215 0) (layer F.SilkS) (width 0.1))
@@ -1787,7 +1787,7 @@
     (fp_text reference D1 (at -1.904 -0.0635) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED (at 0 1.17 90) (layer F.Fab)
+    (fp_text value "LED R" (at 0 1.17 90) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_circle (center -1.265 0) (end -1.215 0) (layer F.SilkS) (width 0.1))
