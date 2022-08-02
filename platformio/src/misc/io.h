@@ -24,15 +24,15 @@ class OutputPin {
 };
 
 // Active low.
-extern OutputPin<26> LED1;
-extern OutputPin<25> LED2;
+extern OutputPin<25> LED1;
+extern OutputPin<28> LED2;
 
 // Output pulses for diagnostics.
 extern OutputPin<11> TIMER_OUT_PIN;
 extern OutputPin<12> ISR_OUT_PIN;
 
 // Enables power on 0 value.
-extern OutputPin<9> SENSOR_POWER_PIN;
+// extern OutputPin<9> SENSOR_POWER_PIN;
 
 // --- Output pins
 

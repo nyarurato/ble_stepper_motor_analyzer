@@ -20,7 +20,8 @@ from pyqtgraph import QtGui
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
 
-DEVICE_ADDR = "C9:B7:AF:B8:72:D6"
+#DEVICE_ADDR = "C9:B7:AF:B8:72:D6"
+DEVICE_ADDR = "D5:77:38:D3:5A:55"
 
 amps_abs_filter = Filter(0.5)
 
