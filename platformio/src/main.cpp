@@ -27,12 +27,12 @@
 #include "misc/util.h"
 
 static void aqc_setup() {
-  analyzer::Settings analyzer_settings = {.offset1 = 2048 - 239 + 270,
-                                          .offset2 = 2048 - 205 + 220,
-                                          .reverse_direction = false};
+  analyzer::Settings settings;
+  config_eeprom::read_acquisition_settings(&settings);
+
   // NOTE that we call the analyzer settings before starting
   // the ADC interrupts.
-  analyzer::setup(analyzer_settings);
+  analyzer::setup(settings);
 
   adc_dma::setup();
 }
@@ -41,15 +41,11 @@ static void aqc_setup() {
 
 static Elapsed blink_timer;
 
-static Elapsed test_timer;
-
-
 // TODO: share with other temp state buffers
 static analyzer::State notification_state;
 
 // static analyzer::AdcCaptureBuffer capture_buffer;
 // static Elapsed dump_timer;
-
 
 void main(void) {
   io::setup();
@@ -72,21 +68,10 @@ void main(void) {
       is_connected = ble_service::is_connected();
     }
 
-    // if (dump_timer.elapsed_millis() >= 5000) {
-    //   dump_timer.reset();
-    //   analyzer::get_last_capture_snapshot(&capture_buffer);
-    //   analyzer::dump_adc_capture_buffer(capture_buffer);
-    // }
-
     // Blocking call.
     analyzer::pop_next_state(&notification_state, true);
 
     // Send state notification if enabled.
     ble_service::maybe_notify_state(notification_state);
-
-    if (test_timer.elapsed_millis() > 2000) {
-      test_timer.reset();
-      config_eeprom::temp_test();
-    }
   }
 }
