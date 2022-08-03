@@ -6,6 +6,7 @@
 #include "acquisition/adc_dma.h"
 #include "acquisition/analyzer.h"
 #include "ble/ble_util.h"
+#include "misc/config_eeprom.h"
 
 // NOTE: BLE Peripheral example is from
 // .platformio/packages/framework-zephyr/samples/bluetooth/peripheral/src
@@ -39,6 +40,9 @@ static void aqc_setup() {
 //-----------------------------------
 
 static Elapsed blink_timer;
+
+static Elapsed test_timer;
+
 
 // TODO: share with other temp state buffers
 static analyzer::State notification_state;
@@ -79,5 +83,10 @@ void main(void) {
 
     // Send state notification if enabled.
     ble_service::maybe_notify_state(notification_state);
+
+    if (test_timer.elapsed_millis() > 2000) {
+      test_timer.reset();
+      config_eeprom::temp_test();
+    }
   }
 }

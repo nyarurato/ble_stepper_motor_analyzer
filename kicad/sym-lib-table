@@ -1,6 +1,4 @@
 (sym_lib_table
-  (lib (name simple_stepper_motor_analyzer)(type Legacy)(uri C:/projects/simple_stepper_motor_analyzer/repo/kicad/stepper_motor_analyzer.lib)(options "")(descr ""))
-  (lib (name LibreSolar)(type Legacy)(uri C:/Users/user/Downloads/kicad-symbols-master/kicad-symbols-master/LibreSolar.lib)(options "")(descr ""))
   (lib (name stepper_probe)(type Legacy)(uri ${KIPRJMOD}/stepper_probe.lib)(options "")(descr ""))
   (lib (name stepper_probe-rescue)(type Legacy)(uri ${KIPRJMOD}/stepper_probe-rescue.lib)(options "")(descr ""))
 )
