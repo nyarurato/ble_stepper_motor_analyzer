@@ -18,8 +18,8 @@ InputPin  SWITCH1;  // Used for BUTTON1
 
 void setup() {
   // Outpupts
-  LED1.init(25, 1);
-  LED2.init(28, 1);
+  LED1.init(25, 0);
+  LED2.init(28, 0);
   TIMER_OUT_PIN.init(11, 0);
   ISR_OUT_PIN.init(12, 0);
 

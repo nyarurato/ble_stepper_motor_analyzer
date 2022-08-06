@@ -151,11 +151,11 @@ static analyzer::State read_state;
 static ssize_t on_probe_state_read(struct bt_conn *conn,
                                    const struct bt_gatt_attr *attr, void *buf,
                                    uint16_t len, uint16_t offset) {
-  io::LED2.clear();
+  //io::LED2.clear();
   // printk("on_state_read(%hd, %d) called.\n", len, offset);
 
   if (offset != 0) {
-    io::LED2.set();
+    //io::LED2.set();
 
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
@@ -165,7 +165,7 @@ static ssize_t on_probe_state_read(struct bt_conn *conn,
   const int result =
       encode_state(read_state, reinterpret_cast<uint8_t *>(buf), len);
 
-  io::LED2.set();
+  // io::LED2.set();
   return result;
 }
 

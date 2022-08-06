@@ -72,6 +72,10 @@ static void zero_calibration() {
          settings.offset2, write_ok ? "OK" : "FAILED");
 }
 
+// Used to generate blink to indicates that 
+// acquisition is working.
+static uint32_t analyzer_counter = 0;
+
 void main(void) {
   io::setup();
   button::setup();
@@ -87,12 +91,14 @@ void main(void) {
       is_connected = ble_service::is_connected();
     }
 
-    // Update LED blinks.
-    const uint32_t millis_now = k_uptime_get_32();
-    const uint32_t blink_mask = is_connected ? 0x1 << 6 : 0x1 << 10;
-    io::LED1.write((millis_now & blink_mask) || zero_setting);
+    // Update LED blinks.  Blinking indicates analyzer works
+    // and provides states. High speed blink indicates connection
+    // status.
+    const uint32_t blink_mask = is_connected ? 0x1 << 2 : 0x1 << 5;
+    io::LED1.write((analyzer_counter & blink_mask) || zero_setting);
 
     // Check button.
+    const uint32_t millis_now = k_uptime_get_32();
     Button::ButtonEvent button_event = button::BUTTON1.update(millis_now);
     if (!button::BUTTON1.is_pressed()) {
       // Button is not pressed. Can stop the zero calibration action feedback.
@@ -118,6 +124,8 @@ void main(void) {
     // The rate is fast enough to non interfere with other activities in
     // this loop such as LED blinkin.
     analyzer::pop_next_state(&notification_state, true);
+
+    analyzer_counter++;
 
     // Send state notification if enabled.
     ble_service::maybe_notify_state(notification_state);
