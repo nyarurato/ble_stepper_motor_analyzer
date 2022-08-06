@@ -113,6 +113,7 @@ F 0 "J1" H 1100 1850 50  0000 R CNN
 F 1 "Conn_01x04_Male" H 922 1623 50  0001 R CNN
 F 2 "stepper_probe:connector_4pins_horizontal" H 950 1650 50  0001 C CNN
 F 3 "~" H 950 1650 50  0001 C CNN
+F 4 "" H 950 1650 50  0001 C CNN "LCSC"
 	1    950  1650
 	1    0    0    1   
 $EndComp
@@ -125,6 +126,7 @@ F 1 "Conn_01x04_Male" H 1850 3100 50  0001 R CNN
 F 2 "stepper_probe:connector_4pins_horizontal" H 1275 2925 50  0001 C CNN
 F 3 "~" H 1275 2925 50  0001 C CNN
 F 4 "C31753" H 1350 3200 50  0000 C CNN "LCSC Part Number"
+F 5 "" H 1275 2925 50  0001 C CNN "LCSC"
 	1    1275 2925
 	1    0    0    1   
 $EndComp
@@ -133,9 +135,10 @@ L stepper_probe-rescue:ACS70331_soic8-simple_stepper_motor_analyzer U1
 U 1 1 627A85BB
 P 3725 1700
 F 0 "U1" H 2850 1975 50  0000 C CNN
-F 1 "TMCS1108A4BQDT" H 3150 2125 50  0000 C CNN
+F 1 "CC6920BSO-5A" H 3150 2125 50  0000 C CNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 4125 1650 50  0001 L CIN
 F 3 "" H 3725 1700 50  0001 C CNN
+F 4 "C2880430" H 3725 1700 50  0000 C CNN "LCSC"
 	1    3725 1700
 	1    0    0    -1  
 $EndComp
@@ -299,6 +302,7 @@ F 0 "M1" H 1050 3425 50  0001 L CNN
 F 1 "Motor" H 900 3375 50  0001 L TNN
 F 2 "stepper_probe:Empty" H 1010 3115 50  0001 C CNN
 F 3 "" H 1010 3115 50  0001 C CNN
+F 4 "DNP" H 1000 3025 50  0001 C CNN "LCSC"
 	1    1000 3025
 	0    -1   -1   0   
 $EndComp
@@ -386,8 +390,6 @@ F 4 "C2935458" H 8575 4050 50  0000 C CNN "LCSC"
 	1    8425 3725
 	1    0    0    -1  
 $EndComp
-Text Notes 4425 3050 2    50   ~ 0
-Current sensors
 $Comp
 L Connector:Conn_01x02_Male J3
 U 1 1 628AD243
@@ -396,6 +398,7 @@ F 0 "J3" H 8150 1100 50  0000 R CNN
 F 1 "BAT" H 8075 975 50  0001 R CNN
 F 2 "stepper_probe:PinHeader_1x02_P2.54mm_Vertical" H 8225 1025 50  0001 C CNN
 F 3 "~" H 8225 1025 50  0001 C CNN
+F 4 "" H 8225 1025 50  0001 C CNN "LCSC"
 	1    8225 1025
 	-1   0    0    -1  
 $EndComp
@@ -891,7 +894,7 @@ F 0 "C6" V 3850 1300 50  0000 L CNN
 F 1 "100n" V 3650 1150 50  0000 L CNN
 F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 3938 1075 50  0001 C CNN
 F 3 "~" H 3900 1225 50  0001 C CNN
-F 4 "C307331" V 3750 1325 50  0000 C CNN "LCSC"
+F 4 "C307331" V 3850 350 50  0000 C CNN "LCSC"
 	1    3900 1225
 	0    1    1    0   
 $EndComp
@@ -949,6 +952,7 @@ F 0 "J4" H 10425 3900 50  0000 C CNN
 F 1 "Serial Port" H 10550 3900 50  0001 C CNN
 F 2 "stepper_probe:PinHeader_1x04_P2.54mm_Vertical" H 10375 3675 50  0001 C CNN
 F 3 "~" H 10375 3675 50  0001 C CNN
+F 4 "" H 10375 3675 50  0001 C CNN "LCSC"
 	1    10375 3675
 	-1   0    0    -1  
 $EndComp
@@ -1117,6 +1121,7 @@ F 0 "J6" H 5350 4425 50  0000 R CNN
 F 1 "BAT" H 5100 4575 50  0001 R CNN
 F 2 "stepper_probe:PinHeader_1x02_P2.54mm_Vertical" H 5250 4625 50  0001 C CNN
 F 3 "~" H 5250 4625 50  0001 C CNN
+F 4 "" H 5250 4625 50  0001 C CNN "LCSC"
 	1    5250 4625
 	-1   0    0    -1  
 $EndComp
@@ -1474,7 +1479,7 @@ F 0 "C13" H 2925 3225 50  0000 L CNN
 F 1 "DNI" H 3075 3025 50  0000 R CNN
 F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 3288 2900 50  0001 C CNN
 F 3 "~" H 3250 3050 50  0001 C CNN
-F 4 "DNI" H 3075 3125 50  0000 R CNN "LCSC"
+F 4 "DNP" H 3075 3125 50  0000 R CNN "LCSC"
 	1    3250 3050
 	-1   0    0    1   
 $EndComp
@@ -1493,10 +1498,11 @@ $Comp
 L stepper_probe-rescue:ACS70331_soic8-simple_stepper_motor_analyzer U2
 U 1 1 627AA0D1
 P 2750 2775
-F 0 "U2" H 1975 2225 50  0000 C CNN
-F 1 "TMCS1108A4BQDT" H 2250 2350 50  0000 C CNN
+F 0 "U2" H 2000 2450 50  0000 C CNN
+F 1 "CC6920BSO-5A" H 2250 2350 50  0000 C CNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 3150 2725 50  0001 L CIN
 F 3 "" H 2750 2775 50  0001 C CNN
+F 4 "C2880430" H 2150 2250 50  0000 C CNN "LCSC"
 	1    2750 2775
 	1    0    0    -1  
 $EndComp
@@ -1514,7 +1520,7 @@ F 0 "C14" H 3900 2150 50  0000 L CNN
 F 1 "DNI" H 4050 1950 50  0000 R CNN
 F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 4263 1825 50  0001 C CNN
 F 3 "~" H 4225 1975 50  0001 C CNN
-F 4 "DNI" H 4050 2050 50  0000 R CNN "LCSC"
+F 4 "DNP" H 4050 2050 50  0000 R CNN "LCSC"
 	1    4225 1975
 	-1   0    0    1   
 $EndComp
@@ -1543,6 +1549,7 @@ F 0 "J7" H 6678 3530 50  0001 L CNN
 F 1 "Conn_01x01_Female" H 6678 3485 50  0001 L CNN
 F 2 "stepper_probe:BAT_PLUS_PAD" H 6650 3550 50  0001 C CNN
 F 3 "~" H 6650 3550 50  0001 C CNN
+F 4 "DNP" H 6650 3550 50  0001 C CNN "LCSC"
 	1    6650 3550
 	1    0    0    -1  
 $EndComp
@@ -1554,6 +1561,7 @@ F 0 "J8" H 6678 3755 50  0001 L CNN
 F 1 "Conn_01x01_Female" H 6678 3710 50  0001 L CNN
 F 2 "stepper_probe:BAT_MINUS_PAD" H 6650 3775 50  0001 C CNN
 F 3 "~" H 6650 3775 50  0001 C CNN
+F 4 "DNP" H 6650 3775 50  0001 C CNN "LCSC"
 	1    6650 3775
 	1    0    0    -1  
 $EndComp
@@ -1610,6 +1618,7 @@ F 0 "R11" V 5075 6900 50  0000 R CNN
 F 1 "DNP" V 5075 6700 50  0000 R CNN
 F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4975 6800 50  0001 C CNN
 F 3 "~" H 4975 6800 50  0001 C CNN
+F 4 "DNP" H 4975 6800 50  0001 C CNN "LCSC"
 	1    4975 6800
 	0    -1   -1   0   
 $EndComp
@@ -1621,6 +1630,7 @@ F 0 "R12" V 5050 7250 50  0000 R CNN
 F 1 "DNP" V 5050 7050 50  0000 R CNN
 F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4975 7150 50  0001 C CNN
 F 3 "~" H 4975 7150 50  0001 C CNN
+F 4 "DNP" H 4975 7150 50  0001 C CNN "LCSC"
 	1    4975 7150
 	0    -1   -1   0   
 $EndComp
@@ -1652,4 +1662,6 @@ Text Notes 5375 7075 0    50   ~ 0
 Reserved for future\nconfigurations.
 Text Notes 6100 4200 0    50   ~ 0
 9V battery pads for zero \ncurrent calibration.
+Text Notes 3925 3025 0    50   ~ 0
+Current sensors
 $EndSCHEMATC
