@@ -801,7 +801,6 @@ NoConn ~ 2200 5225
 NoConn ~ 3000 6225
 NoConn ~ 3100 6225
 NoConn ~ 3300 6225
-NoConn ~ 3600 6225
 NoConn ~ 4000 4925
 NoConn ~ 4000 5125
 NoConn ~ 4000 5225
@@ -1063,8 +1062,6 @@ NoConn ~ 4000 4725
 NoConn ~ 4000 4825
 Wire Wire Line
 	3400 6225 3400 6550
-Text Notes 3975 7375 0    50   ~ 0
-TODO: Consider replacing the DC/DC with an insulated one.
 $Comp
 L stepper_probe:GND #PWR011
 U 1 1 6294FC1A
@@ -1312,7 +1309,6 @@ Text Label 1575 4725 0    50   ~ 0
 SDA
 Text Label 1575 4825 0    50   ~ 0
 SCL
-NoConn ~ 3500 6225
 $Comp
 L stepper_probe:+3V3 #PWR0103
 U 1 1 62DB77A4
@@ -1356,7 +1352,7 @@ Connection ~ 7200 2100
 Wire Wire Line
 	7200 2100 7600 2100
 Text Notes 6375 6250 0    50   ~ 0
-Configuration EEPROM
+Settings EEPROM
 $Comp
 L stepper_probe:+3V3 #PWR0105
 U 1 1 62EA5B3C
@@ -1582,10 +1578,78 @@ Wire Wire Line
 	6450 3550 6175 3550
 Text Label 6175 3550 0    50   ~ 0
 BAT+
-Text Notes 5825 4400 0    50   ~ 0
-To zero calibrate the probe, disconnect all\ncables, touch the pads at the back of the\nboard with  a +9V battery and press the\nbutton for 10 secs.
-Text Notes 6725 3725 0    50   ~ 0
-Zero calibration\nbattery pads.
 Wire Wire Line
 	7725 1025 8025 1025
+$Comp
+L stepper_probe:GND #PWR0111
+U 1 1 62EFA692
+P 5125 7200
+F 0 "#PWR0111" H 5125 6950 50  0001 C CNN
+F 1 "GND" H 5129 7045 50  0001 C CNN
+F 2 "" H 5125 7200 50  0001 C CNN
+F 3 "" H 5125 7200 50  0001 C CNN
+	1    5125 7200
+	1    0    0    -1  
+$EndComp
+$Comp
+L stepper_probe:GND #PWR0112
+U 1 1 62EFAB50
+P 5125 6850
+F 0 "#PWR0112" H 5125 6600 50  0001 C CNN
+F 1 "GND" H 5129 6695 50  0001 C CNN
+F 2 "" H 5125 6850 50  0001 C CNN
+F 3 "" H 5125 6850 50  0001 C CNN
+	1    5125 6850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small_US R11
+U 1 1 62EFB038
+P 4975 6800
+F 0 "R11" V 5075 6900 50  0000 R CNN
+F 1 "DNP" V 5075 6700 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4975 6800 50  0001 C CNN
+F 3 "~" H 4975 6800 50  0001 C CNN
+	1    4975 6800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R_Small_US R12
+U 1 1 62EFBB37
+P 4975 7150
+F 0 "R12" V 5050 7250 50  0000 R CNN
+F 1 "DNP" V 5050 7050 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4975 7150 50  0001 C CNN
+F 3 "~" H 4975 7150 50  0001 C CNN
+	1    4975 7150
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5075 6800 5125 6800
+Wire Wire Line
+	5125 6800 5125 6850
+Wire Wire Line
+	5075 7150 5125 7150
+Wire Wire Line
+	5125 7150 5125 7200
+Text Label 4425 6800 0    50   ~ 0
+CFG1
+Wire Wire Line
+	4425 6800 4875 6800
+Wire Wire Line
+	4425 7150 4875 7150
+Text Label 4425 7150 0    50   ~ 0
+CFG2
+Wire Wire Line
+	3500 6225 3500 6550
+Wire Wire Line
+	3600 6225 3600 6550
+Text Label 3500 6550 1    50   ~ 0
+CFG1
+Text Label 3600 6550 1    50   ~ 0
+CFG2
+Text Notes 5375 7075 0    50   ~ 0
+Reserved for future\nconfigurations.
+Text Notes 6100 4200 0    50   ~ 0
+9V battery pads for zero \ncurrent calibration.
 $EndSCHEMATC
