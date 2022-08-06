@@ -4,25 +4,27 @@
 namespace io {
 
 // Digital outputs.
-OutputPin<25> LED1;
-OutputPin<28> LED2;
-OutputPin<11> TIMER_OUT_PIN;
-OutputPin<12> ISR_OUT_PIN;
-// OutputPin<9> SENSOR_POWER_PIN;
+// OutputPin LED1(25);
+// OutputPin LED2(28);
+// OutputPin TIMER_OUT_PIN(11);
+// OutputPin ISR_OUT_PIN(12);
+OutputPin LED1;
+OutputPin LED2;
+OutputPin TIMER_OUT_PIN;
+OutputPin ISR_OUT_PIN;
 
 // Digital inputs.
-// InputPin<13> SWITCH1;
+InputPin  SWITCH1;  // Used for BUTTON1
 
 void setup() {
   // Outpupts
-  LED1.setup(1);
-  LED2.setup(1);
-  // SENSOR_POWER_PIN.setup(0);
-  TIMER_OUT_PIN.setup(0);
-  ISR_OUT_PIN.setup(0);
+  LED1.init(25, 1);
+  LED2.init(28, 1);
+  TIMER_OUT_PIN.init(11, 0);
+  ISR_OUT_PIN.init(12, 0);
 
   // Inputs
-  // SWITCH1.setup();
+  SWITCH1.init(13, NRF_GPIO_PIN_PULLUP);
 }
 
 }  // namespace io

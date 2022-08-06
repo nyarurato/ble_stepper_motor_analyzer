@@ -20,7 +20,7 @@ struct Settings {
   int16_t offset1;
   int16_t offset2;
   // If true, reverse interpretation of forward/backward movement.
-  bool reverse_direction;
+  bool is_reverse_direction;
 };
 
 // Number of pairs of ADC readings to capture for the signal
@@ -231,7 +231,9 @@ void calibrate_zeros();
 
 // Set direction. This updates the current settings.
 // Controlled by the user in the Settings screen.
-void set_direction(bool reverse_direction);
+void set_is_reversed_direction(bool is_reverse_direction);
+
+bool get_is_reversed_direction();
 
 // Return a copy of the internal settings. Used after
 // calibrate_zeros() to save the current settings in the

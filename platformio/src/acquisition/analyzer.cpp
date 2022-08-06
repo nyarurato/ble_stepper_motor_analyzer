@@ -266,10 +266,18 @@ void calibrate_zeros() {
   adc_dma::enable_irq();
 }
 
-void set_direction(bool reverse_direction) {
+void set_is_reversed_direction(bool is_reverse_direction) {
   adc_dma::disable_irq();
-  { isr_data.settings.reverse_direction = reverse_direction; }
+  { isr_data.settings.is_reverse_direction = is_reverse_direction; }
   adc_dma::enable_irq();
+}
+
+bool get_is_reversed_direction() {
+  bool result;
+  adc_dma::disable_irq();
+  { result = isr_data.settings.is_reverse_direction; }
+  adc_dma::enable_irq();
+  return result;
 }
 
 void get_settings(Settings* settings) {
@@ -333,7 +341,7 @@ static inline void isr_update_full_steps_counter(int increment) {
   State& isr_state = isr_data.state;  // alias
 
   // Update step counter based on direction setting.
-  if (isr_data.settings.reverse_direction) {
+  if (isr_data.settings.is_reverse_direction) {
     isr_state.full_steps -= increment;
   } else {
     isr_state.full_steps += increment;
@@ -630,7 +638,7 @@ double state_steps(const State& state) {
   // be good enough for now.
   //
   // TODO: record last direction flag value in the state.
-  const double result = isr_data.settings.reverse_direction
+  const double result = isr_data.settings.is_reverse_direction
                             ? state.full_steps - fraction
                             : state.full_steps + fraction;
 

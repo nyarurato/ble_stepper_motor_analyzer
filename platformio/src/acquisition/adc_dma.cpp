@@ -203,7 +203,7 @@ void InitPpi() {
     nrfx_status =
         // nrfx_gpiote_out_prealloc_init(LED2_PIN, &config, gpiote_chan);
         // nrfx_gpiote_out_init(TIMER_OUT_PIN, &pin_config);
-        nrfx_gpiote_out_init(io::TIMER_OUT_PIN.pin_num, &pin_config);
+        nrfx_gpiote_out_init(io::TIMER_OUT_PIN.pin_num(), &pin_config);
     MY_NRFX_CHECK(nrfx_status, 102);
 
     // ;;nrfx_gpiote_set_task_trigger
@@ -216,7 +216,7 @@ void InitPpi() {
     //                          idx, TIMER_OUT_PIN,                    // Pin,
     //                          NRF_GPIOTE_POLARITY_TOGGLE,  // Polarity,
     //                          NRF_GPIOTE_INITIAL_VALUE_HIGH);  // Init_val;
-    nrfx_gpiote_out_task_enable(io::TIMER_OUT_PIN.pin_num);
+    nrfx_gpiote_out_task_enable(io::TIMER_OUT_PIN.pin_num());
     // nrf_gpiote_task_enable(NRF_GPIOTE, 5);
   }
 
@@ -230,7 +230,7 @@ void InitPpi() {
 
     // Task is clearing LED2 pin.
     const uint32_t gpio_clr_task_addr =
-        nrfx_gpiote_clr_task_addr_get(io::TIMER_OUT_PIN.pin_num);
+        nrfx_gpiote_clr_task_addr_get(io::TIMER_OUT_PIN.pin_num());
 
     // Event is ADC timer middle of cycle.
     const uint32_t timer_clr_event_addr =
@@ -253,7 +253,7 @@ void InitPpi() {
 
     // Task is clearing LED2 pin.
     const uint32_t gpio_set_task_addr =
-        nrfx_gpiote_set_task_addr_get(io::TIMER_OUT_PIN.pin_num);
+        nrfx_gpiote_set_task_addr_get(io::TIMER_OUT_PIN.pin_num());
 
     // Event is ADC timer end of cycle.
     const uint32_t timer_set_event_addr =

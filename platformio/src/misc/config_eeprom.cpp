@@ -23,7 +23,7 @@ struct ConfigPayload {
   int16_t offset1 = 0;
   int16_t offset2 = 0;
   // Acquisition direction flag.
-  bool reverse_direction = false;
+  bool is_reverse_direction = false;
   // Reserve. Always write as 0.
   uint8_t reserved[32] = {};
 };
@@ -38,7 +38,7 @@ struct ConfigPacket {
 static const ConfigPayload kDefaultConfigPayload = {
     .offset1 = 2970,
     .offset2 = 2070,
-    .reverse_direction = false,
+    .is_reverse_direction = false,
 };
 
 static void clear_reserved(ConfigPayload* payload) {
@@ -62,7 +62,7 @@ bool read_bytes(uint8_t byte_address, uint8_t* bfr, uint8_t size) {
   int status = i2c_write_read(i2c_dev, kEepromDeviceAddress, &byte_address, 1,
                               bfr, size);
 
-  printk("i2c read: i2c status: %d\n", status);
+  printk("i2c read: status: %d\n", status);
 
   return status == 0;
 }
@@ -98,7 +98,7 @@ bool write_bytes(uint8_t byte_address, const uint8_t* bfr, uint8_t size) {
     int status =
         i2c_write(i2c_dev, packet, bytes_in_page + 1, kEepromDeviceAddress);
 
-    printk("i2c write: i2c status: %d\n", status);
+    printk("i2c page write: status: %d\n", status);
 
     if (status) {
       // last_status = "WRITE_ERROR";
@@ -116,7 +116,7 @@ static void copy_settings(const ConfigPayload& payload,
                           analyzer::Settings* settings) {
   settings->offset1 = payload.offset1;
   settings->offset2 = payload.offset2;
-  settings->reverse_direction = payload.reverse_direction;
+  settings->is_reverse_direction = payload.is_reverse_direction;
 }
 
 // const char* last_status = "NONE";
@@ -154,7 +154,7 @@ bool write_acquisition_settings(const analyzer::Settings& settings) {
   // Populate payload.
   packet.payload.offset1 = settings.offset1;
   packet.payload.offset2 = settings.offset2;
-  packet.payload.reverse_direction = settings.reverse_direction;
+  packet.payload.is_reverse_direction = settings.is_reverse_direction;
   clear_reserved(&packet.payload);
 
   // Compute checkscum.
