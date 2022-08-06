@@ -113,7 +113,7 @@ F 0 "J1" H 1100 1850 50  0000 R CNN
 F 1 "Conn_01x04_Male" H 922 1623 50  0001 R CNN
 F 2 "stepper_probe:connector_4pins_horizontal" H 950 1650 50  0001 C CNN
 F 3 "~" H 950 1650 50  0001 C CNN
-F 4 "" H 950 1650 50  0001 C CNN "LCSC"
+F 4 "C31753" H 950 1650 50  0001 C CNN "LCSC"
 	1    950  1650
 	1    0    0    1   
 $EndComp
@@ -125,8 +125,7 @@ F 0 "J2" H 1375 3100 50  0000 R CNN
 F 1 "Conn_01x04_Male" H 1850 3100 50  0001 R CNN
 F 2 "stepper_probe:connector_4pins_horizontal" H 1275 2925 50  0001 C CNN
 F 3 "~" H 1275 2925 50  0001 C CNN
-F 4 "C31753" H 1350 3200 50  0000 C CNN "LCSC Part Number"
-F 5 "" H 1275 2925 50  0001 C CNN "LCSC"
+F 4 "C31753" H 1275 2925 50  0001 C CNN "LCSC"
 	1    1275 2925
 	1    0    0    1   
 $EndComp

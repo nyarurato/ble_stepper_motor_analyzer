@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>C:\projects\ble_stepper_monitor\repo\kicad\stepper_probe.sch</source>
-    <date>8/6/2022 12:56:11 PM</date>
+    <date>8/6/2022 2:20:08 PM</date>
     <tool>Eeschema (5.1.10)-1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -51,7 +51,7 @@
     </comp>
     <comp ref="U1">
       <value>CC6920BSO-5A</value>
-      <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <footprint>stepper_probe:kaka3</footprint>
       <fields>
         <field name="LCSC">C2880430</field>
       </fields>
@@ -377,7 +377,7 @@
     </comp>
     <comp ref="U5">
       <value>M24C02-FMN</value>
-      <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <footprint>stepper_probe:kaka1</footprint>
       <datasheet>http://www.st.com/content/ccc/resource/technical/document/datasheet/b0/d8/50/40/5a/85/49/6f/DM00071904.pdf/files/DM00071904.pdf/jcr:content/translations/en.DM00071904.pdf</datasheet>
       <fields>
         <field name="LCSC">C7562</field>
@@ -487,7 +487,7 @@
     </comp>
     <comp ref="U2">
       <value>CC6920BSO-5A</value>
-      <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <footprint>stepper_probe:SOIC-8_LCPCB_ROT</footprint>
       <fields>
         <field name="LCSC">C2880430</field>
       </fields>
