@@ -25,6 +25,17 @@ DEVICE_ADDR = "D5:77:38:D3:5A:55"
 
 amps_abs_filter = Filter(0.5)
 
+timer_handler_counter = 0
+# slot_cycle = 0
+
+pending_reset = True
+pause_enabled = False
+
+capture_divider = 1
+last_set_capture_divider = 0
+
+capture_signal_fetcher: CaptureSignalFetcher = None
+
 # ----- Connect to probe
 
 # TODO: Fix forward reference to update_from_state. The callback_handler is invoked before
@@ -179,7 +190,7 @@ plot7.setLabel('bottom', 'Time', 's')
 # win.centralLayout.setColumnStretchFactor(3, 1)
 
 win.nextRow()
-buttons_layout = win.addLayout(colspan=2)
+buttons_layout = win.addLayout(colspan=3)
 buttons_layout.setSpacing(20)
 buttons_layout.layout.setHorizontalSpacing(30)
 
@@ -195,6 +206,12 @@ button2_proxy = QtGui.QGraphicsProxyWidget()
 button2 = QtGui.QPushButton('Pause')
 button2_proxy.setWidget(button2)
 buttons_layout.addItem(button2_proxy, row=0, col=1)
+
+# Button3
+button3_proxy = QtGui.QGraphicsProxyWidget()
+button3 = QtGui.QPushButton('Time Scale')
+button3_proxy.setWidget(button3)
+buttons_layout.addItem(button3_proxy, row=0, col=2)
 
 # This is a hack to force the view compacting the buttons
 # row ASAP. We created win with similar but slightly different
@@ -247,15 +264,6 @@ def update_from_state(state: ProbeState):
 # QT exec co exist.
 
 
-timer_handler_counter = 0
-# slot_cycle = 0
-
-pending_reset = True
-pause_enabled = False
-
-capture_signal_fetcher: CaptureSignalFetcher = None
-
-
 def on_reset_button():
     global pending_reset
     pending_reset = True
@@ -271,8 +279,20 @@ def on_pause_button():
         pause_enabled = True
 
 
+def on_scale_button():
+    global capture_divider, last_set_capture_divider, button3
+    if capture_divider == 1:
+        capture_divider = 2
+    elif capture_divider == 2:
+        capture_divider = 5
+    else:
+        capture_divider = 1
+
+
 def timer_handler():
-    global probe, timer_handler_counter, slot_cycle, graph1, graph2, graph3, graph4, graph5, graph6, plot7, capture_signal_fetcher, buttons_layout, pending_reset, pause_enabled
+    global probe, timer_handler_counter, slot_cycle, graph1, graph2, graph3, graph4, graph5, graph6, plot7
+    global capture_signal_fetcher, buttons_layout, pending_reset, pause_enabled
+    global capture_divider, last_set_capture_divider
 
     if pending_reset:
         asyncio.get_event_loop().run_until_complete(probe.write_command_reset_data())
@@ -288,6 +308,12 @@ def timer_handler():
         capture_signal_fetcher.reset()
 
         pending_reset = False
+
+    if capture_divider != last_set_capture_divider:
+        asyncio.get_event_loop().run_until_complete(
+            probe.write_command_set_capture_divider(capture_divider))
+        last_set_capture_divider = capture_divider
+        print(f"Set capture divider to {last_set_capture_divider}", flush=True)
 
     updates_enabled = not pause_enabled
 
@@ -332,6 +358,7 @@ capture_signal_fetcher = CaptureSignalFetcher(probe)
 
 button1.clicked.connect(lambda: on_reset_button())
 button2.clicked.connect(lambda: on_pause_button())
+button3.clicked.connect(lambda: on_scale_button())
 
 timer = pg.QtCore.QTimer()
 timer.timeout.connect(timer_handler)

@@ -151,11 +151,11 @@ static analyzer::State read_state;
 static ssize_t on_probe_state_read(struct bt_conn *conn,
                                    const struct bt_gatt_attr *attr, void *buf,
                                    uint16_t len, uint16_t offset) {
-  //io::LED2.clear();
-  // printk("on_state_read(%hd, %d) called.\n", len, offset);
+  // io::LED2.clear();
+  //  printk("on_state_read(%hd, %d) called.\n", len, offset);
 
   if (offset != 0) {
-    //io::LED2.set();
+    // io::LED2.set();
 
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
@@ -359,7 +359,7 @@ static ssize_t on_command_write(struct bt_conn *conn,
                                 const struct bt_gatt_attr *attr,
                                 const void *buf, uint16_t len, uint16_t offset,
                                 uint8_t flags) {
-  // Expecting this exact flag. Write without response.
+  // Expecting this exact flag for write-without-response.
   if (flags != BT_GATT_WRITE_FLAG_CMD) {
     printk("on_command_write: unexpected flags: %02x\n", flags);
     return 0;
@@ -370,8 +370,9 @@ static ssize_t on_command_write(struct bt_conn *conn,
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
 
-  if (len != 1) {
-    printk("on_command_write: unexpected command len: %02x\n", len);
+  // We need at least one byte for the opcode.
+  if (len < 1) {
+    printk("on_command_write: empty command\n");
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
   }
 
@@ -382,14 +383,34 @@ static ssize_t on_command_write(struct bt_conn *conn,
     // command = Reset data.
     case 0x01:
       // printk("on_command_write: resetting state and histogram\n");
+      if (len != 1) {
+        printk("on_command_write: reset command too long: %hu\n", len);
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+      }
       analyzer::reset_data();
       return len;
 
     // Command = Snapshot ADC signal capture.
     case 0x02:
       // printk("on_command_write: snapshot adc capture signal\n");
+      if (len != 1) {
+        printk("on_command_write: signal capture command too long: %hu\n", len);
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+      }
       analyzer::get_last_capture_snapshot(&adc_capture_snapshot);
       adc_capture_points_read_so_far = 0;
+      return len;
+
+    // Command = Set ADC capture divider. Note that until the new capture
+    // will be ready, the last capture is still with the old divider.
+    case 0x03:
+      // printk("on_command_write: snapshot adc capture signal\n");
+      if (len != 2) {
+        printk("on_command_write: set divider aommand wrong length : %hu\n",
+               len);
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+      }
+      analyzer::set_signal_capture_divider(data[1]);
       return len;
 
     default:
@@ -489,8 +510,8 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
   const uint16_t n = p - p0;
 
   // printk(
-  //     "Capture signal read ok: start: %d, count: %d, bytes: %hu, buffer: %hu\n",
-  //     start, actual_count, n, len);
+  //     "Capture signal read ok: start: %d, count: %d, bytes: %hu, buffer:
+  //     %hu\n", start, actual_count, n, len);
 
   return n;
 }

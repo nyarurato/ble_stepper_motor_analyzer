@@ -215,6 +215,13 @@ class Probe:
             return
         await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x02]))
 
+    async def write_command_set_capture_divider(self, divider):
+        if not self.is_connected():
+            logger.error(f"Not connected.")
+            return
+        arg = max(0, min(255, int(divider)))
+        await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x03, arg]))
+
     async def read_capture_signal_packet(self) -> Optional[bytearray]:
         if not self.is_connected():
             logger.error(f"Not connected.")

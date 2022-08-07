@@ -235,6 +235,9 @@ void set_is_reversed_direction(bool is_reverse_direction);
 
 bool get_is_reversed_direction();
 
+// Clipped internally to allowed range.
+void set_signal_capture_divider(uint16_t divider);
+
 // Return a copy of the internal settings. Used after
 // calibrate_zeros() to save the current settings in the
 // EEPROM.
