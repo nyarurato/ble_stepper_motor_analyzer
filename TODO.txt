@@ -10,7 +10,6 @@
 
 * [Device] Provide button feedback using LED2  (epprom write OK/failed, direction forward/backward);
 * [Device] Unstable step counter when X stepper is in low current mode (~0.2A)
-* [Device] Add command to set divider.
 * [Device] Add MCUBoot and BLE/DFU.
 
 ----
@@ -29,6 +28,9 @@
 * Add read command for capture signals.
 * [Device] Add a procedure to save current sensor offset to non volatile memory.
 * [Device] Add command to flip direction (preferably non volatile memory)
+* [Device] Add command to set divider.
+* [Python] Add button to toggle the divider.
+
 
 
 

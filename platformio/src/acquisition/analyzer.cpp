@@ -78,7 +78,7 @@ enum AdcCaptureState {
 
 // This data is accessed from interrupt and thus should
 // be access from main() with IRQ disabled.
-struct IsrData {  
+struct IsrData {
   // The acquisition state visible to users.
   State state;
 
@@ -164,7 +164,17 @@ void get_last_capture_snapshot(AdcCaptureBuffer* buffer) {
 // }
 
 // Should be called from ISR from when interrupts are not enabled.
-extern void irq_start_adc_capture_cycle() {
+void irq_reset_adc_capture_buffer() {
+  isr_data.adc_capture_buffer.items.clear();
+  isr_data.adc_capture_buffer.divider = isr_data.adc_capture_divider;
+
+  isr_data.adc_capture_state = ADC_CAPTURE_HALF_FILL;
+  isr_data.adc_capture_pre_trigger_items_left = kAdcCaptureMaxWaitToTrigger;
+  isr_data.adc_capture_divider_counter = 0;
+}
+
+// Should be called from ISR from when interrupts are not enabled.
+void irq_restart_adc_capture_cycle() {
   // Since ADC capture may be active, data can co-access by ISR.
   //__disable_irq();
   // adc_dma::disable_irq();
@@ -175,13 +185,14 @@ extern void irq_start_adc_capture_cycle() {
 
   // Initialize the new capture buffer.
   isr_data.adc_capture_buffer.seq_number++;
-  isr_data.adc_capture_buffer.items.clear();
-  // isr_data.adc_capture_buffer.trigger_found = false;
-  isr_data.adc_capture_buffer.divider = isr_data.adc_capture_divider;
+  irq_reset_adc_capture_buffer();
 
-  isr_data.adc_capture_state = ADC_CAPTURE_HALF_FILL;
-  isr_data.adc_capture_pre_trigger_items_left = kAdcCaptureMaxWaitToTrigger;
-  isr_data.adc_capture_divider_counter = 0;
+  // isr_data.adc_capture_buffer.items.clear();
+  // isr_data.adc_capture_buffer.divider = isr_data.adc_capture_divider;
+
+  // isr_data.adc_capture_state = ADC_CAPTURE_HALF_FILL;
+  // isr_data.adc_capture_pre_trigger_items_left = kAdcCaptureMaxWaitToTrigger;
+  // isr_data.adc_capture_divider_counter = 0;
   //}
   // adc_dma::enable_irq();
   //__enable_irq();
@@ -208,12 +219,6 @@ const StepsCaptureBuffer* sample_steps_capture() {
   adc_dma::enable_irq();
   return &steps_capture_sample_buffer;
 }
-
-// Users are expected to read this buffer only when capturing
-// is not active.
-// const AdcCaptureBuffer* adc_capture_buffer() {
-//  return &isr_data.adc_capture_buffer;
-//}
 
 const void sample_state(State* state) {
   adc_dma::disable_irq();
@@ -278,6 +283,28 @@ bool get_is_reversed_direction() {
   { result = isr_data.settings.is_reverse_direction; }
   adc_dma::enable_irq();
   return result;
+}
+
+void set_signal_capture_divider(uint16_t divider) {
+  // Clip to a reaonsable range. 
+  if (divider < 1) {
+    divider = 1;
+  } else if (divider > 10) {
+    divider = 10;
+  }
+
+  adc_dma::disable_irq();
+  {
+    isr_data.adc_capture_divider = divider;
+    isr_data.adc_capture_divider_counter = 0;
+
+    // Restart the capture buffer so we don't mix data points
+    // from diferent dividers.
+    irq_reset_adc_capture_buffer();
+  }
+  adc_dma::enable_irq();
+
+  printk("Signal capture divider set to %hu", divider);
 }
 
 void get_settings(Settings* settings) {
@@ -437,7 +464,7 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
         if (isr_data.adc_capture_buffer.items.is_full()) {
           // We completed a capture cycle. Snapshot the result and start
           // a new cycle.
-          irq_start_adc_capture_cycle();
+          irq_restart_adc_capture_cycle();
         }
         break;
     }
@@ -588,9 +615,13 @@ void setup(const Settings& settings) {
   isr_data.settings.offset1 = clip_offset(isr_data.settings.offset1);
   isr_data.settings.offset2 = clip_offset(isr_data.settings.offset2);
 
-  // Since setup is called before initializing ADC interrupts, it's ok
-  // to call this function from a non IRQ function.
-  irq_start_adc_capture_cycle();
+  // We reset the capture without incrementing the capture
+  // sequence number since we didn't completed it.
+  {
+    adc_dma::disable_irq();
+    irq_reset_adc_capture_buffer();
+    adc_dma::enable_irq();
+  }
 }
 
 // This involves floating point operations and thus slow. Do not
