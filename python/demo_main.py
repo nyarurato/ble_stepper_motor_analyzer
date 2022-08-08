@@ -14,6 +14,7 @@ import pyqtgraph as pg
 import asyncio
 from chart import Chart
 import logging
+import time
 from pyqtgraph import QtGui
 
 
@@ -68,9 +69,12 @@ async def connect_to_probe():
         f"Time ticks per sec: [{ probe.info().time_ticks_per_sec()}]", flush=True)
     print(
         f"Histogram bucket steps/sec: [{ probe.info().histogram_bucket_steps_per_sec()}]", flush=True)
-    # Comment this line if you don't want to start from scratch, viewing histograms
-    # with old data, etc.
-    # await probe.write_command_reset_data()
+    #
+    # TODO, can we avoid it without getting ocasional errors? The MTU 
+    # negotiation can take a few seconds to happen. Is this the cause?
+    print(f"A short delay to stabalize the connection...", flush=True)
+    time.sleep(8)
+
     await probe.state_notifications(callback_handler)
     return probe
 
