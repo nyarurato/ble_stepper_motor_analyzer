@@ -1,24 +1,25 @@
 
-
 * [Board ] Add stepper connectors to pick and place.
-* [Python] Avoid jump on first few samples in distance and speed graphs.
-* [Python] Accept probe id rather than probe address.
-* [Python] Add text display of steps and currents.
-* [Device] Add capturing of absolute steps and use it to compute speed. Filter out direction change dittering.
-* [Device] Change divider to uint8 everywhere and clip at 50.
+
 
 ---------------
 
 
+* [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
+* [Python] Initial connection often fails.
+* [Python] Avoid jump on first few samples in distance and speed graphs.
+* [Python] Accept probe id rather than probe address.
+* [Python] Add text display of steps and currents.
+* [Device] Add capturing of absolute steps and use it to compute speed. Filter out direction change dittering.
 * [Python] Accept device address from command line flag.
 * [Python] Exit demo program if lost connection. Alternatively, reconnect.
-
 * [Device] Provide button feedback using LED2  (epprom write OK/failed, direction forward/backward);
 * [Device] Unstable step counter when X stepper is in low current mode (~0.2A)
 * [Device] Add MCUBoot and BLE/DFU.
 
 ----
 
+* [Device] Change divider to uint8 everywhere and clip at 50.
 * Proper critical section protection in analyzer (how to disable preemption)?
 * Add read command for histograms.
 * In python demo program, solve forward reference issue.
