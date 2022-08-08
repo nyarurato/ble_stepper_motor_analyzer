@@ -21,7 +21,8 @@ from pyqtgraph import QtGui
 
 
 #DEVICE_ADDR = "C9:B7:AF:B8:72:D6"
-DEVICE_ADDR = "D5:77:38:D3:5A:55"
+#DEVICE_ADDR = "D5:77:38:D3:5A:55"
+DEVICE_ADDR = "C9:74:A3:F7:FD:54"
 
 amps_abs_filter = Filter(0.5)
 
@@ -285,6 +286,8 @@ def on_scale_button():
         capture_divider = 2
     elif capture_divider == 2:
         capture_divider = 5
+    elif capture_divider == 5:
+        capture_divider = 20 
     else:
         capture_divider = 1
 

@@ -1,6 +1,11 @@
 
 
+* [Board ] Add stepper connectors to pick and place.
+* [Python] Avoid jump on first few samples in distance and speed graphs.
+* [Python] Accept probe id rather than probe address.
 * [Python] Add text display of steps and currents.
+* [Device] Add capturing of absolute steps and use it to compute speed. Filter out direction change dittering.
+* [Device] Change divider to uint8 everywhere and clip at 50.
 
 ---------------
 
