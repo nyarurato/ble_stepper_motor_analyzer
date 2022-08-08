@@ -1,10 +1,11 @@
 
-* [Board ] Add stepper connectors to pick and place.
 
+* [Board ] Simplify the silk screen of the pin headers.
 
 ---------------
 
 
+* [Python] Test with latest Bleak.
 * [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
 * [Python] Initial connection often fails.
 * [Python] Avoid jump on first few samples in distance and speed graphs.
@@ -36,6 +37,7 @@
 * [Device] Add command to flip direction (preferably non volatile memory)
 * [Device] Add command to set divider.
 * [Python] Add button to toggle the divider.
+* [Board ] Add stepper connectors to pick and place.
 
 
 
