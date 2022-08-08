@@ -1,11 +1,10 @@
 
 
-* [Board ] Simplify the silk screen of the pin headers.
+* [Python] Test with latest Bleak.
 
 ---------------
 
 
-* [Python] Test with latest Bleak.
 * [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
 * [Python] Initial connection often fails.
 * [Python] Avoid jump on first few samples in distance and speed graphs.
@@ -20,6 +19,7 @@
 
 ----
 
+* [Board ] Simplify the silk screen of the pin headers.
 * [Device] Change divider to uint8 everywhere and clip at 50.
 * Proper critical section protection in analyzer (how to disable preemption)?
 * Add read command for histograms.
