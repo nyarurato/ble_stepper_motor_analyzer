@@ -36,7 +36,7 @@ static analyzer::Histogram histogram_snapshot;
 // Number of capture points already read from the current
 // snapshot. Reset each time a new snapshot is taken.
 // Sould be in [0, adc_capture_snapshot.items.size()].
-static uint16_t adc_capture_points_read_so_far = 0;
+static uint16_t adc_capture_items_read_so_far = 0;
 
 // User reads capture pagees from this snapshot.
 static analyzer::AdcCaptureBuffer adc_capture_snapshot;
@@ -398,7 +398,7 @@ static ssize_t on_command_write(struct bt_conn *conn,
         return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
       }
       analyzer::get_last_capture_snapshot(&adc_capture_snapshot);
-      adc_capture_points_read_so_far = 0;
+      adc_capture_items_read_so_far = 0;
       return len;
 
     // Command = Set ADC capture divider. Note that until the new capture
@@ -424,8 +424,8 @@ static ssize_t on_command_write(struct bt_conn *conn,
 static struct bt_uuid_128 capture_signal_uuid = BT_UUID_INIT_128(
     BT_UUID_128_ENCODE(0x37e75add, 0xa610, 0x448d, 0x9fd3, 0x3e3130e2c7f7));
 
-// Prefix takes up to 10 bytes (sometimes just 2).
-constexpr uint16_t CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE = 10;
+// Prefix takes up to 9 bytes (sometimes just 2).
+constexpr uint16_t CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE = 9;
 // Expecting room for at least 25 data points per packet.
 constexpr uint16_t MIN_CAPTURE_SIGNAL_VALUE_SIZE =
     CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE + (4 * 25);
@@ -444,12 +444,16 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
     return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
   }
 
-  const int start = adc_capture_points_read_so_far;
-  const int desired_count =
-      adc_capture_snapshot.items.size() - adc_capture_points_read_so_far;
-  const int available_count = (len - CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE) / 4;
-  const int actual_count =
-      (desired_count <= available_count) ? desired_count : available_count;
+  // Index of first item to transfer.
+  const int start_item_index = adc_capture_items_read_so_far;
+  // How many left to transfer.
+  const int desired_item_count =
+      adc_capture_snapshot.items.size() - adc_capture_items_read_so_far;
+  // How many can we transfer now.
+  const int available_item_count = (len - CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE) / 4;
+  // How many we are going to transfer now.
+  const int actual_item_count =
+      (desired_item_count <= available_item_count) ? desired_item_count : available_item_count;
 
   uint8_t *const p0 = static_cast<uint8_t *>(buf);
   uint8_t *p = p0;
@@ -461,9 +465,9 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
 
   // Flags (uint8)
   uint8_t flags = 0x00;
-  if (actual_count) {
+  if (actual_item_count) {
     flags = flags | 0x80;  // Snapshot available.
-    if (actual_count < desired_count) {
+    if (actual_item_count < desired_item_count) {
       flags = flags | 0x01;  // Needs at least one more read.
     }
     // if (adc_capture_snapshot.trigger_found) {
@@ -473,28 +477,30 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
 
   *p++ = flags;
 
-  if (actual_count) {
+  if (actual_item_count) {
     // Capture sequence number: (uint16). For sanity check.
     *p++ = adc_capture_snapshot.seq_number >> 8;
     *p++ = adc_capture_snapshot.seq_number;
 
-    // Divider value (uint16_t).
-    *p++ = adc_capture_snapshot.divider >> 8;
+    // Divider value (uint8_t).
     *p++ = adc_capture_snapshot.divider;
 
+    // Reserved for future flags
+    // *p++ = adc_capture_snapshot.divider;
+
     // Number of points in this read: (uint16)
-    *p++ = (uint16_t)actual_count >> 8;
-    *p++ = (uint16_t)actual_count;
+    *p++ = (uint16_t)actual_item_count >> 8;
+    *p++ = (uint16_t)actual_item_count;
 
     // First point offset: (uint16)
-    *p++ = (uint16_t)start >> 8;
-    *p++ = (uint16_t)start;
+    *p++ = (uint16_t)start_item_index >> 8;
+    *p++ = (uint16_t)start_item_index;
 
     // Here we expect: (p - p0) == CAPTURE_SIGNAL_VALUE_PREFIX_SIZE.
 
     // ----- N points data : 4 x N bytes.
     // Encode data points as pairs of int16_t.
-    for (int i = start; i < start + actual_count; i++) {
+    for (int i = start_item_index; i < start_item_index + actual_item_count; i++) {
       const analyzer::AdcCaptureItem *item = adc_capture_snapshot.items.get(i);
       *p++ = item->v1 >> 8;
       *p++ = item->v1;
@@ -503,7 +509,7 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
     }
 
     // Update for next chunk read.
-    adc_capture_points_read_so_far += actual_count;
+    adc_capture_items_read_so_far += actual_item_count;
   }
 
   // Here we expact n  <= len.

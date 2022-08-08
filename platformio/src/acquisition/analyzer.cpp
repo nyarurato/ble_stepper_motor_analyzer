@@ -96,9 +96,9 @@ struct IsrData {
   uint32_t adc_capture_pre_trigger_items_left;
   // Factor to divide ADC ticks. Only every n'th sample is captured.
   // Value >= 1.
-  uint16_t adc_capture_divider;
+  uint8_t adc_capture_divider;
   // Up counter for capturing only every n'th samples.
-  uint16_t adc_capture_divider_counter;
+  uint8_t adc_capture_divider_counter;
   // The ADC capture buffer. Updated by ISR when state != CAPTURE_IDLE
   // and accessible by the UI (ready only) when state = CAPTURE_IDLE.
   AdcCaptureBuffer adc_capture_buffer;
@@ -285,12 +285,12 @@ bool get_is_reversed_direction() {
   return result;
 }
 
-void set_signal_capture_divider(uint16_t divider) {
+void set_signal_capture_divider(uint8_t divider) {
   // Clip to a reaonsable range. 
   if (divider < 1) {
     divider = 1;
-  } else if (divider > 10) {
-    divider = 10;
+  } else if (divider > 50) {
+    divider = 50;
   }
 
   adc_dma::disable_irq();

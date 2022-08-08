@@ -35,7 +35,7 @@ class CaptureSignal:
             return None
 
         divider = int.from_bytes(
-            packets[0][4:6],  byteorder='big', signed=False)
+            packets[0][4:5],  byteorder='big', signed=False)
         time_step_secs = divider / probe_info.time_ticks_per_sec()
 
         # Decode data points.
@@ -45,10 +45,10 @@ class CaptureSignal:
         for packet in packets:
             # NOTE: For now we ignore the packet sequence number and offset field and
             # assume that the packets match.
-            n = int.from_bytes(packet[6:8],  byteorder='big', signed=False)
+            n = int.from_bytes(packet[5:7],  byteorder='big', signed=False)
             for i in range(n):
-                # Offset of the a/b pair in the packet.
-                base = 10 + (i * 4)
+                # 9 is the byte Offset of the a/b pair in the packet.
+                base = 9 + (i * 4)
                 ticks_a = int.from_bytes(
                     packet[base:base+2],  byteorder='big', signed=True)
                 ticks_b = int.from_bytes(
