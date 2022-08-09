@@ -1,5 +1,6 @@
 #!python
 
+from tokenize import String
 from turtle import width
 from numpy import histogram
 from capture_signal import CaptureSignal
@@ -16,19 +17,23 @@ from chart import Chart
 import logging
 import time
 from pyqtgraph import QtGui
+import re
+import argparse
 
 
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
+DEFAULT_DEVICE_NAME = "STP-C974A3F7FD54"
 
-#DEVICE_ADDR = "C9:B7:AF:B8:72:D6"
-#DEVICE_ADDR = "D5:77:38:D3:5A:55"
-DEVICE_ADDR = "C9:74:A3:F7:FD:54"
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--device_name", dest="device_name",
+                    default=DEFAULT_DEVICE_NAME, help="Name of BLE device to connect to")
+args = parser.parse_args()
+
 
 amps_abs_filter = Filter(0.5)
 
 timer_handler_counter = 0
-# slot_cycle = 0
 
 pending_reset = True
 pause_enabled = False
@@ -38,7 +43,14 @@ last_set_capture_divider = 0
 
 capture_signal_fetcher: CaptureSignalFetcher = None
 
-# ----- Connect to probe
+
+def probe_name_to_address(probe_name: str):
+    m = re.fullmatch(r"STP-([0-9A-F]{12})", probe_name.upper())
+    if not m:
+        raise Exception(f"Invalid probe name [{probe_name}]")
+    h = m.group(1)
+    return f"{h[0:2]}:{h[2:4]}:{h[4:6]}:{h[6:8]}:{h[8:10]}:{h[10:12]}"
+
 
 # TODO: Fix forward reference to update_from_state. The callback_handler is invoked before
 # update_from_state is defined which causes an error on startup.
@@ -51,9 +63,10 @@ def callback_handler(probe_state: ProbeState):
 
 # Co-routing returns Probe or None.
 async def connect_to_probe():
-    global DEVICE_ADDR
-    print(f"Trying to connect to device {DEVICE_ADDR}...", flush=True)
-    probe = await Probe.find_by_address(DEVICE_ADDR)
+    #global PROBE_NAME
+    probe_address = probe_name_to_address(args.device_name)
+    print(f"Trying to connect to device {probe_address}...", flush=True)
+    probe = await Probe.find_by_address(probe_address)
     if not probe:
         print(f"Device not found", flush=True)
         return None
@@ -70,7 +83,7 @@ async def connect_to_probe():
     print(
         f"Histogram bucket steps/sec: [{ probe.info().histogram_bucket_steps_per_sec()}]", flush=True)
     #
-    # TODO, can we avoid it without getting ocasional errors? The MTU 
+    # TODO, can we avoid it without getting ocasional errors? The MTU
     # negotiation can take a few seconds to happen. Is this the cause?
     print(f"A short delay to stabalize the connection...", flush=True)
     time.sleep(8)
@@ -88,7 +101,7 @@ win_height = 700
 # We set the actual size later. This is a workaround to force an
 # early compaction of the buttons row.
 win = pg.GraphicsLayoutWidget(show=True, size=[win_width, win_height-1])
-win.setWindowTitle(f"BLE Stepper Motor Probe Demo [{DEVICE_ADDR}]")
+win.setWindowTitle(f"BLE Stepper Motor Probe Demo [{args.device_name}]")
 #win.resize(1100, 700)
 
 # Layout class doc: https://doc.qt.io/qt-5/qgraphicsgridlayout.html
@@ -98,22 +111,12 @@ win.ci.layout.setColumnPreferredWidth(1, 240)
 win.ci.layout.setColumnPreferredWidth(2, 240)
 win.ci.layout.setColumnPreferredWidth(3, 380)
 
-# win.ci.layout.setColumnMinimumWidth(0, 100)
-# win.ci.layout.setColumnMinimumWidth(1, 100)
-# win.ci.layout.setColumnMinimumWidth(2, 100)
-# win.ci.layout.setColumnMinimumWidth(3, 100)
-
-# win.ci.layout.setColumnMaximumWidth(0, 1000)
-# win.ci.layout.setColumnMaximumWidth(1, 1000)
-# win.ci.layout.setColumnMaximumWidth(2, 1000)
-# win.ci.layout.setColumnMaximumWidth(3, 1000)
 
 win.ci.layout.setColumnStretchFactor(0, 1)
 win.ci.layout.setColumnStretchFactor(1, 1)
 win.ci.layout.setColumnStretchFactor(2, 1)
 win.ci.layout.setColumnStretchFactor(3, 1)
 
-# Note: p1, p2, p3 are of type pyqtgraph.PlotItem
 
 # Graph 1
 plot: pg.PlotItem = win.addPlot(name="Plot1", colspan=4)
@@ -127,7 +130,6 @@ graph1 = Chart(plot, pg.mkPen('yellow'))
 win.nextRow()
 plot = win.addPlot(name="Plot2", colspan=4)
 plot.setLabel('left', 'Speed', 'steps/s')
-#plot.setLabel('bottom', 'Time', 's')
 plot.setXRange(-10, 0)
 plot.showGrid(False, True, 0.7)
 plot.setAutoPan(x=True)
@@ -138,7 +140,6 @@ graph2 = Chart(plot, pg.mkPen('orange'))
 win.nextRow()
 plot = win.addPlot(name="Plot3", colspan=4)
 plot.setLabel('left', 'Current', 'A')
-#plot.setLabel('bottom', 'Time', 's')
 plot.setXRange(-10, 0)
 plot.setYRange(0, 2)
 plot.showGrid(False, True, 0.7)
@@ -163,7 +164,6 @@ graph5 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='salmon')
 plot5.addItem(graph5)
 
 # Graph 6
-# win.nextRow()
 plot6 = win.addPlot(name="Plot6")
 plot6.setLabel('left', 'Distance', 'Percents')
 plot6.setLabel('bottom', 'Speed', 'steps/s')
@@ -171,28 +171,10 @@ graph6 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='skyblue')
 plot6.addItem(graph6)
 
 # Graph 7
-# # win.nextRow()
 plot7 = win.addPlot(name="Plot7")
 plot7.setLabel('left', 'Current', 'A')
 plot7.setLabel('bottom', 'Time', 's')
 
-
-# win.ci.layout.setColumnStretchFactor(0, 1)
-# win.ci.layout.setColumnStretchFactor(1, 1)
-# win.ci.layout.setColumnStretchFactor(2, 1)
-# win.ci.layout.setColumnStretchFactor(3, 1)
-
-# win.ci.nextCol()
-
-
-# graph7 = Chart(plot, pg.mkPen('green'))
-# plot7.addItem(graph6)
-
-
-# win.centralLayout.setColumnStretchFactor(0, 1)
-# win.centralLayout.setColumnStretchFactor(1, 1)
-# win.centralLayout.setColumnStretchFactor(2, 1)
-# win.centralLayout.setColumnStretchFactor(3, 1)
 
 win.nextRow()
 buttons_layout = win.addLayout(colspan=3)
@@ -224,10 +206,6 @@ buttons_layout.addItem(button3_proxy, row=0, col=2)
 win.resize(win_width, win_height)
 # win.show()
 
-# Steps text label
-# steps_label = pg.LabelItem()
-# steps_label.setText("Steps: ???")
-# buttons_layout.addItem(steps_label)
 
 last_state = None
 points_counter = 0
@@ -261,7 +239,6 @@ def update_from_state(state: ProbeState):
         graph2.add_point(state.timestamp_secs(), speed)
         graph3.add_point(state.timestamp_secs(), amps_abs_filter.value())
 
-    # graph4.add_point(state.timestamp_secs(), state.watts_per_ohm())
 
 # This is a hack. By reading the probe from the QT timer we can have
 # both display updates and async notifications from the device. Should
@@ -291,7 +268,7 @@ def on_scale_button():
     elif capture_divider == 2:
         capture_divider = 5
     elif capture_divider == 5:
-        capture_divider = 20 
+        capture_divider = 20
     else:
         capture_divider = 1
 
