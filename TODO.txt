@@ -1,14 +1,11 @@
 
-
-* [Python] Accept probe id rather than probe address.
-* [Device] Compare noise between TI and Alegro sensors.
+[Device] Verify power stability. Especialy with low voltage/current.
 
 ---------------
 
 
 * [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
 * [Device] Provide button feedback using LED2  (epprom write OK/failed, direction forward/backward);
-* [Device] Unstable step counter when X stepper is in low current mode (~0.2A)
 
 
 * [Python] Avoid jump on first few samples in distance and speed graphs.
@@ -42,6 +39,10 @@
 * [Device] Add command to set divider.
 * [Python] Add button to toggle the divider.
 * [Board ] Add stepper connectors to pick and place.
+* [Python] Accept probe id rather than probe address.
+* [Device] Compare noise between TI and Alegro sensors.
+* [Device] Unstable step counter when X stepper is in low current mode (~0.2A)
+
 
 
 
