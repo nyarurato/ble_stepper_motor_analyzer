@@ -48,6 +48,10 @@ static analyzer::State notification_state;
 // When true, blinking LED is solid to provide feedback.
 static bool zero_setting = false;
 
+// Used to have solid LED for a short time after reset to
+// indicate a reset, in case of an unstable power supply.
+static bool reset_flag = true;
+
 static void is_reverse_direction() {
   const bool new_reversed_direction = !analyzer::get_is_reversed_direction();
   analyzer::set_is_reversed_direction(new_reversed_direction);
@@ -72,7 +76,7 @@ static void zero_calibration() {
          settings.offset2, write_ok ? "OK" : "FAILED");
 }
 
-// Used to generate blink to indicates that 
+// Used to generate blink to indicates that
 // acquisition is working.
 static uint32_t analyzer_counter = 0;
 
@@ -96,15 +100,19 @@ void main(void) {
     // status.
     const uint32_t blink_mask = is_connected ? 0x1 << 2 : 0x1 << 5;
     io::LED1.write((analyzer_counter & blink_mask) || zero_setting);
+    io::LED2.write(reset_flag);
 
     // Check button.
     const uint32_t millis_now = k_uptime_get_32();
+    if (millis_now >= 3000) {
+      reset_flag = false;
+    }
     Button::ButtonEvent button_event = button::BUTTON1.update(millis_now);
     if (!button::BUTTON1.is_pressed()) {
       // Button is not pressed. Can stop the zero calibration action feedback.
       zero_setting = false;
     }
-    
+
     if (button_event != Button::EVENT_NONE) {
       printk("Button event: %d\n", button_event);
 

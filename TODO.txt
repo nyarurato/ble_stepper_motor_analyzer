@@ -1,4 +1,5 @@
 
+[Device] Change 10ohms resistor to fuses. E.g. C136320
 [Device] Verify power stability. Especialy with low voltage/current.
 
 ---------------
