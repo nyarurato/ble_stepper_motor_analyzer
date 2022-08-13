@@ -23,7 +23,7 @@ import argparse
 
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
-DEFAULT_DEVICE_NAME = "STP-C974A3F7FD54"
+DEFAULT_DEVICE_NAME = "STP-EA2307AE0794"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device_name", dest="device_name",
