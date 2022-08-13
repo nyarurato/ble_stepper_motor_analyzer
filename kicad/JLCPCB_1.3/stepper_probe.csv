@@ -16,7 +16,7 @@ Comment,Designator,Footprint,LCSC
 "10uh","L2","stepper_probe:coil_10uh","C107342"
 "15nh","L3","stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder","C27143"
 "Motor","M1","stepper_probe:Empty","DNP"
-"PJA3439","Q1","Package_TO_SOT_SMD:SOT-23","C2844879"
+"PJA3439","Q1","stepper_probe:SOT-23_JLCPCB","C2844879"
 "300k","R1","stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder","C25774"
 "10K","R10","stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder","C25744"
 "DNP","R11,R12","stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder","DNP"
