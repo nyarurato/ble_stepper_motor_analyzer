@@ -5,6 +5,12 @@ D Power symbol creates a global label with name "+3V3"
 K power-flag
 $ENDCMP
 #
+$CMP 1N47xxA
+D 1300mW Silicon planar power Zener diodes, DO-41
+K zener diode
+F https://www.vishay.com/docs/85816/1n4728a.pdf
+$ENDCMP
+#
 $CMP AO3401A
 D -4.0A Id, -30V Vds, P-Channel MOSFET, SOT-23
 K P-Channel MOSFET
@@ -114,6 +120,18 @@ $CMP VP0610T
 D -0.18A Id, -60V Vds, P-Channel MOSFET, SOT-23
 K P-Channel MOSFET
 F http://www.vishay.com/docs/70209/70209.pdf
+$ENDCMP
+#
+$CMP ZYxxx
+D 2000mW Zener Diode, DO-41
+K zener diode
+F https://diotec.com/tl_files/diotec/files/pdf/datasheets/zy1
+$ENDCMP
+#
+$CMP zenner
+D 1300mW Zener Diode, DO-41
+K zener diode
+F http://www.vishay.com/docs/85790/zpy3v9.pdf
 $ENDCMP
 #
 #End Doc Library

@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>C:\projects\ble_stepper_monitor\repo\kicad\stepper_probe.sch</source>
-    <date>8/13/2022 2:18:48 PM</date>
+    <date>8/13/2022 4:47:00 PM</date>
     <tool>Eeschema (5.1.10)-1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -107,10 +107,10 @@
     </comp>
     <comp ref="J3">
       <value>BAT</value>
-      <footprint>stepper_probe:PinHeader_1x02_P2.54mm_Vertical_JLCPCB_SMD</footprint>
+      <footprint>stepper_probe:PinHeader_1x02_P2.54mm_Horizontal_JLCPCB</footprint>
       <datasheet>~</datasheet>
       <fields>
-        <field name="LCSC">C2905434</field>
+        <field name="LCSC">C2935927</field>
       </fields>
       <libsource lib="Connector" part="Conn_01x02_Male" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
       <sheetpath names="/" tstamps="/"/>
@@ -410,7 +410,7 @@
       <tstamp>62788E2E</tstamp>
     </comp>
     <comp ref="C13">
-      <value>DNI</value>
+      <value>DNP</value>
       <footprint>stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder</footprint>
       <datasheet>~</datasheet>
       <fields>
@@ -431,7 +431,7 @@
       <tstamp>627AA0D1</tstamp>
     </comp>
     <comp ref="C14">
-      <value>DNI</value>
+      <value>DNP</value>
       <footprint>stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder</footprint>
       <datasheet>~</datasheet>
       <fields>
