@@ -1,20 +1,19 @@
 
-[Device] Change 10ohms resistor to fuses. E.g. C136320
-[Device] Verify power stability. Especialy with low voltage/current.
+
+* [Device] Provide LED2 feedback for direction flip click.
+* [Python] Avoid jump on first few samples in distance and speed graphs.
 
 ---------------
 
 
 * [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
-* [Device] Provide button feedback using LED2  (epprom write OK/failed, direction forward/backward);
 
 
-* [Python] Avoid jump on first few samples in distance and speed graphs.
 * [Python] Add text display of steps and currents.
-* [Python] Accept device address from command line flag.
 * [Python] Exit demo program if lost connection. Alternatively, reconnect.
 * [Python] Try to make ctrl-c working.
 
+* [Device] Add pin 1 dot to the DC/DC footprint.
 * [Device] Add MCUBoot and BLE/DFU.
 
 ----
@@ -43,6 +42,10 @@
 * [Python] Accept probe id rather than probe address.
 * [Device] Compare noise between TI and Alegro sensors.
 * [Device] Unstable step counter when X stepper is in low current mode (~0.2A)
+* [Device] Change 10ohms resistor to fuses. E.g. C136320
+* [Device] Verify power stability. Especialy with low voltage/current.
+* [Device] Provide button feedback using LED2  (epprom write OK/failed, direction forward/backward);
+* [Python] Accept device address from command line flag.
 
 
 
