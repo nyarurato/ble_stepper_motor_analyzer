@@ -50,7 +50,7 @@ class Probe:
 
     async def __find_service_or_disconnect(self, name: str, uuid: str) -> (BleakGATTService | None):
         if not self.__client.is_connected:
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (__find_service_or_disconnect).")
             return None
         service = self.__client.services.get_service(uuid)
         if not service:
@@ -63,7 +63,7 @@ class Probe:
 
     async def __find_chrc_or_disconnect(self, service: BleakGATTService, name: str, uuid: str) -> (BleakGATTCharacteristic | None):
         if not self.__client.is_connected:
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (__find_chrc_or_disconnect).")
             return None
         chrc = service.get_characteristic(uuid)
         if not chrc:
@@ -76,7 +76,7 @@ class Probe:
 
     async def __read_chrc_or_disconnect(self, service: BleakGATTService, name: str, uuid: str) -> (bytearray | None):
         if not self.__client.is_connected:
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (__read_chrc_or_disconnect).")
             return None
         chrc = await self.__find_chrc_or_disconnect(service, name, uuid)
         if not chrc:
@@ -177,54 +177,54 @@ class Probe:
 
     async def read_state(self) -> Optional[ProbeState]:
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected")
             return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_state_chrc)
         return ProbeState.decode(val_bytes, self.__probe_info)
 
     async def read_current_histogram(self) -> Optional[CurrentHistogram]:
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (read_current_histogram).")
             return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_current_histogram_chrc)
         return CurrentHistogram.decode(val_bytes, self.__probe_info)
 
     async def read_time_histogram(self) -> Optional[TimeHistogram]:
         if not self.is_connected():
-            logger.error(f"Not connected.")
-            return None
+            logger.error(f"Not connected (read_time_histogram).")
+            #return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_time_histogram_chrc)
         return TimeHistogram.decode(val_bytes, self.__probe_info)
 
     async def read_distance_histogram(self) -> Optional[DistanceHistogram]:
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (read_distance_histogram).")
             return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_distance_histogram_chrc)
         return DistanceHistogram.decode(val_bytes, self.__probe_info)
 
     async def write_command_reset_data(self):
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (write_command_reset_data).")
             return
         await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x01]))
 
     async def write_command_capture_signal_snapshot(self):
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (write_command_capture_signal_snapshot).")
             return
         await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x02]))
 
     async def write_command_set_capture_divider(self, divider):
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (write_command_set_capture_divider).")
             return
         arg = max(0, min(255, int(divider)))
         await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x03, arg]))
 
     async def read_capture_signal_packet(self) -> Optional[bytearray]:
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (read_capture_signal_packet).")
             return None
         return await self.__client.read_gatt_char(self.__capture_signal_chrc)
 
@@ -243,7 +243,7 @@ class Probe:
                 handler(probe_state)
 
         if not self.is_connected():
-            logger.error(f"Not connected.")
+            logger.error(f"Not connected (callback_handler).")
             return None
         await self.__client.start_notify(self.__stepper_state_chrc, callback_handler)
         logger.info(f"Started probe state notifications.")

@@ -19,11 +19,18 @@ import time
 from pyqtgraph import QtGui
 import re
 import argparse
-
+import signal
+import sys
 
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
+# Default device id is not specifying --device_name=... on the
+# command line.
 DEFAULT_DEVICE_NAME = "STP-EA2307AE0794"
+
+# Allows to stop the program by typing ctrl-c.
+signal.signal(signal.SIGINT, lambda number, frame: sys.exit())
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device_name", dest="device_name",
@@ -35,7 +42,12 @@ amps_abs_filter = Filter(0.5)
 
 timer_handler_counter = 0
 
-pending_reset = True
+# NOTE: Initializing pending_reset to True will reset the 
+# steps on program start but may display an initial spike
+# with the notification or two that arrived before the
+# reset. In using it, consider send a reset command before
+# enabling the notifications.
+pending_reset = False
 pause_enabled = False
 
 capture_divider = 1
@@ -57,7 +69,8 @@ def probe_name_to_address(probe_name: str):
 
 
 def callback_handler(probe_state: ProbeState):
-    #print(f"probe state handler called: time: {probe_state.timestamp_secs()}", flush=True)
+    # print(f"probe state handler called: time: {probe_state.timestamp_secs()}", flush=True)
+    # print(f"State: t={probe_state.timestamp_secs()}, s={probe_state.steps}", flush=True)
     update_from_state(probe_state)
 
 
@@ -85,8 +98,8 @@ async def connect_to_probe():
     #
     # TODO, can we avoid it without getting ocasional errors? The MTU
     # negotiation can take a few seconds to happen. Is this the cause?
-    print(f"A short delay to stabalize the connection...", flush=True)
-    time.sleep(8)
+    print(f"A short delay to stabilize the connection...", flush=True)
+    time.sleep(3)  # was 8
 
     await probe.state_notifications(callback_handler)
     return probe
@@ -280,6 +293,7 @@ def timer_handler():
 
     if pending_reset:
         asyncio.get_event_loop().run_until_complete(probe.write_command_reset_data())
+        last_state = None
         graph1.clear()
         graph2.clear()
         graph3.clear()

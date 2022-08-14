@@ -1,7 +1,9 @@
 
 
+* [Python] is_connected() sometimes returns false negative. Consider to skip.
 * [Device] Provide LED2 feedback for direction flip click.
-* [Python] Avoid jump on first few samples in distance and speed graphs.
+* [Device] Add pin 1 dot to the DC/DC footprint.
+
 
 ---------------
 
@@ -11,9 +13,7 @@
 
 * [Python] Add text display of steps and currents.
 * [Python] Exit demo program if lost connection. Alternatively, reconnect.
-* [Python] Try to make ctrl-c working.
 
-* [Device] Add pin 1 dot to the DC/DC footprint.
 * [Device] Add MCUBoot and BLE/DFU.
 
 ----
@@ -46,6 +46,8 @@
 * [Device] Verify power stability. Especialy with low voltage/current.
 * [Device] Provide button feedback using LED2  (epprom write OK/failed, direction forward/backward);
 * [Python] Accept device address from command line flag.
+* [Python] Avoid jump on first few samples in distance and speed graphs.
+* [Python] Try to make ctrl-c working.
 
 
 

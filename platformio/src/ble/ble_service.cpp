@@ -723,18 +723,15 @@ void setup() {
 static analyzer::State notifications_state;
 
 void maybe_notify_state(const analyzer::State &state) {
-  // Nothing to do if notifications are disabled.
-  // if (!state_notifications_enabled) {
-  //   return;
-  // }
-
   const int state_size = encode_state(state, state_value, sizeof(state_value));
 
   int status = bt_gatt_notify(NULL, state_notify_attr, state_value, state_size);
   if (status == -ENOTCONN) {
     // No connection is subscribed to this notification.
+    // printk(" %d\n", state.full_steps);
   } else if (status == 0) {
     // printk("Notif sent ok\n");
+    // printk("#%d\n", state.full_steps);
   } else {
     printk("%05d Notification error %d. (%hu bytes)\n", 0, status, state_size);
   }

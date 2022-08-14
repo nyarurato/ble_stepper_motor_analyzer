@@ -35,7 +35,7 @@ class Chart:
         # Time diff in secs from previous point.
         delta_t = t_secs - self.start_time
 
-        # Shift all chunks left.
+        # Shift all chunks left in the time domain.
         for c in self.chunks_curves:
             c.setPos(-delta_t, 0)
 
@@ -90,10 +90,9 @@ class Chart:
 
         # Set x, y values of the new point.
         current_chunk_data[i+1, 0] = t_secs - self.start_time
-        #current_chunk_data[i+1,1] = status.amps_a
         current_chunk_data[i+1, 1] = y
 
-        # If a new chunk, set the starting point for continunity
+        # If a new chunk, set the starting point for continuity
         # with previous chunk.
         if i == 0:
             if len(self.chunks_data) > 1:
@@ -105,7 +104,6 @@ class Chart:
 
         # Update the current chunk curve with current chunk data.
         # All other curve stay the same.
-        #current_chunk_curve.setData(x= current_chunk_data[:i+2, 0], y= current_chunk_data[:i+2, 1])
         current_chunk_curve.setData(
             x=current_chunk_data[:i+2, 0], y=current_chunk_data[:i+2, 1])
         self.points_counter += 1
