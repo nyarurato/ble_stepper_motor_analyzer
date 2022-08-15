@@ -86,7 +86,11 @@ struct IsrData {
   Histogram histogram;
 
   // Current settings.
-  Settings settings;
+  // Settings settings;
+
+  // Offset settings. See analyzer::Settings.
+  int16_t offset1;
+  int16_t offset2;
 
   // Signal capturing members.
   //
@@ -265,28 +269,28 @@ void reset_data() {
 void calibrate_zeros() {
   adc_dma::disable_irq();
   {
-    isr_data.settings.offset1 += isr_data.state.v1;
-    isr_data.settings.offset2 += isr_data.state.v2;
+    isr_data.offset1 += isr_data.state.v1;
+    isr_data.offset2 += isr_data.state.v2;
   }
   adc_dma::enable_irq();
 }
 
 void set_is_reversed_direction(bool is_reverse_direction) {
   adc_dma::disable_irq();
-  { isr_data.settings.is_reverse_direction = is_reverse_direction; }
+  { isr_data.state.is_reverse_direction = is_reverse_direction; }
   adc_dma::enable_irq();
 }
 
 bool get_is_reversed_direction() {
   bool result;
   adc_dma::disable_irq();
-  { result = isr_data.settings.is_reverse_direction; }
+  { result = isr_data.state.is_reverse_direction; }
   adc_dma::enable_irq();
   return result;
 }
 
 void set_signal_capture_divider(uint8_t divider) {
-  // Clip to a reaonsable range. 
+  // Clip to a reaonsable range.
   if (divider < 1) {
     divider = 1;
   } else if (divider > 50) {
@@ -310,7 +314,11 @@ void set_signal_capture_divider(uint8_t divider) {
 void get_settings(Settings* settings) {
   adc_dma::disable_irq();
 
-  { *settings = isr_data.settings; }
+  {
+    settings->offset1 = isr_data.offset1;
+    settings->offset2 = isr_data.offset2;
+    settings->is_reverse_direction = isr_data.state.is_reverse_direction;
+  }
   adc_dma::enable_irq();
 }
 
@@ -368,7 +376,7 @@ static inline void isr_update_full_steps_counter(int increment) {
   State& isr_state = isr_data.state;  // alias
 
   // Update step counter based on direction setting.
-  if (isr_data.settings.is_reverse_direction) {
+  if (isr_data.state.is_reverse_direction) {
     isr_state.full_steps -= increment;
   } else {
     isr_state.full_steps += increment;
@@ -406,10 +414,8 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
   }
 
   // Slight filtering for signal cleanup.
-  const int16_t v1 =
-      (int16_t)signal1_filter.update(raw_v1) - isr_data.settings.offset1;
-  const int16_t v2 =
-      (int16_t)signal2_filter.update(raw_v2) - isr_data.settings.offset2;
+  const int16_t v1 = (int16_t)signal1_filter.update(raw_v1) - isr_data.offset1;
+  const int16_t v2 = (int16_t)signal2_filter.update(raw_v2) - isr_data.offset2;
 
   isr_data.state.v1 = v1;
   isr_data.state.v2 = v2;
@@ -600,26 +606,27 @@ void isr_snapshot_state() {
   k_sem_give(&circular_state_semaphore);
 }
 
-// Force a valid settings offset value.
+// Force a reasonable offset setting value.
 static int clip_offset(int requested_offset) {
   return (requested_offset > kMaxOffset)   ? kMaxOffset
          : (requested_offset < kMinOffset) ? kMinOffset
                                            : requested_offset;
-  // return std::max(kMinOffset, std::min(kMaxOffset, requested_offset));
 }
 
 // Call once on program initialization, before ADC interrupts are
 // enabled.
 void setup(const Settings& settings) {
-  isr_data.settings = settings;
-  isr_data.settings.offset1 = clip_offset(isr_data.settings.offset1);
-  isr_data.settings.offset2 = clip_offset(isr_data.settings.offset2);
-
-  // We reset the capture without incrementing the capture
-  // sequence number since we didn't completed it.
   {
     adc_dma::disable_irq();
+
+    isr_data.offset1 = clip_offset(settings.offset1);
+    isr_data.offset2 = clip_offset(settings.offset2);
+    isr_data.state.is_reverse_direction = settings.is_reverse_direction;
+
+    // We reset the capture without incrementing the capture
+    // sequence number since we didn't completed it.
     irq_reset_adc_capture_buffer();
+
     adc_dma::enable_irq();
   }
 }
@@ -664,12 +671,7 @@ double state_steps(const State& state) {
   // Fraction is in the range [-0.5, 0.5]
   const double fraction = rel_radians * (2 / M_PI);
 
-  // NOTE: this is a little bit hacky since we don't know the direction
-  // flag setting at the time this sample was captured but should
-  // be good enough for now.
-  //
-  // TODO: record last direction flag value in the state.
-  const double result = isr_data.settings.is_reverse_direction
+  const double result = state.is_reverse_direction
                             ? state.full_steps - fraction
                             : state.full_steps + fraction;
 

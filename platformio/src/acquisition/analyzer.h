@@ -121,6 +121,7 @@ struct State {
         is_energized(false),
         non_energized_count(0),
         quadrant(0),
+        is_reverse_direction(false),
         full_steps(0),
         max_full_steps(0),
         max_retraction_steps(0),
@@ -151,6 +152,10 @@ struct State {
   // The last quadrant in the range [0, 3]. Each quadrant
   // represents a full step. See quadrants_plot.png  for details.
   uint8_t quadrant;
+  // If true, direction is interpreted in the reversed direction.
+  // This flag is needed to calculate the fractional step value
+  // from quadrart, full_steps, and v1, v2.
+  bool is_reverse_direction;
   // Total (forward - backward) full steps. This is a proxy
   // for the overall distance.
   int full_steps;

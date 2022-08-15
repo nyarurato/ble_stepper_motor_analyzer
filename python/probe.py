@@ -177,7 +177,7 @@ class Probe:
 
     async def read_state(self) -> Optional[ProbeState]:
         if not self.is_connected():
-            logger.error(f"Not connected")
+            logger.error(f"Not connected (read_state)")
             return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_state_chrc)
         return ProbeState.decode(val_bytes, self.__probe_info)

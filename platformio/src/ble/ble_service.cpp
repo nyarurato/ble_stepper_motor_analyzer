@@ -116,7 +116,7 @@ static int encode_state(const analyzer::State &state, uint8_t *buf,
 
   uint8_t *p = buf;
 
-  // We encode this as a unit_48 bit value.
+  // We encode this as a unit_48 bit MSB value.
   uint64_t val64 = state.tick_count;
   *p++ = val64 >> 40;
   *p++ = val64 >> 32;
@@ -131,13 +131,24 @@ static int encode_state(const analyzer::State &state, uint8_t *buf,
   *p++ = val32 >> 8;
   *p++ = val32 >> 0;
 
-  // Quadrant [0, 1, 2, 3]
-  *p++ = state.quadrant;
+  // Flags.
+  // * bit4 : true IFF reversed direction
+  // * bit1 : quadrant MSB
+  // * bit0 : quadrant LSB.
+  //
+  // Quarant is in the range [0, 3].
+  // All other bits are reserved and readers should treat them
+  // as undefined.
+  const uint8_t flags = 
+     (state.is_reverse_direction ? 0x10: 0) | (state.quadrant & 0x03);
+  *p++ = flags;
 
+  // Current ticks for coil 1.
   uint16_t val16 = (uint16_t)state.v1;
   *p++ = val16 >> 8;
   *p++ = val16 >> 0;
 
+  // Current ticks for coil 2.
   val16 = (uint16_t)state.v2;
   *p++ = val16 >> 8;
   *p++ = val16 >> 0;
