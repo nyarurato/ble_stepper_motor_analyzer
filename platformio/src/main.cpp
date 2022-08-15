@@ -27,6 +27,32 @@
 #include "misc/io.h"
 #include "misc/util.h"
 
+//-----------------------------------
+
+static Elapsed periodic_timer;
+
+// TODO: share with other temp state buffers
+static analyzer::State notification_state;
+
+// When true, blinking LED is solid to provide feedback.
+// static bool zero_setting = false;
+
+// Used to have solid LED for a short time after reset to
+// indicate a reset, in case of an unstable power supply.
+// static bool reset_flag = true;
+
+// Used to blink N times LED 2.
+static Elapsed led2_timer;
+// Down counter. If value > 0, then led2 blinks and bit 0 controls
+// the led state.
+static uint16_t led2_counter;
+
+static void start_led2_blinks(uint16_t n) {
+  led2_timer.reset();
+  led2_counter = n * 2;
+  io::LED2.write(led2_counter > 0);
+}
+
 static void aqc_setup() {
   analyzer::Settings settings;
   config_eeprom::read_acquisition_settings(&settings);
@@ -38,31 +64,19 @@ static void aqc_setup() {
   adc_dma::setup();
 }
 
-//-----------------------------------
-
-static Elapsed periodic_timer;
-
-// TODO: share with other temp state buffers
-static analyzer::State notification_state;
-
-// When true, blinking LED is solid to provide feedback.
-static bool zero_setting = false;
-
-// Used to have solid LED for a short time after reset to
-// indicate a reset, in case of an unstable power supply.
-static bool reset_flag = true;
-
-static void is_reverse_direction() {
+static void toggle_direction() {
   const bool new_reversed_direction = !analyzer::get_is_reversed_direction();
   analyzer::set_is_reversed_direction(new_reversed_direction);
   // We also reset the steps counter and such.
   analyzer::reset_data();
   analyzer::Settings settings;
   analyzer::get_settings(&settings);
-  const bool write_ok = config_eeprom::write_acquisition_settings(settings);
+  const bool write_error = !config_eeprom::write_acquisition_settings(settings);
+  const uint16_t num_blinks = write_error ? 10 : new_reversed_direction ? 2 : 1;
+  start_led2_blinks(num_blinks);
   printk("%s direction. Write %s\n",
          new_reversed_direction ? "REVERSED" : "NORMAL",
-         write_ok ? "OK" : "FAILED");
+         write_error ? "FAILED" : "OK");
 }
 
 // Current through sensors must be zero when calling
@@ -72,6 +86,7 @@ static void zero_calibration() {
   analyzer::Settings settings;
   analyzer::get_settings(&settings);
   const bool write_ok = config_eeprom::write_acquisition_settings(settings);
+  start_led2_blinks(write_ok ? 3 : 10);
   printk("Zero calibration (%hd, %hd). Write %s\n", settings.offset1,
          settings.offset2, write_ok ? "OK" : "FAILED");
 }
@@ -98,32 +113,44 @@ void main(void) {
     // Update LED blinks.  Blinking indicates analyzer works
     // and provides states. High speed blink indicates connection
     // status.
-    const uint32_t blink_mask = is_connected ? 0x1 << 2 : 0x1 << 5;
-    io::LED1.write((analyzer_counter & blink_mask) || zero_setting);
-    io::LED2.write(reset_flag);
+    const int blink_shift = is_connected ? 0 : 3;
+    const bool blink_state = ((analyzer_counter >> blink_shift) & 0x7) == 0x7;
+    // Supress LED1 while blinking LED2. We should move them appart on the
+    // board such that they don't interfere visually.
+    io::LED1.write(blink_state  && !led2_counter);
+
+    if (led2_counter > 0 && led2_timer.elapsed_millis() >= 500) {
+      led2_timer.reset();
+      led2_counter--;
+      io::LED2.write(led2_counter > 0 && !(led2_counter & 0x1));
+    }
+
+    // if  (reset_flag) {
+    //   io::LED2.set();
+    // }
 
     // Check button.
     const uint32_t millis_now = k_uptime_get_32();
-    if (millis_now >= 3000) {
-      reset_flag = false;
-    }
+    // if (millis_now >= 3000) {
+    //   reset_flag = false;
+    // }
     Button::ButtonEvent button_event = button::BUTTON1.update(millis_now);
-    if (!button::BUTTON1.is_pressed()) {
-      // Button is not pressed. Can stop the zero calibration action feedback.
-      zero_setting = false;
-    }
+    // if (!button::BUTTON1.is_pressed()) {
+    //   // Button is not pressed. Can stop the zero calibration action
+    //   feedback. zero_setting = false;
+    // }
 
     if (button_event != Button::EVENT_NONE) {
       printk("Button event: %d\n", button_event);
 
       // Handle single click. Reverse direction.
       if (button_event == Button::EVENT_SHORT_CLICK) {
-        is_reverse_direction();
+        toggle_direction();
       }
 
       // Handle long press. Zero calibration.
       else if (button_event == Button::EVENT_LONG_PRESS) {
-        zero_setting = true;
+        // zero_setting = true;
         zero_calibration();
       }
     }

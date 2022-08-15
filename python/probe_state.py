@@ -23,13 +23,14 @@ logger = logging.getLogger(__name__)
 
 
 class ProbeState:
-    def __init__(self, timestamp_secs: float, steps: float, amps_a: float, amps_b: float, ticks_a: int, ticks_b: int):
+    def __init__(self, timestamp_secs: float, steps: float, amps_a: float, amps_b: float, ticks_a: int, ticks_b: int, quadrant: int):
         self.__timestamp_secs = timestamp_secs
         self.steps = steps
         self.amps_a = amps_a
         self.amps_b = amps_b
         self.ticks_a = ticks_a
         self.ticks_b = ticks_b
+        self.quadrant = quadrant
 
     @classmethod
     def decode(cls, data: bytearray, probe_info: ProbeInfo) -> (ProbeState | None):
@@ -48,12 +49,12 @@ class ProbeState:
         amps_b = ticks_b / probe_info.current_ticks_per_amp()
         # Compute steps with fractional resolution.
         steps = ProbeState.microsteps(full_steps, quadrant, ticks_a, ticks_b)
-        return ProbeState(timestamp_secs, steps,  amps_a, amps_b, ticks_a, ticks_b)
+        return ProbeState(timestamp_secs, steps,  amps_a, amps_b, ticks_a, ticks_b, quadrant)
 
     def __str__(self):
         return f"TS:{self.__timestamp_secs:9.3f}, Steps:{self.steps:8.2f}," \
             f" A:{self.amps_a:5.2f}, B:{self.amps_b:5.2f}, abs:{self.amps_abs():4.2f}" \
-            f" ({self.ticks_a}, {self.ticks_b})"
+            f" ({self.ticks_a}, {self.ticks_b} / {self.quadrant})"
 
     def timestamp_secs(self) -> float:
         return self.__timestamp_secs
@@ -82,9 +83,9 @@ class ProbeState:
         # See quadrant diagram in doc directory for more
         # details.
 
-        # Range is in [0, PI];
+        # Range [0, PI] radians;
         radians = math.atan2(ticks_b, ticks_a)
-        # Range [0, 2]
+        # Range [0, 2] steps.
         microsteps = abs(radians * 2 / math.pi)
 
         # Adjust the fractional step per quadrant.

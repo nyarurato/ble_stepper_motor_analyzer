@@ -1,19 +1,17 @@
 
+* [Device] Steps noise when REVERSED and one of the coils is as zero current.
 
-* [Python] is_connected() sometimes returns false negative. Consider to skip.
-* [Device] Provide LED2 feedback for direction flip click.
-* [Device] Add pin 1 dot to the DC/DC footprint.
 
 
 ---------------
 
 
+* [Python] is_connected() sometimes returns false negative. Consider to skip.
+* [Device] Add pin 1 dot to the DC/DC footprint.
+* [Board ] Seperate between LED1 and LED2
 * [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
-
-
 * [Python] Add text display of steps and currents.
 * [Python] Exit demo program if lost connection. Alternatively, reconnect.
-
 * [Device] Add MCUBoot and BLE/DFU.
 
 ----
@@ -48,6 +46,7 @@
 * [Python] Accept device address from command line flag.
 * [Python] Avoid jump on first few samples in distance and speed graphs.
 * [Python] Try to make ctrl-c working.
+* [Device] Provide LED2 feedback for direction flip click.
 
 
 
