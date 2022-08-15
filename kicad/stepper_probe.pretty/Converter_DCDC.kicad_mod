@@ -1,4 +1,4 @@
-(module Converter_DCDC (layer F.Cu) (tedit 62EEE101)
+(module Converter_DCDC (layer F.Cu) (tedit 62FA659E)
   (descr "DCDC-Converter, Artesyn, ATA Series, 3W Single and Dual Output, 1500VDC Isolation, 24.0x13.7x8.0mm https://www.artesyn.com/power/assets/ata_series_ds_01apr2015_79c25814fd.pdf https://www.artesyn.com/power/assets/trn_dc-dc_ata_3w_series_releas1430412818_techref.pdf")
   (tags "DCDC SMD")
   (attr smd)
@@ -8,6 +8,7 @@
   (fp_text value Converter_DCDC (at 13.5 0 90) (layer F.Fab)
     (effects (font (size 1 1) (thickness 0.15)))
   )
+  (fp_circle (center -3.71 4.37) (end -3.61 4.37) (layer F.SilkS) (width 0.2))
   (fp_line (start 4.65 -3.65) (end 4.65 3.65) (layer F.SilkS) (width 0.12))
   (fp_line (start -4.65 -3.65) (end -4.65 3.65) (layer F.SilkS) (width 0.12))
   (fp_line (start -4.65 3.65) (end 4.65 3.65) (layer F.SilkS) (width 0.12))

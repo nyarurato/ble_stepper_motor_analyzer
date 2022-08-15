@@ -1,20 +1,21 @@
 
 
 
+* [Python] Add an optional flag with steppr description string to display at the top.
+
 
 ---------------
 
-
 * [Python] is_connected() sometimes returns false negative. Consider to skip.
-* [Device] Add pin 1 dot to the DC/DC footprint.
-* [Board ] Seperate between LED1 and LED2
 * [Python] Add text display of steps and currents.
 * [Python] Exit demo program if lost connection. Alternatively, reconnect.
 * [Device] Add MCUBoot and BLE/DFU.
-* [Board ] Add a zenner symbol for the footprint of D4 to avoid JLCPCB questions.
 
 ----
 
+* [Board ] Add a zenner symbol for the footprint of D4 to avoid JLCPCB questions.
+* [Board ] Seperate between LED1 and LED2
+* [Device] Add pin 1 dot to the DC/DC footprint.
 * [Python] Initial connection often fails.
 * [Python] Test with latest Bleak.
 * [Board ] Simplify the silk screen of the pin headers.
