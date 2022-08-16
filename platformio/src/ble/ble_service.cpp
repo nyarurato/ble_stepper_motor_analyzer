@@ -18,6 +18,7 @@
 
 #include "acquisition/acq_consts.h"
 #include "acquisition/analyzer.h"
+#include "misc/controls.h"
 #include "misc/elapsed.h"
 #include "misc/io.h"
 #include "misc/util.h"
@@ -139,8 +140,8 @@ static int encode_state(const analyzer::State &state, uint8_t *buf,
   // Quarant is in the range [0, 3].
   // All other bits are reserved and readers should treat them
   // as undefined.
-  const uint8_t flags = 
-     (state.is_reverse_direction ? 0x10: 0) | (state.quadrant & 0x03);
+  const uint8_t flags =
+      (state.is_reverse_direction ? 0x10 : 0) | (state.quadrant & 0x03);
   *p++ = flags;
 
   // Current ticks for coil 1.
@@ -417,12 +418,44 @@ static ssize_t on_command_write(struct bt_conn *conn,
     case 0x03:
       // printk("on_command_write: snapshot adc capture signal\n");
       if (len != 2) {
-        printk("on_command_write: set divider aommand wrong length : %hu\n",
+        printk("on_command_write: set divider command wrong length : %hu\n",
                len);
         return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
       }
       analyzer::set_signal_capture_divider(data[1]);
       return len;
+
+      // Command = toggle direction. This doesn't reverses the motors
+      // buy just the direction of the step counting. New value is
+      // persisted on the eeprom.
+    case 0x04:
+      if (len != 1) {
+        printk(
+            "on_command_write: toggle direction command wrong length : %hu\n",
+            len);
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+      }
+      if (controls::toggle_direction(NULL)) {
+        return len;  // ok
+      } else {
+        return BT_GATT_ERR(BT_ATT_ERR_WRITE_NOT_PERMITTED);
+      }
+
+      // Command = zero calibrate the sensors. Should we called with
+      // zero sensor curent, preferably disconnected. New value
+      // is persisted on the eeprom.
+    case 0x05:
+      if (len != 1) {
+        printk(
+            "on_command_write: zero calibration command wrong length : %hu\n",
+            len);
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+      }
+      if (controls::zero_calibration()) {
+        return len;  // ok
+      } else {
+        return BT_GATT_ERR(BT_ATT_ERR_WRITE_NOT_PERMITTED);
+      }
 
     default:
       printk("on_command_write: unknown opcode: %02x\n", opcode);
@@ -461,10 +494,12 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
   const int desired_item_count =
       adc_capture_snapshot.items.size() - adc_capture_items_read_so_far;
   // How many can we transfer now.
-  const int available_item_count = (len - CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE) / 4;
+  const int available_item_count =
+      (len - CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE) / 4;
   // How many we are going to transfer now.
-  const int actual_item_count =
-      (desired_item_count <= available_item_count) ? desired_item_count : available_item_count;
+  const int actual_item_count = (desired_item_count <= available_item_count)
+                                    ? desired_item_count
+                                    : available_item_count;
 
   uint8_t *const p0 = static_cast<uint8_t *>(buf);
   uint8_t *p = p0;
@@ -511,7 +546,8 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
 
     // ----- N points data : 4 x N bytes.
     // Encode data points as pairs of int16_t.
-    for (int i = start_item_index; i < start_item_index + actual_item_count; i++) {
+    for (int i = start_item_index; i < start_item_index + actual_item_count;
+         i++) {
       const analyzer::AdcCaptureItem *item = adc_capture_snapshot.items.get(i);
       *p++ = item->v1 >> 8;
       *p++ = item->v1;

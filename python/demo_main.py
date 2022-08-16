@@ -24,17 +24,19 @@ import sys
 
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
-# Default device id is not specifying --device_name=... on the
+# Default device id is not specifying --device_id=... on the
 # command line.
-DEFAULT_DEVICE_NAME = "STP-EA2307AE0794"
+DEFAULT_DEVICE_ID = "STP-EA2307AE0794"
+DEFAULT_DEVICE_NAME = "My Stepper"
 
 # Allows to stop the program by typing ctrl-c.
 signal.signal(signal.SIGINT, lambda number, frame: sys.exit())
 
-
 parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--device_name", dest="device_name",
-                    default=DEFAULT_DEVICE_NAME, help="Name of BLE device to connect to")
+parser.add_argument("-i", "--device_id", dest="device_id",
+                    default=DEFAULT_DEVICE_ID, help="The device id as STP-XXXXXXXXXXXX")
+parser.add_argument("-x", "--device_name", dest="device_name",
+                    default=DEFAULT_DEVICE_NAME, help="Optional device id such as Stepper X")
 args = parser.parse_args()
 
 
@@ -42,7 +44,7 @@ amps_abs_filter = Filter(0.5)
 
 timer_handler_counter = 0
 
-# NOTE: Initializing pending_reset to True will reset the 
+# NOTE: Initializing pending_reset to True will reset the
 # steps on program start but may display an initial spike
 # with the notification or two that arrived before the
 # reset. In using it, consider send a reset command before
@@ -50,16 +52,19 @@ timer_handler_counter = 0
 pending_reset = False
 pause_enabled = False
 
+pending_direction_toggle = False
+pending_zero_calibration = True
+
 capture_divider = 1
 last_set_capture_divider = 0
 
 capture_signal_fetcher: CaptureSignalFetcher = None
 
 
-def probe_name_to_address(probe_name: str):
-    m = re.fullmatch(r"STP-([0-9A-F]{12})", probe_name.upper())
+def device_id_to_device_address(device_id: str):
+    m = re.fullmatch(r"STP-([0-9A-F]{12})", device_id.upper())
     if not m:
-        raise Exception(f"Invalid probe name [{probe_name}]")
+        raise Exception(f"Invalid device id [{device_id}]")
     h = m.group(1)
     return f"{h[0:2]}:{h[2:4]}:{h[4:6]}:{h[6:8]}:{h[8:10]}:{h[10:12]}"
 
@@ -77,9 +82,9 @@ def callback_handler(probe_state: ProbeState):
 # Co-routing returns Probe or None.
 async def connect_to_probe():
     #global PROBE_NAME
-    probe_address = probe_name_to_address(args.device_name)
-    print(f"Trying to connect to device {probe_address}...", flush=True)
-    probe = await Probe.find_by_address(probe_address)
+    device_address = device_id_to_device_address(args.device_id)
+    print(f"Trying to connect to device {device_address}...", flush=True)
+    probe = await Probe.find_by_address(device_address)
     if not probe:
         print(f"Device not found", flush=True)
         return None
@@ -114,7 +119,10 @@ win_height = 700
 # We set the actual size later. This is a workaround to force an
 # early compaction of the buttons row.
 win = pg.GraphicsLayoutWidget(show=True, size=[win_width, win_height-1])
-win.setWindowTitle(f"BLE Stepper Motor Probe Demo [{args.device_name}]")
+title = f"BLE Stepper Motor Probe Demo [{args.device_id}]"
+if args.device_name:
+    title += f" [{args.device_name}]"
+win.setWindowTitle(title)
 #win.resize(1100, 700)
 
 # Layout class doc: https://doc.qt.io/qt-5/qgraphicsgridlayout.html
@@ -190,20 +198,19 @@ plot7.setLabel('bottom', 'Time', 's')
 
 
 win.nextRow()
-buttons_layout = win.addLayout(colspan=3)
+buttons_layout = win.addLayout(colspan=4)
 buttons_layout.setSpacing(20)
 buttons_layout.layout.setHorizontalSpacing(30)
 
 # Button1
 button1_proxy = QtGui.QGraphicsProxyWidget()
-button1 = QtGui.QPushButton('Reset')
+button1 = QtGui.QPushButton('Toggle dir.')
 button1_proxy.setWidget(button1)
 buttons_layout.addItem(button1_proxy, row=0, col=0)
 
-
 # Button2
 button2_proxy = QtGui.QGraphicsProxyWidget()
-button2 = QtGui.QPushButton('Pause')
+button2 = QtGui.QPushButton('Reset Data')
 button2_proxy.setWidget(button2)
 buttons_layout.addItem(button2_proxy, row=0, col=1)
 
@@ -212,6 +219,13 @@ button3_proxy = QtGui.QGraphicsProxyWidget()
 button3 = QtGui.QPushButton('Time Scale')
 button3_proxy.setWidget(button3)
 buttons_layout.addItem(button3_proxy, row=0, col=2)
+
+# Button4
+button4_proxy = QtGui.QGraphicsProxyWidget()
+button4 = QtGui.QPushButton('Pause')
+button4_proxy.setWidget(button4)
+buttons_layout.addItem(button4_proxy, row=0, col=3)
+
 
 # This is a hack to force the view compacting the buttons
 # row ASAP. We created win with similar but slightly different
@@ -265,17 +279,17 @@ def on_reset_button():
 
 
 def on_pause_button():
-    global pause_enabled, button2
+    global pause_enabled, button4
     if pause_enabled:
-        button2.setText("Pause")
+        button4.setText("Pause")
         pause_enabled = False
     else:
-        button2.setText("Continue")
+        button4.setText("Continue")
         pause_enabled = True
 
 
 def on_scale_button():
-    global capture_divider, last_set_capture_divider, button3
+    global capture_divider, last_set_capture_divider
     if capture_divider == 1:
         capture_divider = 2
     elif capture_divider == 2:
@@ -286,10 +300,20 @@ def on_scale_button():
         capture_divider = 1
 
 
+def on_direction_button():
+    global pending_direction_toggle
+    pending_direction_toggle = True
+
+
+def on_zero_calibration_button():
+    global pending_zero_calibration
+    pending_zero_calibration = True
+
+
 def timer_handler():
     global probe, timer_handler_counter, slot_cycle, graph1, graph2, graph3, graph4, graph5, graph6, plot7
     global capture_signal_fetcher, buttons_layout, pending_reset, pause_enabled
-    global capture_divider, last_set_capture_divider
+    global capture_divider, last_set_capture_divider, pending_zero_calibration, pending_direction_toggle
 
     if pending_reset:
         asyncio.get_event_loop().run_until_complete(probe.write_command_reset_data())
@@ -306,6 +330,16 @@ def timer_handler():
         capture_signal_fetcher.reset()
 
         pending_reset = False
+
+    if pending_direction_toggle:
+        asyncio.get_event_loop().run_until_complete(
+            probe.write_toggle_direction_command())
+        pending_direction_toggle = False
+
+    if pending_zero_calibration:
+        asyncio.get_event_loop().run_until_complete(
+            probe.write_zero_calibration_command())
+        pending_zero_calibration = False
 
     if capture_divider != last_set_capture_divider:
         asyncio.get_event_loop().run_until_complete(
@@ -354,9 +388,11 @@ def timer_handler():
 probe = asyncio.get_event_loop().run_until_complete(connect_to_probe())
 capture_signal_fetcher = CaptureSignalFetcher(probe)
 
-button1.clicked.connect(lambda: on_reset_button())
-button2.clicked.connect(lambda: on_pause_button())
+button1.clicked.connect(lambda: on_direction_button())
+button2.clicked.connect(lambda: on_reset_button())
 button3.clicked.connect(lambda: on_scale_button())
+button4.clicked.connect(lambda: on_pause_button())
+
 
 timer = pg.QtCore.QTimer()
 timer.timeout.connect(timer_handler)

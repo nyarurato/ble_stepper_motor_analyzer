@@ -310,7 +310,7 @@ F 4 "C479190" H 3100 7150 50  0000 C CNN "LCSC"
 	1    0    0    -1  
 $EndComp
 Text Notes 9225 6900 2    79   ~ 0
-BLE STEPPER MOTOR MONITOR  v1.3
+BLE STEPPER MOTOR MONITOR  v1.3.1
 $Comp
 L Connector_Generic:Conn_02x05_Odd_Even J5
 U 1 1 62893276

@@ -1,7 +1,6 @@
 
 
 
-* [Python] Add an optional flag with steppr description string to display at the top.
 
 
 ---------------
@@ -9,6 +8,7 @@
 * [Python] is_connected() sometimes returns false negative. Consider to skip.
 * [Python] Add text display of steps and currents.
 * [Python] Exit demo program if lost connection. Alternatively, reconnect.
+
 * [Device] Add MCUBoot and BLE/DFU.
 
 ----
@@ -49,6 +49,9 @@
 * [Device] Provide LED2 feedback for direction flip click.
 * [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
 * [Device] Steps noise when REVERSED and one of the coils is as zero current.
+* [Python] Add an optional flag with steppr description string to display at the top.
+* [Device] Add command to zero sensors.
+* [Device] Add command to toggle or set direction.
 
 
 

@@ -1,20 +1,10 @@
 
 from __future__ import annotations
 
-# import asyncio
 import math
 import logging
 
-# from typing import Awaitable
-# from typing import Callable
-# from typing import Dict
-# from typing import List
-# from typing import Optional
-# from typing import Tuple
 
-# from bleak import BleakScanner
-# from bleak import BleakClient
-# from numpy import full
 
 from probe_info import ProbeInfo
 
@@ -56,9 +46,12 @@ class ProbeState:
         return ProbeState(timestamp_secs, steps,  amps_a, amps_b, ticks_a, ticks_b, quadrant, is_reversed_direction)
 
     def __str__(self):
+        direction = "FWD"
+        if self.is_reversed_direction:
+            direction = "BAK"
         return f"TS:{self.__timestamp_secs:9.3f}, Steps:{self.steps:8.2f}," \
             f" A:{self.amps_a:5.2f}, B:{self.amps_b:5.2f}, abs:{self.amps_abs():4.2f}" \
-            f" ({self.ticks_a}, {self.ticks_b} / {self.quadrant}, {self.is_reversed_direction})"
+            f" ({self.ticks_a:5d}, {self.ticks_b:5d}, {self.quadrant}, {direction})"
 
     def timestamp_secs(self) -> float:
         return self.__timestamp_secs

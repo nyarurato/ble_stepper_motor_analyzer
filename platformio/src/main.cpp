@@ -5,6 +5,7 @@
 
 #include "acquisition/adc_dma.h"
 #include "acquisition/analyzer.h"
+#include "misc/controls.h"
 #include "ble/ble_util.h"
 #include "misc/config_eeprom.h"
 
@@ -64,32 +65,32 @@ static void aqc_setup() {
   adc_dma::setup();
 }
 
-static void toggle_direction() {
-  const bool new_reversed_direction = !analyzer::get_is_reversed_direction();
-  analyzer::set_is_reversed_direction(new_reversed_direction);
-  // We also reset the steps counter and such.
-  analyzer::reset_data();
-  analyzer::Settings settings;
-  analyzer::get_settings(&settings);
-  const bool write_error = !config_eeprom::write_acquisition_settings(settings);
-  const uint16_t num_blinks = write_error ? 10 : new_reversed_direction ? 2 : 1;
-  start_led2_blinks(num_blinks);
-  printk("%s direction. Write %s\n",
-         new_reversed_direction ? "REVERSED" : "NORMAL",
-         write_error ? "FAILED" : "OK");
-}
+// static void toggle_direction() {
+//   const bool new_reversed_direction = !analyzer::get_is_reversed_direction();
+//   analyzer::set_is_reversed_direction(new_reversed_direction);
+//   // We also reset the steps counter and such.
+//   analyzer::reset_data();
+//   analyzer::Settings settings;
+//   analyzer::get_settings(&settings);
+//   const bool write_error = !config_eeprom::write_acquisition_settings(settings);
+//   // const uint16_t num_blinks = write_error ? 10 : new_reversed_direction ? 2 : 1;
+//   // start_led2_blinks(num_blinks);
+//   printk("%s direction. Write %s\n",
+//          new_reversed_direction ? "REVERSED" : "NORMAL",
+//          write_error ? "FAILED" : "OK");
+// }
 
 // Current through sensors must be zero when calling
 // this.
-static void zero_calibration() {
-  analyzer::calibrate_zeros();
-  analyzer::Settings settings;
-  analyzer::get_settings(&settings);
-  const bool write_ok = config_eeprom::write_acquisition_settings(settings);
-  start_led2_blinks(write_ok ? 3 : 10);
-  printk("Zero calibration (%hd, %hd). Write %s\n", settings.offset1,
-         settings.offset2, write_ok ? "OK" : "FAILED");
-}
+// static void zero_calibration() {
+//   analyzer::calibrate_zeros();
+//   analyzer::Settings settings;
+//   analyzer::get_settings(&settings);
+//   const bool write_ok = config_eeprom::write_acquisition_settings(settings);
+//   start_led2_blinks(write_ok ? 3 : 10);
+//   printk("Zero calibration (%hd, %hd). Write %s\n", settings.offset1,
+//          settings.offset2, write_ok ? "OK" : "FAILED");
+// }
 
 // Used to generate blink to indicates that
 // acquisition is working.
@@ -145,13 +146,17 @@ void main(void) {
 
       // Handle single click. Reverse direction.
       if (button_event == Button::EVENT_SHORT_CLICK) {
-        toggle_direction();
+        bool new_is_reversed_direcction;
+        const bool ok = controls::toggle_direction(&new_is_reversed_direcction);
+        const uint16_t num_blinks = !ok ? 10 : new_is_reversed_direcction ? 2 : 1;
+        start_led2_blinks(num_blinks);
       }
 
       // Handle long press. Zero calibration.
       else if (button_event == Button::EVENT_LONG_PRESS) {
         // zero_setting = true;
-        zero_calibration();
+        const bool ok = controls::zero_calibration();
+        start_led2_blinks(ok ? 3 : 10);
       }
     }
 

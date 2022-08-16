@@ -192,7 +192,7 @@ class Probe:
     async def read_time_histogram(self) -> Optional[TimeHistogram]:
         if not self.is_connected():
             logger.error(f"Not connected (read_time_histogram).")
-            #return None
+            # return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_time_histogram_chrc)
         return TimeHistogram.decode(val_bytes, self.__probe_info)
 
@@ -209,9 +209,16 @@ class Probe:
             return
         await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x01]))
 
+    # async def write_toggle_direction_command(self):
+    #     if not self.is_connected():
+    #         logger.error(f"Not connected (write_toggle_direction_command).")
+    #         return
+    #     await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x04]))
+
     async def write_command_capture_signal_snapshot(self):
         if not self.is_connected():
-            logger.error(f"Not connected (write_command_capture_signal_snapshot).")
+            logger.error(
+                f"Not connected (write_command_capture_signal_snapshot).")
             return
         await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x02]))
 
@@ -221,6 +228,24 @@ class Probe:
             return
         arg = max(0, min(255, int(divider)))
         await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x03, arg]))
+
+    # Changes forward/backward direction interpretation. The new direction
+    # is persisted on the device.
+    async def write_toggle_direction_command(self):
+        if not self.is_connected():
+            logger.error(f"Not connected (write_toggle_direction_command).")
+            return
+        print("Toggle direction command", flush=True)
+        await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x04]))
+
+    # Should be done with steppers disconnected or turned off. New zero calibration
+    # is persisted on the device.
+    async def write_zero_calibration_command(self):
+        if not self.is_connected():
+            logger.error(f"Not connected (write_zero_calibration_command).")
+            return
+        print("Zero calibration command", flush=True)
+        await self.__client.write_gatt_char(self.__stepper_command_chrc, bytearray([0x05]))
 
     async def read_capture_signal_packet(self) -> Optional[bytearray]:
         if not self.is_connected():
