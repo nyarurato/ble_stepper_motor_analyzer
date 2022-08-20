@@ -66,8 +66,22 @@ class InputPin {
 // Active low. This pin is also the default DFU switch pin
 // of MCUboot.
 extern InputPin SWITCH1;
-// extern Button BUTTON1;  // Over SWITCH1
+
+// Used to select hardware configuration based on population
+// of resistors R11, R12. An installed resistor results in
+// '0' at the respective input.
+extern InputPin HARDWARE_CFG1;
+extern InputPin HARDWARE_CFG2;
+
 
 void setup();
+
+// Read hardware configuration.
+// Returns:
+// 0 - R11, R12, not installed.
+// 1 - Only R11 installed.
+// 2 - Only R12 installed.
+// 3 - Both R11, R12 installed.
+extern uint8_t read_hardware_config();
 
 }  // namespace io

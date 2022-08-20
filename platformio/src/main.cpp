@@ -5,9 +5,9 @@
 
 #include "acquisition/adc_dma.h"
 #include "acquisition/analyzer.h"
-#include "misc/controls.h"
 #include "ble/ble_util.h"
 #include "misc/config_eeprom.h"
+#include "misc/controls.h"
 
 // NOTE: BLE Peripheral example is from
 // .platformio/packages/framework-zephyr/samples/bluetooth/peripheral/src
@@ -54,6 +54,23 @@ static void start_led2_blinks(uint16_t n) {
   io::LED2.write(led2_counter > 0);
 }
 
+  // Determine hardware configuration based on configuration
+  // resistors.
+static uint16_t get_adc_ticks_per_amp(uint8_t hardware_config) {
+  switch (hardware_config) {
+    case 0:
+      return acq_consts::CC6920BSO5A_MV_PER_AMP;
+      break;
+    case 1:
+      return acq_consts::TMCS1108A4B_MV_PER_AMP;
+      break;
+    // Configurations 3, 4 are reserved.
+    default:
+      printk("ERROR: Unknoen hardware config %hhu\n", hardware_config);
+      return 0;
+  }
+}
+
 static void aqc_setup() {
   analyzer::Settings settings;
   config_eeprom::read_acquisition_settings(&settings);
@@ -72,8 +89,10 @@ static void aqc_setup() {
 //   analyzer::reset_data();
 //   analyzer::Settings settings;
 //   analyzer::get_settings(&settings);
-//   const bool write_error = !config_eeprom::write_acquisition_settings(settings);
-//   // const uint16_t num_blinks = write_error ? 10 : new_reversed_direction ? 2 : 1;
+//   const bool write_error =
+//   !config_eeprom::write_acquisition_settings(settings);
+//   // const uint16_t num_blinks = write_error ? 10 : new_reversed_direction ?
+//   2 : 1;
 //   // start_led2_blinks(num_blinks);
 //   printk("%s direction. Write %s\n",
 //          new_reversed_direction ? "REVERSED" : "NORMAL",
@@ -100,7 +119,14 @@ void main(void) {
   io::setup();
   button::setup();
   util::dump_zephyr_devices();
-  ble_service::setup();
+
+  // We assume that the pullup inputs got settled by now. 
+  const uint8_t hardware_config = io::read_hardware_config();
+  printk("Hardware config: %hhu\n", hardware_config);
+  const uint16_t adc_ticks_per_amp = get_adc_ticks_per_amp(hardware_config);
+  printk("ADC ticks per amp: %hu\n", adc_ticks_per_amp);
+
+  ble_service::setup(adc_ticks_per_amp);
   aqc_setup();
 
   static bool is_connected = false;
@@ -115,10 +141,10 @@ void main(void) {
     // and provides states. High speed blink indicates connection
     // status.
     const int blink_shift = is_connected ? 0 : 3;
-    const bool blink_state = ((analyzer_counter >> blink_shift) & 0x7) == 0x7;
+    const bool blink_state = ((analyzer_counter >> blink_shift) & 0x7) == 0x0;
     // Supress LED1 while blinking LED2. We should move them appart on the
     // board such that they don't interfere visually.
-    io::LED1.write(blink_state  && !led2_counter);
+    io::LED1.write(blink_state && !led2_counter);
 
     if (led2_counter > 0 && led2_timer.elapsed_millis() >= 500) {
       led2_timer.reset();
@@ -148,7 +174,9 @@ void main(void) {
       if (button_event == Button::EVENT_SHORT_CLICK) {
         bool new_is_reversed_direcction;
         const bool ok = controls::toggle_direction(&new_is_reversed_direcction);
-        const uint16_t num_blinks = !ok ? 10 : new_is_reversed_direcction ? 2 : 1;
+        const uint16_t num_blinks = !ok                          ? 10
+                                    : new_is_reversed_direcction ? 2
+                                                                 : 1;
         start_led2_blinks(num_blinks);
       }
 

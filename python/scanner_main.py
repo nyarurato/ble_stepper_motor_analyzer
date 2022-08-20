@@ -1,5 +1,9 @@
 #!python
 
+# A python program to scan the bluetooth BLE devices
+# nearby, looking for stepper motor analyzer ids which
+# look like "STP-EA2307AE0794"
+
 import asyncio
 from bleak import discover
 

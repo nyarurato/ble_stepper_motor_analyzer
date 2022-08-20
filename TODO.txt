@@ -1,18 +1,20 @@
 
 
+* [Python] Print signal level.
+
+* [Python] Add text display of steps and currents.
+* [Python] is_connected() sometimes returns false negative. Consider to skip.
 
 
 
 ---------------
 
-* [Python] is_connected() sometimes returns false negative. Consider to skip.
-* [Python] Add text display of steps and currents.
 * [Python] Exit demo program if lost connection. Alternatively, reconnect.
-
 * [Device] Add MCUBoot and BLE/DFU.
 
 ----
 
+* [Python] Report missing notifications.
 * [Board ] Add a zenner symbol for the footprint of D4 to avoid JLCPCB questions.
 * [Board ] Seperate between LED1 and LED2
 * [Device] Add pin 1 dot to the DC/DC footprint.
@@ -52,6 +54,7 @@
 * [Python] Add an optional flag with steppr description string to display at the top.
 * [Device] Add command to zero sensors.
 * [Device] Add command to toggle or set direction.
+* [Python] Add to the time scale button a text with the current scale.
 
 
 

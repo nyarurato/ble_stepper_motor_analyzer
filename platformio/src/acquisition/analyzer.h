@@ -141,7 +141,7 @@ struct State {
   // Signed current values in ADC count units.  When the stepper
   // is energized, these values together with the quadrant value
   // below can be used to compute the fractional step value.
-  // This value has CURRENT_TICKS_PER_AMP ticks per amp.
+  // This value has ADC_TICKS_PER_AMP ticks per amp.
   int16_t v1;
   int16_t v2;
   // True if the coils are energized. Determined by the sum
@@ -247,6 +247,7 @@ void set_signal_capture_divider(uint8_t divider);
 // calibrate_zeros() to save the current settings in the
 // EEPROM.
 void get_settings(Settings* settings);
+
 
 // Temp
 void dump_dma_state();

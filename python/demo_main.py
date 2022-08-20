@@ -1,5 +1,8 @@
 #!python
 
+# A python program to retrieve data from the BLE stepper motor analyzer
+# probe and displaying it in realtime on the screen.
+
 from tokenize import String
 from turtle import width
 from numpy import histogram
@@ -53,7 +56,7 @@ pending_reset = False
 pause_enabled = False
 
 pending_direction_toggle = False
-pending_zero_calibration = True
+# pending_zero_calibration = True
 
 capture_divider = 1
 last_set_capture_divider = 0
@@ -73,9 +76,8 @@ def device_id_to_device_address(device_id: str):
 # update_from_state is defined which causes an error on startup.
 
 
+# Receives the state updates from the device.
 def callback_handler(probe_state: ProbeState):
-    # print(f"probe state handler called: time: {probe_state.timestamp_secs()}", flush=True)
-    # print(f"State: t={probe_state.timestamp_secs()}, s={probe_state.steps}", flush=True)
     update_from_state(probe_state)
 
 
@@ -101,7 +103,7 @@ async def connect_to_probe():
     print(
         f"Histogram bucket steps/sec: [{ probe.info().histogram_bucket_steps_per_sec()}]", flush=True)
     #
-    # TODO, can we avoid it without getting ocasional errors? The MTU
+    # TODO, can we avoid it without getting occasional errors? The MTU
     # negotiation can take a few seconds to happen. Is this the cause?
     print(f"A short delay to stabilize the connection...", flush=True)
     time.sleep(3)  # was 8
@@ -216,7 +218,7 @@ buttons_layout.addItem(button2_proxy, row=0, col=1)
 
 # Button3
 button3_proxy = QtGui.QGraphicsProxyWidget()
-button3 = QtGui.QPushButton('Time Scale')
+button3 = QtGui.QPushButton('Time Scale X1')
 button3_proxy.setWidget(button3)
 buttons_layout.addItem(button3_proxy, row=0, col=2)
 
@@ -239,22 +241,25 @@ points_counter = 0
 
 
 def update_from_state(state: ProbeState):
-    # global p3,  current_chunk_data, points_counter, curves, startTime
     global probe, graph1, graph2, last_state, points_counter, pause_enabled
-
-    # Read probe
-    # state = asyncio.get_event_loop().run_until_complete(probe.read_state())
 
     if points_counter % 100 == 0:
         print(f"{points_counter:06d}: {state}", flush=True)
     points_counter += 1
 
     if last_state is None:
+        print(f"No last state", flush=True)
         speed = 0
     else:
         delta_t = state.timestamp_secs() - last_state.timestamp_secs()
+        # Normal intervals are 0.020. If it's larger, we are missing
+        # notification packets.
+        if delta_t > 0.025:
+          print(f"Data loss: {delta_t*1000:3.0f} ms", flush=True)
         if delta_t <= 0:
-            # Notification is too fast, no change in timestamp.
+            # Notification is too fast, no change in timestamp. We
+            # want to avoid divide by zero.
+            last_state = state
             return
         speed = (state.steps - last_state.steps) / delta_t
 
@@ -267,10 +272,6 @@ def update_from_state(state: ProbeState):
         graph3.add_point(state.timestamp_secs(), amps_abs_filter.value())
 
 
-# This is a hack. By reading the probe from the QT timer we can have
-# both display updates and async notifications from the device. Should
-# have a simpler way, but don't really understand how asyncio and
-# QT exec co exist.
 
 
 def on_reset_button():
@@ -298,6 +299,8 @@ def on_scale_button():
         capture_divider = 20
     else:
         capture_divider = 1
+    button3.setText(f"Time Scale X{capture_divider}")
+
 
 
 def on_direction_button():
@@ -305,9 +308,7 @@ def on_direction_button():
     pending_direction_toggle = True
 
 
-def on_zero_calibration_button():
-    global pending_zero_calibration
-    pending_zero_calibration = True
+
 
 
 def timer_handler():
@@ -336,10 +337,7 @@ def timer_handler():
             probe.write_toggle_direction_command())
         pending_direction_toggle = False
 
-    if pending_zero_calibration:
-        asyncio.get_event_loop().run_until_complete(
-            probe.write_zero_calibration_command())
-        pending_zero_calibration = False
+   
 
     if capture_divider != last_set_capture_divider:
         asyncio.get_event_loop().run_until_complete(
@@ -350,12 +348,10 @@ def timer_handler():
     updates_enabled = not pause_enabled
 
     slot = timer_handler_counter % 25
-    # if slot == 0:
-    #     slot_cycle += 1
+   
 
     # Once in a while update the histograms.
     if updates_enabled and slot == 14:
-        # print(f"*** {type(buttons_layout)}", flush=True)
         histogram: CurrentHistogram = asyncio.get_event_loop(
         ).run_until_complete(probe.read_current_histogram())
         graph4.setOpts(x=histogram.centers(), height=histogram.heights(

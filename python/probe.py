@@ -259,10 +259,8 @@ class Probe:
 
     async def state_notifications(self,
                                   handler: Callable[[ProbeState], None]):
-
         # Adapter handler.
         async def callback_handler(sender, data):
-            ##print(f"Notification handler called data:{len(data)}, self:{self.info().current_ticks_per_amp()}, handler:{callback}", flush=True)
             probe_state = ProbeState.decode(data, self.__probe_info)
             if handler:
                 handler(probe_state)

@@ -29,7 +29,6 @@ class ProbeState:
         if len(data) != 15:
             logger.error(f"Invalid state data length {len(data)}.")
             return None
-        #print(f"Data: {data.hex()}", flush=True)
         ticks_timestamp = int.from_bytes(
             data[0:6],  byteorder='big', signed=False)
         full_steps = int.from_bytes(data[6:10],  byteorder='big', signed=True)

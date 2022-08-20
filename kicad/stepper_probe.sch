@@ -83,11 +83,11 @@ $Comp
 L stepper_probe-rescue:ACS70331_soic8-simple_stepper_motor_analyzer U1
 U 1 1 627A85BB
 P 3725 1700
-F 0 "U1" H 2850 1975 50  0000 C CNN
+F 0 "U1" H 2900 2000 50  0000 C CNN
 F 1 "CC6920BSO-5A" H 3150 2125 50  0000 C CNN
 F 2 "stepper_probe:SOIC-8_LCPCB_ROT" H 4125 1650 50  0001 L CIN
 F 3 "" H 3725 1700 50  0001 C CNN
-F 4 "C2880430" H 3725 1700 50  0000 C CNN "LCSC"
+F 4 "C2880430" H 2850 2250 50  0000 L CNN "LCSC"
 	1    3725 1700
 	1    0    0    -1  
 $EndComp
@@ -309,7 +309,7 @@ F 4 "C479190" H 3100 7150 50  0000 C CNN "LCSC"
 	1    2650 6925
 	1    0    0    -1  
 $EndComp
-Text Notes 9225 6900 2    79   ~ 0
+Text Notes 9575 6900 2    79   ~ 0
 BLE STEPPER MOTOR MONITOR  v1.3.1
 $Comp
 L Connector_Generic:Conn_02x05_Odd_Even J5
@@ -748,7 +748,7 @@ F 0 "C6" V 3850 1300 50  0000 L CNN
 F 1 "100n" V 3650 1150 50  0000 L CNN
 F 2 "stepper_probe:C_0402_1005Metric_Pad0.74x0.62mm_HandSolder" H 3938 1075 50  0001 C CNN
 F 3 "~" H 3900 1225 50  0001 C CNN
-F 4 "C307331" V 3850 350 50  0000 C CNN "LCSC"
+F 4 "C307331" V 3525 1300 50  0000 C CNN "LCSC"
 	1    3900 1225
 	0    1    1    0   
 $EndComp
@@ -1336,64 +1336,64 @@ Wire Wire Line
 $Comp
 L stepper_probe:GND #PWR0111
 U 1 1 62EFA692
-P 5125 7200
-F 0 "#PWR0111" H 5125 6950 50  0001 C CNN
-F 1 "GND" H 5129 7045 50  0001 C CNN
-F 2 "" H 5125 7200 50  0001 C CNN
-F 3 "" H 5125 7200 50  0001 C CNN
-	1    5125 7200
+P 4800 7225
+F 0 "#PWR0111" H 4800 6975 50  0001 C CNN
+F 1 "GND" H 4804 7070 50  0001 C CNN
+F 2 "" H 4800 7225 50  0001 C CNN
+F 3 "" H 4800 7225 50  0001 C CNN
+	1    4800 7225
 	1    0    0    -1  
 $EndComp
 $Comp
 L stepper_probe:GND #PWR0112
 U 1 1 62EFAB50
-P 5125 6850
-F 0 "#PWR0112" H 5125 6600 50  0001 C CNN
-F 1 "GND" H 5129 6695 50  0001 C CNN
-F 2 "" H 5125 6850 50  0001 C CNN
-F 3 "" H 5125 6850 50  0001 C CNN
-	1    5125 6850
+P 4800 6875
+F 0 "#PWR0112" H 4800 6625 50  0001 C CNN
+F 1 "GND" H 4804 6720 50  0001 C CNN
+F 2 "" H 4800 6875 50  0001 C CNN
+F 3 "" H 4800 6875 50  0001 C CNN
+	1    4800 6875
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R_Small_US R11
 U 1 1 62EFB038
-P 4975 6800
-F 0 "R11" V 5075 6900 50  0000 R CNN
-F 1 "DNP" V 5075 6700 50  0000 R CNN
-F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4975 6800 50  0001 C CNN
-F 3 "~" H 4975 6800 50  0001 C CNN
-F 4 "DNP" H 4975 6800 50  0001 C CNN "LCSC"
-	1    4975 6800
+P 4650 6825
+F 0 "R11" V 4750 6925 50  0000 R CNN
+F 1 "DNP" V 4750 6725 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4650 6825 50  0001 C CNN
+F 3 "~" H 4650 6825 50  0001 C CNN
+F 4 "DNP" H 4650 6825 50  0001 C CNN "LCSC"
+	1    4650 6825
 	0    -1   -1   0   
 $EndComp
 $Comp
 L Device:R_Small_US R12
 U 1 1 62EFBB37
-P 4975 7150
-F 0 "R12" V 5050 7250 50  0000 R CNN
-F 1 "DNP" V 5050 7050 50  0000 R CNN
-F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4975 7150 50  0001 C CNN
-F 3 "~" H 4975 7150 50  0001 C CNN
-F 4 "DNP" H 4975 7150 50  0001 C CNN "LCSC"
-	1    4975 7150
+P 4650 7175
+F 0 "R12" V 4725 7275 50  0000 R CNN
+F 1 "DNP" V 4725 7075 50  0000 R CNN
+F 2 "stepper_probe:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder" H 4650 7175 50  0001 C CNN
+F 3 "~" H 4650 7175 50  0001 C CNN
+F 4 "DNP" H 4650 7175 50  0001 C CNN "LCSC"
+	1    4650 7175
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	5075 6800 5125 6800
+	4750 6825 4800 6825
 Wire Wire Line
-	5125 6800 5125 6850
+	4800 6825 4800 6875
 Wire Wire Line
-	5075 7150 5125 7150
+	4750 7175 4800 7175
 Wire Wire Line
-	5125 7150 5125 7200
-Text Label 4425 6800 0    50   ~ 0
+	4800 7175 4800 7225
+Text Label 4100 6825 0    50   ~ 0
 CFG1
 Wire Wire Line
-	4425 6800 4875 6800
+	4100 6825 4550 6825
 Wire Wire Line
-	4425 7150 4875 7150
-Text Label 4425 7150 0    50   ~ 0
+	4100 7175 4550 7175
+Text Label 4100 7175 0    50   ~ 0
 CFG2
 Wire Wire Line
 	3500 6225 3500 6550
@@ -1403,8 +1403,6 @@ Text Label 3500 6550 1    50   ~ 0
 CFG1
 Text Label 3600 6550 1    50   ~ 0
 CFG2
-Text Notes 5375 7075 0    50   ~ 0
-Reserved for future\nconfigurations.
 Text Notes 3925 3025 0    50   ~ 0
 Current sensors
 Connection ~ 7200 1625
@@ -1639,4 +1637,56 @@ Wire Wire Line
 Connection ~ 6375 1900
 Wire Wire Line
 	6375 1900 6375 1825
+Text Notes 5475 7075 0    50   ~ 0
+1K
+Text Notes 5225 6950 0    50   ~ 0
+DNP
+Text Notes 5475 6950 0    50   ~ 0
+DNP
+Text Notes 5225 7075 0    50   ~ 0
+DNP
+Text Notes 5225 7200 0    50   ~ 0
+1K
+Text Notes 5475 7200 0    50   ~ 0
+DNP
+Text Notes 5475 7325 0    50   ~ 0
+1K
+Text Notes 5225 7325 0    50   ~ 0
+1K
+Text Notes 5725 7075 0    50   ~ 0
+400
+Text Notes 5700 6825 0    50   ~ 0
+mv/A
+Text Notes 5725 6950 0    50   ~ 0
+270
+Text Notes 5475 6825 0    50   ~ 0
+R11
+Text Notes 5225 6825 0    50   ~ 0
+R12
+Wire Notes Line width 4 style solid
+	5950 6725 5950 7350
+Wire Notes Line width 4 style solid
+	5950 7350 5175 7350
+Wire Notes Line width 4 style solid
+	5175 7350 5175 6725
+Wire Notes Line width 4 style solid
+	5175 6725 5950 6725
+Wire Notes Line width 4 style solid
+	5175 6850 5950 6850
+Wire Notes Line width 4 style solid
+	5175 6975 5950 6975
+Wire Notes Line width 4 style solid
+	5175 7100 5950 7100
+Wire Notes Line width 4 style solid
+	5175 7225 5950 7225
+Wire Notes Line width 4 style solid
+	5425 6725 5425 7350
+Wire Notes Line width 4 style solid
+	5675 6725 5675 7350
+Text Notes 4475 7550 0    50   ~ 0
+Current sensor Configuration
+Text Notes 2850 1050 0    50   ~ 0
+270mv/A
+Text Notes 1950 3450 0    50   ~ 0
+270mv/A
 $EndSCHEMATC

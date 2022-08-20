@@ -61,13 +61,18 @@ static struct bt_uuid_128 probe_service_uuid =
 static struct bt_uuid_128 info_uuid = BT_UUID_INIT_128(
     BT_UUID_128_ENCODE(0x37e75add, 0xa610, 0x448d, 0x9fd3, 0x3e3130e2c7f2));
 
+// Offset in info_value below of the adc_ticks_per_amp field.
+static constexpr int ADC_TICKS_PER_AMP_OFFSET = 1;
+
 static uint8_t info_value[] = {
     // One byte for format version.
     0x1,
 
-    // Two bytes for CURRENT_TICKS_PER_AMP.
-    (uint8_t)(acq_consts::CURRENT_TICKS_PER_AMP >> 8),
-    (uint8_t)(acq_consts::CURRENT_TICKS_PER_AMP >> 0),
+    // Two bytes for adc_ticks_per_amp. The actual value of
+    // these two bytes are set by setup() using the
+    // offset const ADC_TICKS_PER_AMP_OFFSET.
+    0x00,  // adc_ticks_per_amp >> 8  MSB
+    0x00,  // adc_ticks_per_amp >> 0  LSB
 
     // Three bytes for TIME_TICKS_PER_SEC.
     (uint8_t)(acq_consts::TIME_TICKS_PER_SEC >> 16),
@@ -703,12 +708,14 @@ static const struct bt_le_adv_param *kAdvParams =
 
 static struct bt_gatt_attr *state_notify_attr = NULL;
 
-void setup() {
-  // struct bt_gatt_attr *status_notify_attr;
-  // char str[BT_UUID_STR_LEN];
-  int err;
+void setup(uint16_t adc_ticks_per_amp) {
+  // Initialize the adc_ticks_per_amp in the info value.
+  info_value[ADC_TICKS_PER_AMP_OFFSET + 0] =
+      (uint8_t)(adc_ticks_per_amp >> 8);  // MSB
+  info_value[ADC_TICKS_PER_AMP_OFFSET + 1] =
+      (uint8_t)(adc_ticks_per_amp >> 0);  // LSB
 
-  err = bt_enable(NULL);
+  int err = bt_enable(NULL);
   if (err) {
     printk("Bluetooth init failed (err %d)\n", err);
     return;

@@ -16,12 +16,11 @@
 #include "adc_dma.h"
 #include "filters.h"
 #include "misc/circular_buffer.h"
+#include "misc/io.h"
 
 namespace analyzer {
 
-// Updated by sample_state(). This is the frozen copy of the
-// state the UI can use.
-// static State sampled_state;
+
 
 // Circular buffer of states. Used for auto sample
 // state mode.
