@@ -255,7 +255,7 @@ def update_from_state(state: ProbeState):
         # Normal intervals are 0.020. If it's larger, we are missing
         # notification packets.
         if delta_t > 0.025:
-          print(f"Data loss: {delta_t*1000:3.0f} ms", flush=True)
+            print(f"Data loss: {delta_t*1000:3.0f} ms", flush=True)
         if delta_t <= 0:
             # Notification is too fast, no change in timestamp. We
             # want to avoid divide by zero.
@@ -270,8 +270,6 @@ def update_from_state(state: ProbeState):
         graph1.add_point(state.timestamp_secs(), state.steps)
         graph2.add_point(state.timestamp_secs(), speed)
         graph3.add_point(state.timestamp_secs(), amps_abs_filter.value())
-
-
 
 
 def on_reset_button():
@@ -296,19 +294,17 @@ def on_scale_button():
     elif capture_divider == 2:
         capture_divider = 5
     elif capture_divider == 5:
+        capture_divider = 10
+    elif capture_divider == 10:
         capture_divider = 20
     else:
         capture_divider = 1
     button3.setText(f"Time Scale X{capture_divider}")
 
 
-
 def on_direction_button():
     global pending_direction_toggle
     pending_direction_toggle = True
-
-
-
 
 
 def timer_handler():
@@ -337,8 +333,6 @@ def timer_handler():
             probe.write_toggle_direction_command())
         pending_direction_toggle = False
 
-   
-
     if capture_divider != last_set_capture_divider:
         asyncio.get_event_loop().run_until_complete(
             probe.write_command_set_capture_divider(capture_divider))
@@ -348,7 +342,6 @@ def timer_handler():
     updates_enabled = not pause_enabled
 
     slot = timer_handler_counter % 25
-   
 
     # Once in a while update the histograms.
     if updates_enabled and slot == 14:
