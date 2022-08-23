@@ -791,20 +791,25 @@ void maybe_notify_state(const analyzer::State &state) {
   }
 }
 
+struct ConnectionIteratorData {
+  int conn_counter = 0;
+};
+
 // Iterator for counting connections.  Data is a pointer to an int counter.
 static void conn_counter_iterator(struct bt_conn *conn, void *data) {
-  if (conn->state != BT_CONN_CONNECTED) {
-    return;
+  ConnectionIteratorData *iter_data = (ConnectionIteratorData *)data;
+
+  if (conn->state == BT_CONN_CONNECTED) {
+    iter_data->conn_counter += 1;
   }
-  int *counter_ptr = (int *)data;
-  *counter_ptr += 1;
 }
 
+// TODO: Merge the implementation of the iterator here with that
+// in ble_util.h
 bool is_connected() {
-  int conn_counter = 0;
-  bt_conn_foreach(BT_CONN_TYPE_ALL, conn_counter_iterator, &conn_counter);
-  // printk("--- counter: %d\n", conn_counter);
-  return conn_counter;
+  ConnectionIteratorData iter_data;
+  bt_conn_foreach(BT_CONN_TYPE_ALL, conn_counter_iterator, &iter_data);
+  return iter_data.conn_counter != 0;
 }
 
 }  // namespace ble_service

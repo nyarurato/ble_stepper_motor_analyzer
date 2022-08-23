@@ -1,9 +1,9 @@
 
 
-* [Python] Print signal level.
+* [Device] Use zephyr settings instead of eepprom
 
+* [Python] Verify TX level increased or Print signal level.
 * [Python] Add text display of steps and currents.
-* [Python] is_connected() sometimes returns false negative. Consider to skip.
 
 
 
@@ -55,6 +55,8 @@
 * [Device] Add command to zero sensors.
 * [Device] Add command to toggle or set direction.
 * [Python] Add to the time scale button a text with the current scale.
+* [Device] Increase TX level.
+* [Python] is_connected() sometimes returns false negative. Consider to skip.
 
 
 

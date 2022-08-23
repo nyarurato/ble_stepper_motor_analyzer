@@ -307,7 +307,7 @@ void set_signal_capture_divider(uint8_t divider) {
   }
   adc_dma::enable_irq();
 
-  printk("Signal capture divider set to %hu", divider);
+  printk("Signal capture divider set to %hu\n", divider);
 }
 
 void get_settings(Settings* settings) {

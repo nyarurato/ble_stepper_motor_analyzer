@@ -29,7 +29,7 @@ import sys
 
 # Default device id is not specifying --device_id=... on the
 # command line.
-DEFAULT_DEVICE_ID = "STP-EA2307AE0794"
+DEFAULT_DEVICE_ID = "STP-ED80E46264A4"
 DEFAULT_DEVICE_NAME = "My Stepper"
 
 # Allows to stop the program by typing ctrl-c.
@@ -58,7 +58,8 @@ pause_enabled = False
 pending_direction_toggle = False
 # pending_zero_calibration = True
 
-capture_divider = 1
+# Starting with default divider of 5.
+capture_divider = 5
 last_set_capture_divider = 0
 
 capture_signal_fetcher: CaptureSignalFetcher = None
@@ -132,17 +133,19 @@ win.setWindowTitle(title)
 win.ci.layout.setColumnPreferredWidth(0, 240)
 win.ci.layout.setColumnPreferredWidth(1, 240)
 win.ci.layout.setColumnPreferredWidth(2, 240)
-win.ci.layout.setColumnPreferredWidth(3, 380)
+win.ci.layout.setColumnPreferredWidth(3, 240)
+win.ci.layout.setColumnPreferredWidth(4, 380)
 
 
 win.ci.layout.setColumnStretchFactor(0, 1)
 win.ci.layout.setColumnStretchFactor(1, 1)
 win.ci.layout.setColumnStretchFactor(2, 1)
 win.ci.layout.setColumnStretchFactor(3, 1)
+win.ci.layout.setColumnStretchFactor(4, 1)
 
 
 # Graph 1
-plot: pg.PlotItem = win.addPlot(name="Plot1", colspan=4)
+plot: pg.PlotItem = win.addPlot(name="Plot1", colspan=5)
 plot.setLabel('left', 'Distance', 'steps')
 plot.setXRange(-10, 0)
 plot.showGrid(False, True, 0.7)
@@ -151,7 +154,7 @@ graph1 = Chart(plot, pg.mkPen('yellow'))
 
 # Graph 2
 win.nextRow()
-plot = win.addPlot(name="Plot2", colspan=4)
+plot = win.addPlot(name="Plot2", colspan=5)
 plot.setLabel('left', 'Speed', 'steps/s')
 plot.setXRange(-10, 0)
 plot.showGrid(False, True, 0.7)
@@ -161,7 +164,7 @@ graph2 = Chart(plot, pg.mkPen('orange'))
 
 # Graph 3
 win.nextRow()
-plot = win.addPlot(name="Plot3", colspan=4)
+plot = win.addPlot(name="Plot3", colspan=5)
 plot.setLabel('left', 'Current', 'A')
 plot.setXRange(-10, 0)
 plot.setYRange(0, 2)
@@ -175,32 +178,44 @@ win.nextRow()
 plot4 = win.addPlot(name="Plot4")
 plot4.setLabel('left', 'Current', 'A')
 plot4.setLabel('bottom', 'Speed', 'steps/s')
+plot4.setYRange(0, 3)
 graph4 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='yellow')
 plot4.addItem(graph4)
 
 # Graph 5
 # win.nextRow()
 plot5 = win.addPlot(name="Plot5")
-plot5.setLabel('left', 'Time', 'Percents')
+plot5.setLabel('left', 'Time', '%')
 plot5.setLabel('bottom', 'Speed', 'steps/s')
 graph5 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='salmon')
 plot5.addItem(graph5)
 
 # Graph 6
 plot6 = win.addPlot(name="Plot6")
-plot6.setLabel('left', 'Distance', 'Percents')
+plot6.setLabel('left', 'Distance', '%')
 plot6.setLabel('bottom', 'Speed', 'steps/s')
 graph6 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='skyblue')
 plot6.addItem(graph6)
+
+# TODO: Renumber graphs.
+
+# Graph 8
+plot8 = win.addPlot(name="Plot8")
+plot8.setLabel('left', 'Coil B', 'A')
+plot8.setLabel('bottom', 'Coil A', 'A')
+plot8.showGrid(True, True, 0.7)
+plot8.setXRange(-3, 3) 
+plot8.setYRange(-3, 3) 
 
 # Graph 7
 plot7 = win.addPlot(name="Plot7")
 plot7.setLabel('left', 'Current', 'A')
 plot7.setLabel('bottom', 'Time', 's')
+plot7.setYRange(-3, 3) 
 
 
 win.nextRow()
-buttons_layout = win.addLayout(colspan=4)
+buttons_layout = win.addLayout(colspan=5)
 buttons_layout.setSpacing(20)
 buttons_layout.layout.setHorizontalSpacing(30)
 
@@ -218,7 +233,7 @@ buttons_layout.addItem(button2_proxy, row=0, col=1)
 
 # Button3
 button3_proxy = QtGui.QGraphicsProxyWidget()
-button3 = QtGui.QPushButton('Time Scale X1')
+button3 = QtGui.QPushButton(f'Time Scale X{capture_divider}')
 button3_proxy.setWidget(button3)
 buttons_layout.addItem(button3_proxy, row=0, col=2)
 
@@ -337,7 +352,7 @@ def timer_handler():
         asyncio.get_event_loop().run_until_complete(
             probe.write_command_set_capture_divider(capture_divider))
         last_set_capture_divider = capture_divider
-        print(f"Set capture divider to {last_set_capture_divider}", flush=True)
+        print(f"Capture divider set to {last_set_capture_divider}", flush=True)
 
     updates_enabled = not pause_enabled
 
@@ -368,6 +383,9 @@ def timer_handler():
                        capture_signal.amps_a(), pen='yellow')
             plot7.plot(capture_signal.times_sec(),
                        capture_signal.amps_b(), pen='skyblue')
+
+            plot8.clear()
+            plot8.plot(capture_signal.amps_a(), capture_signal.amps_b(), pen='greenyellow')
     else:
         state = asyncio.get_event_loop().run_until_complete(probe.read_state())
 

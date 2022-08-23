@@ -9,12 +9,6 @@
 #include "misc/config_eeprom.h"
 #include "misc/controls.h"
 
-// NOTE: BLE Peripheral example is from
-// .platformio/packages/framework-zephyr/samples/bluetooth/peripheral/src
-// https://docs.zephyrproject.org/latest/samples/bluetooth/bluetooth.html
-
-// NOTE: UUID are version 4 (random) UUID, generated
-// at https://www.uuidgenerator.net.
 
 #include <errno.h>
 #include <string.h>
@@ -27,6 +21,9 @@
 #include "misc/elapsed.h"
 #include "misc/io.h"
 #include "misc/util.h"
+
+// NOTE: UUID are version 4 (random) UUID, generated
+// at https://www.uuidgenerator.net.
 
 //-----------------------------------
 
@@ -54,8 +51,8 @@ static void start_led2_blinks(uint16_t n) {
   io::LED2.write(led2_counter > 0);
 }
 
-  // Determine hardware configuration based on configuration
-  // resistors.
+// Determine hardware configuration based on configuration
+// resistors.
 static uint16_t get_adc_ticks_per_amp(uint8_t hardware_config) {
   switch (hardware_config) {
     case 0:
@@ -82,34 +79,6 @@ static void aqc_setup() {
   adc_dma::setup();
 }
 
-// static void toggle_direction() {
-//   const bool new_reversed_direction = !analyzer::get_is_reversed_direction();
-//   analyzer::set_is_reversed_direction(new_reversed_direction);
-//   // We also reset the steps counter and such.
-//   analyzer::reset_data();
-//   analyzer::Settings settings;
-//   analyzer::get_settings(&settings);
-//   const bool write_error =
-//   !config_eeprom::write_acquisition_settings(settings);
-//   // const uint16_t num_blinks = write_error ? 10 : new_reversed_direction ?
-//   2 : 1;
-//   // start_led2_blinks(num_blinks);
-//   printk("%s direction. Write %s\n",
-//          new_reversed_direction ? "REVERSED" : "NORMAL",
-//          write_error ? "FAILED" : "OK");
-// }
-
-// Current through sensors must be zero when calling
-// this.
-// static void zero_calibration() {
-//   analyzer::calibrate_zeros();
-//   analyzer::Settings settings;
-//   analyzer::get_settings(&settings);
-//   const bool write_ok = config_eeprom::write_acquisition_settings(settings);
-//   start_led2_blinks(write_ok ? 3 : 10);
-//   printk("Zero calibration (%hd, %hd). Write %s\n", settings.offset1,
-//          settings.offset2, write_ok ? "OK" : "FAILED");
-// }
 
 // Used to generate blink to indicates that
 // acquisition is working.
@@ -120,7 +89,7 @@ void main(void) {
   button::setup();
   util::dump_zephyr_devices();
 
-  // We assume that the pullup inputs got settled by now. 
+  // We assume that the pullup inputs got settled by now.
   const uint8_t hardware_config = io::read_hardware_config();
   printk("Hardware config: %hhu\n", hardware_config);
   const uint16_t adc_ticks_per_amp = get_adc_ticks_per_amp(hardware_config);
