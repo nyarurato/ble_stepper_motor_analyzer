@@ -30,8 +30,10 @@ void setup() {
 }
 
 uint8_t read_hardware_config() {
-  return (HARDWARE_CFG1.is_low() ? 1 : 0) |
-         (HARDWARE_CFG2.is_low() ? 2 : 0);
+  // Combine CFG2 (MSB) and CFG1 (LSB) inputs into
+  // a two bits value.
+  return (HARDWARE_CFG1.is_high() ? 1 : 0) |
+         (HARDWARE_CFG2.is_high() ? 2 : 0);
 }
 
 }  // namespace io

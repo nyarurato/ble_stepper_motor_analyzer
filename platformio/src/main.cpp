@@ -1,23 +1,19 @@
 
 #include <bluetooth/gatt.h>
-#include <stdio.h>
-#include <zephyr.h>
-
-#include "acquisition/adc_dma.h"
-#include "acquisition/analyzer.h"
-#include "ble/ble_util.h"
-#include "misc/config_eeprom.h"
-#include "misc/controls.h"
-
-
 #include <errno.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/printk.h>
 #include <zephyr.h>
 #include <zephyr/types.h>
 
+#include "acquisition/adc_dma.h"
+#include "acquisition/analyzer.h"
 #include "ble/ble_service.h"
+#include "ble/ble_util.h"
 #include "misc/button.h"
+#include "misc/config_eeprom.h"
+#include "misc/controls.h"
 #include "misc/elapsed.h"
 #include "misc/io.h"
 #include "misc/util.h"
@@ -55,13 +51,15 @@ static void start_led2_blinks(uint16_t n) {
 // resistors.
 static uint16_t get_adc_ticks_per_amp(uint8_t hardware_config) {
   switch (hardware_config) {
-    case 0:
+    case 3:
+      // R12, R11 not installed.
       return acq_consts::CC6920BSO5A_MV_PER_AMP;
       break;
-    case 1:
+    case 2:
+      // Only R11 is installed.
       return acq_consts::TMCS1108A4B_MV_PER_AMP;
       break;
-    // Configurations 3, 4 are reserved.
+    // Configurations 0, 1 are reserved.
     default:
       printk("ERROR: Unknoen hardware config %hhu\n", hardware_config);
       return 0;
@@ -78,7 +76,6 @@ static void aqc_setup() {
 
   adc_dma::setup();
 }
-
 
 // Used to generate blink to indicates that
 // acquisition is working.

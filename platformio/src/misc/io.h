@@ -78,10 +78,10 @@ void setup();
 
 // Read hardware configuration.
 // Returns:
-// 0 - R11, R12, not installed.
-// 1 - Only R11 installed.
-// 2 - Only R12 installed.
-// 3 - Both R11, R12 installed.
+// 3 - R11, R12, not installed.
+// 2 - Only R11 installed.
+// 1 - Only R12 installed.
+// 0 - Both R11, R12 installed.
 extern uint8_t read_hardware_config();
 
 }  // namespace io

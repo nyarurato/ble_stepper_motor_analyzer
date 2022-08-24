@@ -29,7 +29,7 @@ import sys
 
 # Default device id is not specifying --device_id=... on the
 # command line.
-DEFAULT_DEVICE_ID = "STP-ED80E46264A4"
+DEFAULT_DEVICE_ID = "STP-EEE7C3264283"
 DEFAULT_DEVICE_NAME = "My Stepper"
 
 # Allows to stop the program by typing ctrl-c.
