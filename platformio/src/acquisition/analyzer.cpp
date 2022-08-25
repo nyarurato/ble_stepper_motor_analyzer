@@ -29,14 +29,10 @@ static CircularBuffer<State, 3> state_circular_buffer;
 // We signal this one each time we insert an item to state_circular_buffer.
 static K_SEM_DEFINE(circular_state_semaphore, 0, 1);
 
-// 12 bit -> 4096 counts. 3.3V full scale.
-// 0.4V per AMP (for +/- 2.5A sensor).
-// constexpr float kCountsPerAmp = 0.4 * 4096 / 3.3;
 
-// We use this value to do multiplications instead of divisions.
-// constexpr float kAmpsPerCount = 1 / kCountsPerAmp;
 
-// constexpr float kMilliampsPerCount = 1000 / kCountsPerAmp;
+
+
 
 // Energized/non-energized histeresis limits in ADC
 // counts.
@@ -122,15 +118,7 @@ struct IsrData {
 static IsrData isr_data = {.adc_capture_state = ADC_CAPTURE_HALF_FILL,
                            .adc_capture_divider = 1};
 
-// extern bool is_adc_capture_ready() {
-//   AdcCaptureState adc_capture_state;
-//   //__disable_irq();
-//   adc_dma::disable_irq();
-//   { adc_capture_state = isr_data.adc_capture_state; }
-//   //__enable_irq();
-//   adc_dma::enable_irq();
-//   return adc_capture_state == ADC_CAPTURE_IDLE;
-// }
+
 
 void get_last_capture_snapshot(AdcCaptureBuffer* buffer) {
   adc_dma::disable_irq();

@@ -146,6 +146,9 @@ struct State {
   int16_t v2;
   // True if the coils are energized. Determined by the sum
   // of the absolute values of a pair of current readings.
+  //
+  // NOTE: The energized detection and count doesn't work well
+  // with noisy current sensors.
   bool is_energized;
   // Number of times coils were de-energized.
   uint32_t non_energized_count;

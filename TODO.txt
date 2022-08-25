@@ -1,7 +1,7 @@
 
 
 * [Device] Include in the device info packet the hardware config code.
-* [Python] Verify TX level increased or Print signal level.
+
 * [Python] Add text display of steps and currents.
 
 
@@ -56,7 +56,10 @@
 * [Device] Increase TX level.
 * [Python] is_connected() sometimes returns false negative. Consider to skip.
 * [Device] Use zephyr settings instead of eepprom
-
+* [Python] Verify TX level increased or Print signal level.
+* [Device] Filter out noise.
+* [Device] Check non energize limit.
+* [Device] Include in the packet energized status and count.
 
 
 

@@ -109,7 +109,8 @@ static ssize_t on_probe_info_read(struct bt_conn *conn,
 static struct bt_uuid_128 state_uuid = BT_UUID_INIT_128(
     BT_UUID_128_ENCODE(0x37e75add, 0xa610, 0x448d, 0x9fd3, 0x3e3130e2c7f1));
 
-#define STATE_VALUE_MAX_LEN 20
+// As of Aug 2022 we use only 19 bytes.
+#define STATE_VALUE_MAX_LEN 30
 
 static uint8_t state_value[STATE_VALUE_MAX_LEN] = {0};
 
@@ -138,15 +139,17 @@ static int encode_state(const analyzer::State &state, uint8_t *buf,
   *p++ = val32 >> 0;
 
   // Flags.
-  // * bit4 : true IFF reversed direction
-  // * bit1 : quadrant MSB
+  // * bit5 : true IFF energized.
+  // * bit4 : true IFF reversed direction.
+  // * bit1 : quadrant MSB.
   // * bit0 : quadrant LSB.
   //
   // Quarant is in the range [0, 3].
   // All other bits are reserved and readers should treat them
   // as undefined.
-  const uint8_t flags =
-      (state.is_reverse_direction ? 0x10 : 0) | (state.quadrant & 0x03);
+  const uint8_t flags = (state.is_energized ? 0x20 : 0) |
+                        (state.is_reverse_direction ? 0x10 : 0) |
+                        (state.quadrant & 0x03);
   *p++ = flags;
 
   // Current ticks for coil 1.
@@ -159,6 +162,14 @@ static int encode_state(const analyzer::State &state, uint8_t *buf,
   *p++ = val16 >> 8;
   *p++ = val16 >> 0;
 
+  // Number of times was not energized.
+  val32 = state.non_energized_count;
+  *p++ = val32 >> 24;
+  *p++ = val32 >> 16;
+  *p++ = val32 >> 8;
+  *p++ = val32 >> 0;
+
+  printk("state len: %d, e=%d\n", p - buf, state.is_energized ? 1 : 0);
   return (p - buf);
 }
 
