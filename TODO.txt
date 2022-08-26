@@ -1,66 +1,10 @@
 
 
 * [Device] Include in the device info packet the hardware config code.
+* [Device] Perform zero calibration from a running average.
 
 * [Python] Add text display of steps and currents.
 
 
 ---------------
-
-* [Python] Exit demo program if lost connection. Alternatively, reconnect.
-* [Device] Add MCUBoot and BLE/DFU.
-
-----
-
-* [Python] Report missing notifications.
-* [Board ] Add a zenner symbol for the footprint of D4 to avoid JLCPCB questions.
-* [Board ] Seperate between LED1 and LED2
-* [Device] Add pin 1 dot to the DC/DC footprint.
-* [Python] Initial connection often fails.
-* [Python] Test with latest Bleak.
-* [Board ] Simplify the silk screen of the pin headers.
-* [Device] Change divider to uint8 everywhere and clip at 50.
-* Proper critical section protection in analyzer (how to disable preemption)?
-* Add read command for histograms.
-* In python demo program, solve forward reference issue.
-* Add write command to reset stats and to set params.
-* Reduce the time the device waits from disconnection to advertising.
-* Consider to simplify chart.
-* Add UI button to reset the data.
-* Add UI button to pause.
-* Do we need the signal filter in the analyzer?
-* Visual indication (LED) of connection and activity.
-* Clear charts on reset.
-* Add read command for capture signals.
-* [Device] Add a procedure to save current sensor offset to non volatile memory.
-* [Device] Add command to flip direction (preferably non volatile memory)
-* [Device] Add command to set divider.
-* [Python] Add button to toggle the divider.
-* [Board ] Add stepper connectors to pick and place.
-* [Python] Accept probe id rather than probe address.
-* [Device] Compare noise between TI and Alegro sensors.
-* [Device] Unstable step counter when X stepper is in low current mode (~0.2A)
-* [Device] Change 10ohms resistor to fuses. E.g. C136320
-* [Device] Verify power stability. Especialy with low voltage/current.
-* [Device] Provide button feedback using LED2  (epprom write OK/failed, direction forward/backward);
-* [Python] Accept device address from command line flag.
-* [Python] Avoid jump on first few samples in distance and speed graphs.
-* [Python] Try to make ctrl-c working.
-* [Device] Provide LED2 feedback for direction flip click.
-* [Device] Signal is noisy. Consider to filter. Or maybe on the client?.
-* [Device] Steps noise when REVERSED and one of the coils is as zero current.
-* [Python] Add an optional flag with steppr description string to display at the top.
-* [Device] Add command to zero sensors.
-* [Device] Add command to toggle or set direction.
-* [Python] Add to the time scale button a text with the current scale.
-* [Device] Increase TX level.
-* [Python] is_connected() sometimes returns false negative. Consider to skip.
-* [Device] Use zephyr settings instead of eepprom
-* [Python] Verify TX level increased or Print signal level.
-* [Device] Filter out noise.
-* [Device] Check non energize limit.
-* [Device] Include in the packet energized status and count.
-
-
-
 

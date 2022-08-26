@@ -35,16 +35,23 @@ import sys
 DEFAULT_DEVICE_ADDRESS = "F5:DD:EB:97:EA:14"
 DEFAULT_DEVICE_NAME = "My Stepper"
 
+# Max current display in AMPs.
+# MAX_AMPS = 1.5
+
 # Allows to stop the program by typing ctrl-c.
 signal.signal(signal.SIGINT, lambda number, frame: sys.exit())
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--device_address", dest="device_address",
+parser.add_argument("-d", "--device_address", dest="device_address",
                     default=DEFAULT_DEVICE_ADDRESS, help="The device address")
 # The device name is an arbitrary string such as "Extruder 1".
-parser.add_argument("-x", "--device_name", dest="device_name",
+parser.add_argument("-n", "--device_name", dest="device_name",
                     default=DEFAULT_DEVICE_NAME, help="Optional device id such as Stepper X")
+parser.add_argument("-m", "--max_amps", dest="max_amps",
+                    default=1.5, help="Max current display.")
 args = parser.parse_args()
+
+MAX_AMPS = args.max_amps
 
 
 amps_abs_filter = Filter(0.5)
@@ -180,7 +187,7 @@ win.nextRow()
 plot4 = win.addPlot(name="Plot4")
 plot4.setLabel('left', 'Current', 'A')
 plot4.setLabel('bottom', 'Speed', 'steps/s')
-plot4.setYRange(0, 3)
+plot4.setYRange(0, MAX_AMPS)
 graph4 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='yellow')
 plot4.addItem(graph4)
 
@@ -206,14 +213,14 @@ plot8 = win.addPlot(name="Plot8")
 plot8.setLabel('left', 'Coil B', 'A')
 plot8.setLabel('bottom', 'Coil A', 'A')
 plot8.showGrid(True, True, 0.7)
-plot8.setXRange(-3, 3)
-plot8.setYRange(-3, 3)
+plot8.setXRange(-MAX_AMPS, MAX_AMPS)
+plot8.setYRange(-MAX_AMPS, MAX_AMPS)
 
 # Graph 7
 plot7 = win.addPlot(name="Plot7")
 plot7.setLabel('left', 'Current', 'A')
 plot7.setLabel('bottom', 'Time', 's')
-plot7.setYRange(-3, 3)
+plot7.setYRange(-MAX_AMPS, MAX_AMPS)
 
 
 win.nextRow()
