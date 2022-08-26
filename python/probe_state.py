@@ -57,13 +57,11 @@ class ProbeState:
         direction = "FWD"
         if self.is_reversed_direction:
             direction = "BAK"
-        energized = "-"
-        if self.is_energized:
-            energized = "E"
+        # 'energiized' related information is not reliable with noisy 
+        # current sensors so not including it here.
         return f"TS:{self.__timestamp_secs:9.3f}, Steps:{self.steps:8.2f}," \
             f" A:{self.amps_a:5.2f}, B:{self.amps_b:5.2f}, abs:{self.amps_abs():4.2f}" \
-            f" ({self.ticks_a:5d}, {self.ticks_b:5d}, {self.quadrant}, {direction})" \
-            f" [{energized}: {self.non_energized_count}]"
+            f" ({self.ticks_a:5d}, {self.ticks_b:5d}, {self.quadrant}, {direction})"
 
     def timestamp_secs(self) -> float:
         return self.__timestamp_secs

@@ -169,7 +169,7 @@ static int encode_state(const analyzer::State &state, uint8_t *buf,
   *p++ = val32 >> 8;
   *p++ = val32 >> 0;
 
-  printk("state len: %d, e=%d\n", p - buf, state.is_energized ? 1 : 0);
+  // printk("state len: %d, e=%d\n", p - buf, state.is_energized ? 1 : 0);
   return (p - buf);
 }
 

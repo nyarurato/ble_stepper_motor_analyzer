@@ -27,18 +27,21 @@ import sys
 
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
-# Default device id is not specifying --device_id=... on the
-# command line.
-#DEFAULT_DEVICE_ID = "STP-EEE7C3264283"
-DEFAULT_DEVICE_ID = "STP-F5DDEB97EA14"
+# Default device address. Use the flag below to override it.
+# To find device addresses, run the scanner and look for 
+# devices whose name looks like STP-XXXXXXXXXXXX.
+# The device address has different format on Windows and 
+# on Mac OSX.
+DEFAULT_DEVICE_ADDRESS = "F5:DD:EB:97:EA:14"
 DEFAULT_DEVICE_NAME = "My Stepper"
 
 # Allows to stop the program by typing ctrl-c.
 signal.signal(signal.SIGINT, lambda number, frame: sys.exit())
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--device_id", dest="device_id",
-                    default=DEFAULT_DEVICE_ID, help="The device id as STP-XXXXXXXXXXXX")
+parser.add_argument("-i", "--device_address", dest="device_address",
+                    default=DEFAULT_DEVICE_ADDRESS, help="The device address")
+# The device name is an arbitrary string such as "Extruder 1".
 parser.add_argument("-x", "--device_name", dest="device_name",
                     default=DEFAULT_DEVICE_NAME, help="Optional device id such as Stepper X")
 args = parser.parse_args()
@@ -66,12 +69,6 @@ last_set_capture_divider = 0
 capture_signal_fetcher: CaptureSignalFetcher = None
 
 
-def device_id_to_device_address(device_id: str):
-    m = re.fullmatch(r"STP-([0-9A-F]{12})", device_id.upper())
-    if not m:
-        raise Exception(f"Invalid device id [{device_id}]")
-    h = m.group(1)
-    return f"{h[0:2]}:{h[2:4]}:{h[4:6]}:{h[6:8]}:{h[8:10]}:{h[10:12]}"
 
 
 # TODO: Fix forward reference to update_from_state. The callback_handler is invoked before
@@ -86,7 +83,7 @@ def callback_handler(probe_state: ProbeState):
 # Co-routing returns Probe or None.
 async def connect_to_probe():
     #global PROBE_NAME
-    device_address = device_id_to_device_address(args.device_id)
+    device_address = args.device_address
     print(f"Trying to connect to device {device_address}...", flush=True)
     probe = await Probe.find_by_address(device_address)
     if not probe:
@@ -110,6 +107,10 @@ async def connect_to_probe():
     print(f"A short delay to stabilize the connection...", flush=True)
     time.sleep(3)  # was 8
 
+    # NOTE: The notification system keeps a reference to the current event
+    # loop which is main_event_loop and uses it to post events.
+    # Running the event loop periodically in the timer handler
+    # below services these events.
     await probe.state_notifications(callback_handler)
     return probe
 
@@ -123,7 +124,7 @@ win_height = 700
 # We set the actual size later. This is a workaround to force an
 # early compaction of the buttons row.
 win = pg.GraphicsLayoutWidget(show=True, size=[win_width, win_height-1])
-title = f"BLE Stepper Motor Probe Demo [{args.device_id}]"
+title = f"BLE Stepper Motor Analyzer [{args.device_address}]"
 if args.device_name:
     title += f" [{args.device_name}]"
 win.setWindowTitle(title)
@@ -205,14 +206,14 @@ plot8 = win.addPlot(name="Plot8")
 plot8.setLabel('left', 'Coil B', 'A')
 plot8.setLabel('bottom', 'Coil A', 'A')
 plot8.showGrid(True, True, 0.7)
-plot8.setXRange(-3, 3) 
-plot8.setYRange(-3, 3) 
+plot8.setXRange(-3, 3)
+plot8.setYRange(-3, 3)
 
 # Graph 7
 plot7 = win.addPlot(name="Plot7")
 plot7.setLabel('left', 'Current', 'A')
 plot7.setLabel('bottom', 'Time', 's')
-plot7.setYRange(-3, 3) 
+plot7.setYRange(-3, 3)
 
 
 win.nextRow()
@@ -323,13 +324,20 @@ def on_direction_button():
     pending_direction_toggle = True
 
 
+main_event_loop = asyncio.new_event_loop()
+
+async def do_nothing():
+    None
+
 def timer_handler():
     global probe, timer_handler_counter, slot_cycle, graph1, graph2, graph3, graph4, graph5, graph6, plot7
     global capture_signal_fetcher, buttons_layout, pending_reset, pause_enabled
     global capture_divider, last_set_capture_divider, pending_zero_calibration, pending_direction_toggle
+    global main_event_loop
 
     if pending_reset:
-        asyncio.get_event_loop().run_until_complete(probe.write_command_reset_data())
+        # asyncio.run(probe.write_command_reset_data())
+        main_event_loop.run_until_complete(probe.write_command_reset_data())
         last_state = None
         graph1.clear()
         graph2.clear()
@@ -345,13 +353,15 @@ def timer_handler():
         pending_reset = False
 
     if pending_direction_toggle:
-        asyncio.get_event_loop().run_until_complete(
-            probe.write_toggle_direction_command())
+        # asyncio.run(
+        #     probe.write_toggle_direction_command())
+        main_event_loop.run_until_complete(probe.write_toggle_direction_command())
         pending_direction_toggle = False
 
     if capture_divider != last_set_capture_divider:
-        asyncio.get_event_loop().run_until_complete(
-            probe.write_command_set_capture_divider(capture_divider))
+        # asyncio.run(
+        #     probe.write_command_set_capture_divider(capture_divider))
+        main_event_loop.run_until_complete( probe.write_command_set_capture_divider(capture_divider))
         last_set_capture_divider = capture_divider
         print(f"Capture divider set to {last_set_capture_divider}", flush=True)
 
@@ -361,23 +371,23 @@ def timer_handler():
 
     # Once in a while update the histograms.
     if updates_enabled and slot == 14:
-        histogram: CurrentHistogram = asyncio.get_event_loop(
-        ).run_until_complete(probe.read_current_histogram())
+        histogram: CurrentHistogram = main_event_loop.run_until_complete(
+            probe.read_current_histogram())
         graph4.setOpts(x=histogram.centers(), height=histogram.heights(
         ), width=0.75*histogram.bucket_width())
     elif updates_enabled and slot == 5:
-        histogram: TimeHistogram = asyncio.get_event_loop(
-        ).run_until_complete(probe.read_time_histogram())
+        histogram: TimeHistogram = main_event_loop.run_until_complete(
+            probe.read_time_histogram())
         graph5.setOpts(x=histogram.centers(), height=histogram.heights(
         ), width=0.75*histogram.bucket_width())
     elif updates_enabled and slot == 10:
-        histogram: DistanceHistogram = asyncio.get_event_loop(
-        ).run_until_complete(probe.read_distance_histogram())
+        histogram: DistanceHistogram = main_event_loop.run_until_complete(
+            probe.read_distance_histogram())
         graph6.setOpts(x=histogram.centers(), height=histogram.heights(
         ), width=0.75*histogram.bucket_width())
     elif updates_enabled and slot in [16,  18, 20, 22, 24]:
-        capture_signal: CaptureSignal = asyncio.get_event_loop(
-        ).run_until_complete(capture_signal_fetcher.loop())
+        capture_signal: CaptureSignal = main_event_loop.run_until_complete(
+            capture_signal_fetcher.loop())
         if capture_signal:
             plot7.clear()
             plot7.plot(capture_signal.times_sec(),
@@ -386,14 +396,17 @@ def timer_handler():
                        capture_signal.amps_b(), pen='skyblue')
 
             plot8.clear()
-            plot8.plot(capture_signal.amps_a(), capture_signal.amps_b(), pen='greenyellow')
+            plot8.plot(capture_signal.amps_a(),
+                       capture_signal.amps_b(), pen='greenyellow')
     else:
-        state = asyncio.get_event_loop().run_until_complete(probe.read_state())
+        # state = asyncio.run(probe.read_state())
+        main_event_loop.run_until_complete(probe.read_state())
 
     timer_handler_counter += 1
 
 
-probe = asyncio.get_event_loop().run_until_complete(connect_to_probe())
+probe = main_event_loop.run_until_complete(connect_to_probe())
+# probe = asyncio.run(connect_to_probe())
 capture_signal_fetcher = CaptureSignalFetcher(probe)
 
 button1.clicked.connect(lambda: on_direction_button())

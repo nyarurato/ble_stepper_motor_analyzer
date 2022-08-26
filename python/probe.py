@@ -261,6 +261,7 @@ class Probe:
                                   handler: Callable[[ProbeState], None]):
         # Adapter handler.
         async def callback_handler(sender, data):
+            # print("*** in callback adapter", flush=True)
             probe_state = ProbeState.decode(data, self.__probe_info)
             if handler:
                 handler(probe_state)
