@@ -104,8 +104,8 @@ async def connect_to_probe():
     #
     # TODO, can we avoid it without getting occasional errors? The MTU
     # negotiation can take a few seconds to happen. Is this the cause?
-    print(f"A short delay to stabilize the connection...", flush=True)
-    time.sleep(3)  # was 8
+    #print(f"A short delay to stabilize the connection...", flush=True)
+    #time.sleep(3)  # was 8
 
     # NOTE: The notification system keeps a reference to the current event
     # loop which is main_event_loop and uses it to post events.
@@ -417,7 +417,9 @@ button4.clicked.connect(lambda: on_pause_button())
 
 timer = pg.QtCore.QTimer()
 timer.timeout.connect(timer_handler)
-timer.start(25)
+# Interval in ms.
+# timer.start(25)
+timer.start(20)
 
 if __name__ == '__main__':
     pg.exec()
