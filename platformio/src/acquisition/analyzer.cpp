@@ -20,19 +20,12 @@
 
 namespace analyzer {
 
-
-
 // Circular buffer of states. Used for state notifications.
 // With 20ms per sample, 10 entires provides 200ms buffering.
 static CircularBuffer<State, 10> state_circular_buffer;
 
 // We signal this one each time we insert an item to state_circular_buffer.
 static K_SEM_DEFINE(circular_state_semaphore, 0, 1);
-
-
-
-
-
 
 // Energized/non-energized histeresis limits in ADC
 // counts.
@@ -117,8 +110,6 @@ struct IsrData {
 
 static IsrData isr_data = {.adc_capture_state = ADC_CAPTURE_HALF_FILL,
                            .adc_capture_divider = 1};
-
-
 
 void get_last_capture_snapshot(AdcCaptureBuffer* buffer) {
   adc_dma::disable_irq();
@@ -219,12 +210,14 @@ const void sample_state(State* state) {
 
 const bool pop_next_state(State* state, bool blocking) {
   for (;;) {
-    State* popped_state;
+    const State* popped_state;
     adc_dma::disable_irq();
-    // Null if buffer is empty.
-    popped_state = state_circular_buffer.pop();
-    if (popped_state) {
-      *state = *popped_state;
+    {
+      // Null if buffer is empty.
+      popped_state = state_circular_buffer.pop();
+      if (popped_state) {
+        *state = *popped_state;
+      }
     }
     adc_dma::enable_irq();
     if (popped_state || !blocking) {
@@ -254,10 +247,29 @@ void reset_data() {
 }
 
 void calibrate_zeros() {
+  // To minimize the effect of the noise on the zero offset
+  // we compute an average of the last n states we entered
+  // to the notification buffer. We take advantage of the fact
+  // that even when we consume a state from the buffer, its
+  // value is still available there.
   adc_dma::disable_irq();
   {
-    isr_data.offset1 += isr_data.state.v1;
-    isr_data.offset2 += isr_data.state.v2;
+    const uint16_t n = state_circular_buffer.capacity();
+    int32_t total_v1 = 0;
+    int32_t total_v2 = 0;
+    for (int i = 0; i < n; i++) {
+      const State* state = state_circular_buffer.get_internal(i);
+      total_v1 += state->v1;
+      total_v2 += state->v2;
+      // printk("%d %d\n", (int)state->v1, (int)state->v2);
+    }
+    // isr_data.offset1 += isr_data.state.v1;
+    // isr_data.offset2 += isr_data.state.v2;
+
+    // printk("[%d %d]\n", (int)isr_data.state.v1, (int)isr_data.state.v2);
+
+    isr_data.offset1 += (total_v1 / n);
+    isr_data.offset2 += (total_v2 / n);
   }
   adc_dma::enable_irq();
 }

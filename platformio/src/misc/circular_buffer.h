@@ -42,7 +42,7 @@ class CircularBuffer {
     return result;
   }
 
-  inline T* pop() {
+  inline const T* pop() {
     // Empty, nothing to pop.
     if (!size_) {
       return nullptr;
@@ -53,11 +53,16 @@ class CircularBuffer {
     return result;
   }
 
-    // Index i should be < size(). 0 is the oldest.
+  // Index i should be < size(). 0 is the oldest.
   inline const T* get(uint16_t i) const {
     uint16_t i1 = next_ + i;
     uint16_t i2 = (i1 >= size_) ? i1 - size_ : i1 - size_ + n;
     return &items_[i2];
+  }
+
+  // Direct access to the internal array. i < capacity.
+   inline const T* get_internal(uint16_t i) const {
+    return &items_[i];
   }
 
   // Index i should be < size(). 0 is the newest.
