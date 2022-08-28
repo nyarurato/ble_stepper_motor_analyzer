@@ -22,9 +22,9 @@ namespace analyzer {
 
 
 
-// Circular buffer of states. Used for auto sample
-// state mode.
-static CircularBuffer<State, 3> state_circular_buffer;
+// Circular buffer of states. Used for state notifications.
+// With 20ms per sample, 10 entires provides 200ms buffering.
+static CircularBuffer<State, 10> state_circular_buffer;
 
 // We signal this one each time we insert an item to state_circular_buffer.
 static K_SEM_DEFINE(circular_state_semaphore, 0, 1);

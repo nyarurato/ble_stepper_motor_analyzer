@@ -28,11 +28,15 @@ import sys
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
 # Default device address. Use the flag below to override it.
-# To find device addresses, run the scanner and look for 
+# To find device addresses, run the scanner and look for
 # devices whose name looks like STP-XXXXXXXXXXXX.
-# The device address has different format on Windows and 
+# The device address has different format on Windows and
 # on Mac OSX.
-DEFAULT_DEVICE_ADDRESS = "F5:DD:EB:97:EA:14"
+#DEFAULT_DEVICE_ADDRESS = "F5:DD:EB:97:EA:14"
+#DEFAULT_DEVICE_ADDRESS = "EE:E7:C3:26:42:83"
+#DEFAULT_DEVICE_ADDRESS = "DF:B9:75:AE:AC:AE"
+#DEFAULT_DEVICE_ADDRESS = "EE:E7:C3:26:42:83"
+DEFAULT_DEVICE_ADDRESS = "CC:43:20:8C:2F:C3"
 DEFAULT_DEVICE_NAME = "My Stepper"
 
 # Max current display in AMPs.
@@ -48,7 +52,7 @@ parser.add_argument("-d", "--device_address", dest="device_address",
 parser.add_argument("-n", "--device_name", dest="device_name",
                     default=DEFAULT_DEVICE_NAME, help="Optional device id such as Stepper X")
 parser.add_argument("-m", "--max_amps", dest="max_amps",
-                    default=1.5, help="Max current display.")
+                    default=2.0, help="Max current display.")
 args = parser.parse_args()
 
 MAX_AMPS = args.max_amps
@@ -76,8 +80,6 @@ last_set_capture_divider = 0
 capture_signal_fetcher: CaptureSignalFetcher = None
 
 
-
-
 # TODO: Fix forward reference to update_from_state. The callback_handler is invoked before
 # update_from_state is defined which causes an error on startup.
 
@@ -103,16 +105,22 @@ async def connect_to_probe():
     print(f"Model: [{probe.info().model()}]", flush=True)
     print(f"Manufacturer: [{ probe.info().manufacturer()}]", flush=True)
     print(
+        f"Hardware config: [{ probe.info().hardware_config()}]", flush=True)
+    print(
         f"Current ticks per amp: [{ probe.info().current_ticks_per_amp()}]", flush=True)
     print(
         f"Time ticks per sec: [{ probe.info().time_ticks_per_sec()}]", flush=True)
     print(
         f"Histogram bucket steps/sec: [{ probe.info().histogram_bucket_steps_per_sec()}]", flush=True)
-    #
+
+    if probe.info().current_ticks_per_amp() == 0:
+        sys.exit(f"Device reported an invalid configuration of 0 current ticks"
+                 f" per Amp (hardware config {probe.info().hardware_config()}). Aborting.")
+
     # TODO, can we avoid it without getting occasional errors? The MTU
     # negotiation can take a few seconds to happen. Is this the cause?
     #print(f"A short delay to stabilize the connection...", flush=True)
-    #time.sleep(3)  # was 8
+    # time.sleep(8)  # was 8
 
     # NOTE: The notification system keeps a reference to the current event
     # loop which is main_event_loop and uses it to post events.
@@ -333,14 +341,19 @@ def on_direction_button():
 
 main_event_loop = asyncio.new_event_loop()
 
+
 async def do_nothing():
     None
+
 
 def timer_handler():
     global probe, timer_handler_counter, slot_cycle, graph1, graph2, graph3, graph4, graph5, graph6, plot7
     global capture_signal_fetcher, buttons_layout, pending_reset, pause_enabled
     global capture_divider, last_set_capture_divider, pending_zero_calibration, pending_direction_toggle
     global main_event_loop
+
+    # Process any pending events from background notifications.
+    main_event_loop.run_until_complete(do_nothing())
 
     if pending_reset:
         # asyncio.run(probe.write_command_reset_data())
@@ -362,13 +375,15 @@ def timer_handler():
     if pending_direction_toggle:
         # asyncio.run(
         #     probe.write_toggle_direction_command())
-        main_event_loop.run_until_complete(probe.write_toggle_direction_command())
+        main_event_loop.run_until_complete(
+            probe.write_toggle_direction_command())
         pending_direction_toggle = False
 
     if capture_divider != last_set_capture_divider:
         # asyncio.run(
         #     probe.write_command_set_capture_divider(capture_divider))
-        main_event_loop.run_until_complete( probe.write_command_set_capture_divider(capture_divider))
+        main_event_loop.run_until_complete(
+            probe.write_command_set_capture_divider(capture_divider))
         last_set_capture_divider = capture_divider
         print(f"Capture divider set to {last_set_capture_divider}", flush=True)
 
@@ -405,9 +420,9 @@ def timer_handler():
             plot8.clear()
             plot8.plot(capture_signal.amps_a(),
                        capture_signal.amps_b(), pen='greenyellow')
-    else:
-        # state = asyncio.run(probe.read_state())
-        main_event_loop.run_until_complete(probe.read_state())
+    # else:
+    #     # state = asyncio.run(probe.read_state())
+    #     main_event_loop.run_until_complete(probe.read_state())
 
     timer_handler_counter += 1
 

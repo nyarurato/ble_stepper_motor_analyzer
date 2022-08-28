@@ -6,7 +6,7 @@
 
 namespace ble_service { 
 
-    void setup(uint16_t adc_ticks_per_amp);
+    void setup(uint8_t hardware_config, uint16_t adc_ticks_per_amp);
 
 
     // If state notification is enabled then send a notification

@@ -30,7 +30,7 @@ class ProbeState:
     @classmethod
     def decode(cls, data: bytearray, probe_info: ProbeInfo) -> (ProbeState | None):
         if len(data) != 19:
-            logger.error(f"Invalid state data length {len(data)}.")
+            print(f"Invalid state data length {len(data)}.", flush=True)
             return None
         ticks_timestamp = int.from_bytes(
             data[0:6],  byteorder='big', signed=False)

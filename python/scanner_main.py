@@ -11,8 +11,10 @@ from bleak import discover
 async def scan():
     print("Scanning (5 sec)...", flush=True)
     devices = await discover(timeout=5)
-    for d in devices:
-        print(d, flush=True)
+    for device in devices:
+        # print(device, flush=True)
+        name = device.name or "---"
+        print(f"{device.address}  {name}", flush=True)
 
 
 asyncio.run(scan())

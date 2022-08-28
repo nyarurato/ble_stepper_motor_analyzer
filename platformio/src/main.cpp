@@ -92,7 +92,7 @@ void main(void) {
   const uint16_t adc_ticks_per_amp = get_adc_ticks_per_amp(hardware_config);
   printk("ADC ticks per amp: %hu\n", adc_ticks_per_amp);
 
-  ble_service::setup(adc_ticks_per_amp);
+  ble_service::setup(hardware_config, adc_ticks_per_amp);
   aqc_setup();
 
   static bool is_connected = false;
@@ -163,5 +163,8 @@ void main(void) {
 
     // Send state notification if enabled.
     ble_service::maybe_notify_state(notification_state);
+
+    // printk("Config: %hhu\n",   io::read_hardware_config());
+
   }
 }

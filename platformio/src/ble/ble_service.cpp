@@ -62,17 +62,22 @@ static struct bt_uuid_128 info_uuid = BT_UUID_INIT_128(
     BT_UUID_128_ENCODE(0x37e75add, 0xa610, 0x448d, 0x9fd3, 0x3e3130e2c7f2));
 
 // Offset in info_value below of the adc_ticks_per_amp field.
-static constexpr int ADC_TICKS_PER_AMP_OFFSET = 1;
+static constexpr int INFO_HARDWARE_CONFIG_OFFSET = 1;
+static constexpr int INFO_TICKS_PER_AMP_MSB_OFFSET = 2;
+static constexpr int INFO_TICKS_PER_AMP_LSB_OFFSET = 3;
 
 static uint8_t info_value[] = {
     // One byte for format version.
     0x1,
 
+    // One byte for hardware config code.
+    0x00, 
+
     // Two bytes for adc_ticks_per_amp. The actual value of
     // these two bytes are set by setup() using the
     // offset const ADC_TICKS_PER_AMP_OFFSET.
-    0x00,  // adc_ticks_per_amp >> 8  MSB
-    0x00,  // adc_ticks_per_amp >> 0  LSB
+    0x00,  // MSB
+    0x00,  // LSB
 
     // Three bytes for TIME_TICKS_PER_SEC.
     (uint8_t)(acq_consts::TIME_TICKS_PER_SEC >> 16),
@@ -92,11 +97,12 @@ static ssize_t on_probe_info_read(struct bt_conn *conn,
                                   const struct bt_gatt_attr *attr, void *buf,
                                   uint16_t len, uint16_t offset) {
   if (offset != 0) {
-    // io::LED2.set();
+    printk("on_probe_info_read: offset %hu != 0\n", offset);
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
 
   if (len < INFO_VALUE_SIZE) {
+    printk("on_probe_info_read: len %hu too small\n", len);
     return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
   }
 
@@ -118,6 +124,7 @@ static int encode_state(const analyzer::State &state, uint8_t *buf,
                         uint16_t len) {
   // At the moment we use 15 of the 20 bytes.
   if (len < STATE_VALUE_MAX_LEN) {
+    printk("encode_state: len %hu too small\n", len);
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
   }
 
@@ -184,7 +191,7 @@ static ssize_t on_probe_state_read(struct bt_conn *conn,
 
   if (offset != 0) {
     // io::LED2.set();
-
+    printk("on_probe_state_read: offset %hu != 0\n", offset);
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
 
@@ -207,11 +214,13 @@ static ssize_t on_current_histogram_read(struct bt_conn *conn,
                                          void *buf, uint16_t len,
                                          uint16_t offset) {
   if (offset != 0) {
+    printk("on_current_histogram_read: offset %hu != 0\n", offset);
     // io::LED2.set();
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
 
   if (len < HISTOGRAM_VALUE_SIZE) {
+    printk("on_current_histogram_read: len %hu too small\n", len);
     return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
   }
 
@@ -262,10 +271,12 @@ static ssize_t on_time_histogram_read(struct bt_conn *conn,
                                       void *buf, uint16_t len,
                                       uint16_t offset) {
   if (offset != 0) {
+    printk(        "on_time_histogram_read: offset %hu != 0\n", offset);
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
 
   if (len < HISTOGRAM_VALUE_SIZE) {
+    printk(        "on_time_histogram_read: len %hu too small\n", len);
     return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
   }
 
@@ -282,27 +293,29 @@ static ssize_t on_time_histogram_read(struct bt_conn *conn,
   // Num points: (1 byte)
   *p++ = acq_consts::kNumHistogramBuckets;
 
-  // Find max time value
-  uint64_t max_value = 0;
+  // Find total time value.
+  uint64_t total_ticks = 0;
   for (int i = 0; i < acq_consts::kNumHistogramBuckets; i++) {
-    if (histogram_snapshot.buckets[i].total_ticks_in_steps > max_value) {
-      max_value = histogram_snapshot.buckets[i].total_ticks_in_steps;
-    }
+    // if (histogram_snapshot.buckets[i].total_ticks_in_steps > max_value) {
+      total_ticks += histogram_snapshot.buckets[i].total_ticks_in_steps;
+    // }
   }
 
-  // Special case: all buckets are zero.
-  if (max_value == 0) {
+  // Special case: all buckets are zero. We want to have a few
+  // time ticks to have a meanigful histogram. This also prevents divide
+  // by zero if total ticks is zero.
+  if (total_ticks < 10) {
     for (int i = 0; i < acq_consts::kNumHistogramBuckets; i++) {
       *p++ = 0;
       *p++ = 0;
     }
   } else {
-    // Normal case: encide relative values as mils (1/thousand) of the
-    // top value.
+    // Normal case: encide relative values as permils (0.1%) of the
+    // totoal time. [0, 1000]
     for (int i = 0; i < acq_consts::kNumHistogramBuckets; i++) {
       uint16_t normalized_val =
           (histogram_snapshot.buckets[i].total_ticks_in_steps * 1000) /
-          max_value;
+          total_ticks;
       *p++ = normalized_val >> 8;
       *p++ = normalized_val;
     }
@@ -325,10 +338,12 @@ static ssize_t on_distance_histogram_read(struct bt_conn *conn,
                                           void *buf, uint16_t len,
                                           uint16_t offset) {
   if (offset != 0) {
+        printk(        "on_distance_histogram_read: offset %hu != 0\n", offset);
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
 
   if (len < HISTOGRAM_VALUE_SIZE) {
+            printk(        "on_distance_histogram_read: len %hu too small\n", len);
     return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
   }
 
@@ -346,25 +361,27 @@ static ssize_t on_distance_histogram_read(struct bt_conn *conn,
   *p++ = acq_consts::kNumHistogramBuckets;
 
   // Find max distance value
-  uint64_t max_value = 0;
+  uint64_t total_steps = 0;
   for (int i = 0; i < acq_consts::kNumHistogramBuckets; i++) {
-    if (histogram_snapshot.buckets[i].total_steps > max_value) {
-      max_value = histogram_snapshot.buckets[i].total_steps;
-    }
+    // if (histogram_snapshot.buckets[i].total_steps > max_value) {
+      total_steps += histogram_snapshot.buckets[i].total_steps;
+    // }
   }
 
-  // Special case: all buckets are zero.
-  if (max_value == 0) {
+  // Special case: all buckets are zero. We want to have a few
+  // steps to have a meanigful histogram. This also prevents divide
+  // by zero if total steps is zero.
+  if (total_steps < 10) {
     for (int i = 0; i < acq_consts::kNumHistogramBuckets; i++) {
       *p++ = 0;
       *p++ = 0;
     }
   } else {
-    // Normal case: encide relative values as mils (1/thousand) of the
-    // top value.
+    // Normal case: encide relative values as permils (0.1%) of the
+    // total. [0, 1000].
     for (int i = 0; i < acq_consts::kNumHistogramBuckets; i++) {
       uint16_t normalized_val =
-          (histogram_snapshot.buckets[i].total_steps * 1000) / max_value;
+          (histogram_snapshot.buckets[i].total_steps * 1000) / total_steps;
       *p++ = normalized_val >> 8;
       *p++ = normalized_val;
       // printk("%d: %llu\n", i, histogram_sample.buckets[i].total_steps);
@@ -470,7 +487,9 @@ static ssize_t on_command_write(struct bt_conn *conn,
       if (controls::zero_calibration()) {
         return len;  // ok
       } else {
+        printk(        "on_command_write: zero calibration failed\n");
         return BT_GATT_ERR(BT_ATT_ERR_WRITE_NOT_PERMITTED);
+
       }
 
     default:
@@ -479,28 +498,32 @@ static ssize_t on_command_write(struct bt_conn *conn,
   }
 }
 
-// ----- Distance histogram characteristic
+// ----- Capture signal read characteristic
 
 static struct bt_uuid_128 capture_signal_uuid = BT_UUID_INIT_128(
     BT_UUID_128_ENCODE(0x37e75add, 0xa610, 0x448d, 0x9fd3, 0x3e3130e2c7f7));
 
 // Prefix takes up to 9 bytes (sometimes just 2).
 constexpr uint16_t CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE = 9;
-// Expecting room for at least 25 data points per packet.
+
+// Expecting room for at least 20 data points per packet.
+// With bleak/mac we get an MTU of only 104 bytes.
 constexpr uint16_t MIN_CAPTURE_SIGNAL_VALUE_SIZE =
-    CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE + (4 * 25);
+    CAPTURE_SIGNAL_VALUE_PREFIX_MAX_SIZE + (4 * 20);
 
 static ssize_t on_capture_signal_read(struct bt_conn *conn,
                                       const struct bt_gatt_attr *attr,
                                       void *buf, uint16_t len,
                                       uint16_t offset) {
   if (offset != 0) {
+    printk("Capture read: offset %hu != 0\n, offset", offset);
     return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
   }
 
   // We reject even if currently we don't have sufficient pending
   // data to fill it.
   if (len < MIN_CAPTURE_SIGNAL_VALUE_SIZE) {
+    printk("Capture read: len %hu is too small\n", len);
     return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
   }
 
@@ -577,6 +600,8 @@ static ssize_t on_capture_signal_read(struct bt_conn *conn,
 
   // Here we expact n  <= len.
   const uint16_t n = p - p0;
+
+  // printk("  result len %hu\n", n);
 
   // printk(
   //     "Capture signal read ok: start: %d, count: %d, bytes: %hu, buffer:
@@ -699,7 +724,7 @@ static void on_conn_disconnected(struct bt_conn *conn, uint8_t reason) {
 // See
 void on_conn_param_updated(struct bt_conn *conn, uint16_t interval,
                            uint16_t latency, uint16_t timeout) {
-  printk("*** on_conn_param_updated, %hu, %hu, %hu\n", interval, latency,
+  printk("on_conn_param_updated: %hu, %hu, %hu\n", interval, latency,
          timeout);
 }
 
@@ -719,16 +744,17 @@ static const struct bt_le_adv_param *kAdvParams =
 
 static struct bt_gatt_attr *state_notify_attr = NULL;
 
-void setup(uint16_t adc_ticks_per_amp) {
-  // Initialize the adc_ticks_per_amp in the info value.
-  info_value[ADC_TICKS_PER_AMP_OFFSET + 0] =
+void setup(uint8_t hardware_config, uint16_t adc_ticks_per_amp) {
+  // Update info_value.
+  info_value[INFO_HARDWARE_CONFIG_OFFSET] = hardware_config;
+  info_value[INFO_TICKS_PER_AMP_MSB_OFFSET] =
       (uint8_t)(adc_ticks_per_amp >> 8);  // MSB
-  info_value[ADC_TICKS_PER_AMP_OFFSET + 1] =
+  info_value[INFO_TICKS_PER_AMP_LSB_OFFSET] =
       (uint8_t)(adc_ticks_per_amp >> 0);  // LSB
 
   int err = bt_enable(NULL);
   if (err) {
-    printk("Bluetooth init failed (err %d)\n", err);
+    printk("ble setup: init failed: %d)\n", err);
     return;
   }
 

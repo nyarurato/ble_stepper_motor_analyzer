@@ -35,13 +35,16 @@ class DistanceHistogram:
 
         bucket_count = data[1]
 
+        # print("\n", flush=True)
         buckets = []
         for i in range(bucket_count):
             offset = 2 + i*2
-            rel_time_mils = int.from_bytes(data[offset: offset+2],  byteorder='big', signed=False)
-            rel_time_percents = rel_time_mils / 100.0
-            buckets.append(rel_time_percents)
+            distance_mils = int.from_bytes(data[offset: offset+2],  byteorder='big', signed=False)
+            distance_percents = distance_mils / 10.0
+            # print(f"  {i} {distance_mils}, {distance_percents}", flush=True)
+            buckets.append(distance_percents)
 
+        # print("\n", flush=True)
         return DistanceHistogram(probe_info.histogram_bucket_steps_per_sec(), buckets)   
 
     def centers(self) -> List[float]:

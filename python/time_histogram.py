@@ -38,9 +38,9 @@ class TimeHistogram:
         buckets = []
         for i in range(bucket_count):
             offset = 2 + i*2
-            rel_time_mils = int.from_bytes(data[offset: offset+2],  byteorder='big', signed=False)
-            rel_time_percents = rel_time_mils / 100.0
-            buckets.append(rel_time_percents)
+            time_mils = int.from_bytes(data[offset: offset+2],  byteorder='big', signed=False)
+            time_percents = time_mils / 10.0
+            buckets.append(time_percents)
 
         return TimeHistogram(probe_info.histogram_bucket_steps_per_sec(), buckets)   
 
