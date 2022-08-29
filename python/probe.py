@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 class Probe:
-    def __init__(self, client: BleakClient):
+    def __init__(self, client: BleakClient, steps_per_unit: float):
         self.__client = client
         self.__probe_info = None
         self.__stepper_state_chrc = None
@@ -38,6 +38,8 @@ class Probe:
         self.__stepper_distance_histogram_chrc = None
         self.__stepper_command_chrc = None
         self.__capture_signal_chrc = None
+        self.__steps_per_unit = steps_per_unit
+
 
     def __str__(self) -> str:
         return self.__client.address
@@ -85,14 +87,14 @@ class Probe:
         return val_bytes
 
     @classmethod
-    async def find_by_address(cls, dev_addr: str, timeout: float = 30.0) -> Optional[Probe]:
+    async def find_by_address(cls, dev_addr: str, steps_per_unit: float, timeout: float = 30.0) -> Optional[Probe]:
         device = await BleakScanner.find_device_by_address(dev_addr, timeout=timeout)
         if not device:
             logger.error(f"Device with address {dev_addr} not found.")
             return None
         logger.info(f"Found device: {device.address}.")
         client = BleakClient(device)
-        return Probe(client)
+        return Probe(client, steps_per_unit)
 
     def is_connected(self) -> bool:
         return self.__client.is_connected
@@ -187,21 +189,21 @@ class Probe:
             logger.error(f"Not connected (read_current_histogram).")
             # return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_current_histogram_chrc)
-        return CurrentHistogram.decode(val_bytes, self.__probe_info)
+        return CurrentHistogram.decode(val_bytes, self.__probe_info, self.__steps_per_unit)
 
     async def read_time_histogram(self) -> Optional[TimeHistogram]:
         if not self.is_connected():
             logger.error(f"Not connected (read_time_histogram).")
             # return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_time_histogram_chrc)
-        return TimeHistogram.decode(val_bytes, self.__probe_info)
+        return TimeHistogram.decode(val_bytes, self.__probe_info,  self.__steps_per_unit)
 
     async def read_distance_histogram(self) -> Optional[DistanceHistogram]:
         if not self.is_connected():
             logger.error(f"Not connected (read_distance_histogram).")
             # return None
         val_bytes = await self.__client.read_gatt_char(self.__stepper_distance_histogram_chrc)
-        return DistanceHistogram.decode(val_bytes, self.__probe_info)
+        return DistanceHistogram.decode(val_bytes, self.__probe_info,  self.__steps_per_unit)
 
     async def write_command_reset_data(self):
         if not self.is_connected():

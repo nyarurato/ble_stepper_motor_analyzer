@@ -27,7 +27,7 @@ class TimeHistogram:
         self.__buckets:List[float] = buckets
 
     @classmethod
-    def decode(cls, data: bytearray, probe_info: ProbeInfo) -> (TimeHistogram | None):
+    def decode(cls, data: bytearray, probe_info: ProbeInfo, steps_per_unit: float) -> (TimeHistogram | None):
         format = data[0]
         if format != 0x20:
             logger.error(f"Unexpected time histogram format {format}.")
@@ -42,7 +42,7 @@ class TimeHistogram:
             time_percents = time_mils / 10.0
             buckets.append(time_percents)
 
-        return TimeHistogram(probe_info.histogram_bucket_steps_per_sec(), buckets)   
+        return TimeHistogram(probe_info.histogram_bucket_steps_per_sec() / steps_per_unit, buckets)   
 
     def centers(self) -> List[float]:
         w = self.__bucket_width

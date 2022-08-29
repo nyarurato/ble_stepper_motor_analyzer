@@ -34,9 +34,10 @@ import sys
 # on Mac OSX.
 #DEFAULT_DEVICE_ADDRESS = "F5:DD:EB:97:EA:14"
 #DEFAULT_DEVICE_ADDRESS = "EE:E7:C3:26:42:83"
-#DEFAULT_DEVICE_ADDRESS = "DF:B9:75:AE:AC:AE"
+DEFAULT_DEVICE_ADDRESS = "DF:B9:75:AE:AC:AE"
 #DEFAULT_DEVICE_ADDRESS = "EE:E7:C3:26:42:83"
-DEFAULT_DEVICE_ADDRESS = "CC:43:20:8C:2F:C3"
+#DEFAULT_DEVICE_ADDRESS = "CC:43:20:8C:2F:C3"
+
 DEFAULT_DEVICE_NAME = "My Stepper"
 
 # Max current display in AMPs.
@@ -52,7 +53,11 @@ parser.add_argument("-d", "--device_address", dest="device_address",
 parser.add_argument("-n", "--device_name", dest="device_name",
                     default=DEFAULT_DEVICE_NAME, help="Optional device id such as Stepper X")
 parser.add_argument("-m", "--max_amps", dest="max_amps",
-                    default=2.0, help="Max current display.")
+                    type=float, default=2.0, help="Max current display.")
+parser.add_argument("-u", "--units", dest="units",
+                    default="steps", help="Units of movements.")
+parser.add_argument("-s",  "--steps_per_unit", dest="steps_per_unit",
+                    type=float, default=1.0, help="Steps per unit")
 args = parser.parse_args()
 
 MAX_AMPS = args.max_amps
@@ -93,8 +98,10 @@ def callback_handler(probe_state: ProbeState):
 async def connect_to_probe():
     #global PROBE_NAME
     device_address = args.device_address
+    print(f"Units: {args.units}", flush=True)
+    print(f"Steps per unit: {args.steps_per_unit}", flush=True)
     print(f"Trying to connect to device {device_address}...", flush=True)
-    probe = await Probe.find_by_address(device_address)
+    probe = await Probe.find_by_address(device_address, args.steps_per_unit)
     if not probe:
         print(f"Device not found", flush=True)
         return None
@@ -163,7 +170,7 @@ win.ci.layout.setColumnStretchFactor(4, 1)
 
 # Graph 1
 plot: pg.PlotItem = win.addPlot(name="Plot1", colspan=5)
-plot.setLabel('left', 'Distance', 'steps')
+plot.setLabel('left', 'Distance', args.units)
 plot.setXRange(-10, 0)
 plot.showGrid(False, True, 0.7)
 plot.setAutoPan(x=True)
@@ -172,7 +179,7 @@ graph1 = Chart(plot, pg.mkPen('yellow'))
 # Graph 2
 win.nextRow()
 plot = win.addPlot(name="Plot2", colspan=5)
-plot.setLabel('left', 'Speed', 'steps/s')
+plot.setLabel('left', 'Speed', f"{args.units}/s")
 plot.setXRange(-10, 0)
 plot.showGrid(False, True, 0.7)
 plot.setAutoPan(x=True)
@@ -194,7 +201,7 @@ graph3 = Chart(plot, pg.mkPen('green'))
 win.nextRow()
 plot4 = win.addPlot(name="Plot4")
 plot4.setLabel('left', 'Current', 'A')
-plot4.setLabel('bottom', 'Speed', 'steps/s')
+plot4.setLabel('bottom', 'Speed', f'{args.units}/s')
 plot4.setYRange(0, MAX_AMPS)
 graph4 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='yellow')
 plot4.addItem(graph4)
@@ -203,14 +210,14 @@ plot4.addItem(graph4)
 # win.nextRow()
 plot5 = win.addPlot(name="Plot5")
 plot5.setLabel('left', 'Time', '%')
-plot5.setLabel('bottom', 'Speed', 'steps/s')
+plot5.setLabel('bottom', 'Speed', f"{args.units}/s")
 graph5 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='salmon')
 plot5.addItem(graph5)
 
 # Graph 6
 plot6 = win.addPlot(name="Plot6")
 plot6.setLabel('left', 'Distance', '%')
-plot6.setLabel('bottom', 'Speed', 'steps/s')
+plot6.setLabel('bottom', 'Speed', f"{args.units}/s")
 graph6 = pg.BarGraphItem(x=[], height=[],  width=0.3, brush='skyblue')
 plot6.addItem(graph6)
 
@@ -299,8 +306,8 @@ def update_from_state(state: ProbeState):
 
     last_state = state
     if not pause_enabled and not pending_reset:
-        graph1.add_point(state.timestamp_secs(), state.steps)
-        graph2.add_point(state.timestamp_secs(), speed)
+        graph1.add_point(state.timestamp_secs(), state.steps / args.steps_per_unit)
+        graph2.add_point(state.timestamp_secs(), speed / args.steps_per_unit)
         graph3.add_point(state.timestamp_secs(), amps_abs_filter.value())
 
 

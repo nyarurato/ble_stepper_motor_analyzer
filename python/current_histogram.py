@@ -27,7 +27,7 @@ class CurrentHistogram:
         self.__buckets:List[float] = buckets
 
     @classmethod
-    def decode(cls, data: bytearray, probe_info: ProbeInfo) -> (CurrentHistogram | None):
+    def decode(cls, data: bytearray, probe_info: ProbeInfo, steps_per_unit: float) -> (CurrentHistogram | None):
         format = data[0]
         if format != 0x10:
             logger.error(f"Unexpected current histogram format {format}.")
@@ -42,10 +42,10 @@ class CurrentHistogram:
             current_amps = current_ticks / probe_info.current_ticks_per_amp()
             buckets.append(current_amps)
 
-        return CurrentHistogram(probe_info.histogram_bucket_steps_per_sec(), buckets)   
+        return CurrentHistogram(probe_info.histogram_bucket_steps_per_sec() / steps_per_unit, buckets)   
 
     def centers(self) -> List[float]:
-        w = self.__bucket_width
+        w = self.__bucket_width 
         v = w / 2
         result = []
         for i in range(len(self.__buckets)):
@@ -57,7 +57,7 @@ class CurrentHistogram:
         return self.__buckets
 
     def bucket_width(self) ->int:
-        return self.__bucket_width
+        return self.__bucket_width 
 
     
 

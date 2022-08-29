@@ -27,7 +27,7 @@ class DistanceHistogram:
         self.__buckets:List[float] = buckets
 
     @classmethod
-    def decode(cls, data: bytearray, probe_info: ProbeInfo) -> (DistanceHistogram | None):
+    def decode(cls, data: bytearray, probe_info: ProbeInfo, steps_per_unit: float) -> (DistanceHistogram | None):
         format = data[0]
         if format != 0x30:
             logger.error(f"Unexpected distance histogram format {format}.")
@@ -45,7 +45,7 @@ class DistanceHistogram:
             buckets.append(distance_percents)
 
         # print("\n", flush=True)
-        return DistanceHistogram(probe_info.histogram_bucket_steps_per_sec(), buckets)   
+        return DistanceHistogram(probe_info.histogram_bucket_steps_per_sec() / steps_per_unit, buckets)   
 
     def centers(self) -> List[float]:
         w = self.__bucket_width
