@@ -1,7 +1,6 @@
 
 
-* [Device] Include in the device info packet the hardware config code.
-* [Device] Perform zero calibration from a running average.
+* [Device] Avoid step counter drift when stepper is not energized.
 
 * [Python] Add text display of steps and currents.
 
