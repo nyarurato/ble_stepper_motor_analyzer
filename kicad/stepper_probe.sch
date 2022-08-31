@@ -1661,6 +1661,7 @@ F 0 "J4" H 9875 3025 50  0000 R CNN
 F 1 "Conn_01x03_Male" H 9875 3075 50  0001 R CNN
 F 2 "stepper_probe:PinHeader_1x03_P2.54mm_Vertical" H 9700 3325 50  0001 C CNN
 F 3 "~" H 9700 3325 50  0001 C CNN
+F 4 "C49257" H 9700 3325 50  0001 C CNN "LCSC"
 	1    9700 3325
 	-1   0    0    1   
 $EndComp
