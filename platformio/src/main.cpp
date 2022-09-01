@@ -77,29 +77,47 @@ static void aqc_setup() {
   adc_dma::setup();
 }
 
-static void input_test() {
-  nrf_gpio_cfg_output(25);
-  nrf_gpio_pin_write(25, 1);
+// static void input_test() {
+//   nrf_gpio_cfg_output(25);
+//   nrf_gpio_pin_write(25, 1);
 
-  // const uint32_t pin_num_ = 10;
-  //  const uint32_t pin_num_ = 9;
-  // const uint32_t pin_num_ = 5;
-  const uint32_t pin_num_ = 7;
-  nrf_gpio_cfg_input(pin_num_, NRF_GPIO_PIN_PULLUP);
+//   // const uint32_t pin_num_ = 10;
+//   //  const uint32_t pin_num_ = 9;
+//   // const uint32_t pin_num_ = 5;
+//   const uint32_t pin_num_ = 7;
+//   nrf_gpio_cfg_input(pin_num_, NRF_GPIO_PIN_PULLUP);
 
-  for (;;) {
-    k_msleep(1000);
-    nrf_gpio_cfg_input(pin_num_, NRF_GPIO_PIN_PULLUP);
-    uint32_t val = nrf_gpio_pin_read(pin_num_);
-    nrf_gpio_pin_write(25, val > 0);
-  }
-}
+//   for (;;) {
+//     k_msleep(1000);
+//     nrf_gpio_cfg_input(pin_num_, NRF_GPIO_PIN_PULLUP);
+//     uint32_t val = nrf_gpio_pin_read(pin_num_);
+//     nrf_gpio_pin_write(25, val > 0);
+//   }
+// }
 
 // Used to generate blink to indicates that
 // acquisition is working.
 static uint32_t analyzer_counter = 0;
 
+// class A {
+//   public:
+//     A(int val): val_(val) {}
+//     int val_;
+// };
+
+// A a1(11);
+// int b = 123;
+
+// extern "C" void __libc_init_array();
+
 void main(void) {
+  // __libc_init_array();
+  // for(;;) {
+  //   A a2(22);
+  //   printk("a1.val_=%d, a2.val_=%d, b=%d\n", a1.val_, a2.val_, b);
+  //     k_msleep(500);
+  // }
+
   // input_test();
 
   io::setup();
