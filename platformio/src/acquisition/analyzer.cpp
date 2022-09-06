@@ -36,6 +36,11 @@ static K_SEM_DEFINE(circular_state_semaphore, 0, 1);
 constexpr uint16_t kNonEnergizedThresholdCounts = 50;
 constexpr uint16_t kEnergizedThresholdCounts = 150;
 
+// Controls the low pass filter. See filters.h for details.
+// Higher value -> more agressive filtering. In the range
+// (0, 1024).
+constexpr uint16_t kFilterFactor = 700;
+
 // Allowed range for adc zero current offset setting.
 // This range is wider than needed and actual offsets
 // are expected to be around 1900.
@@ -395,8 +400,8 @@ static inline void isr_update_full_steps_counter(int increment) {
 // to eliminate if free CPU time is insufficient.
 //
 // We use these filters to reduce internal and external noise.
-static filters::Adc12BitsLowPassFilter<700> signal1_filter;
-static filters::Adc12BitsLowPassFilter<700> signal2_filter;
+static filters::Adc12BitsLowPassFilter<kFilterFactor> signal1_filter;
+static filters::Adc12BitsLowPassFilter<kFilterFactor> signal2_filter;
 
 // This function performs the bulk of the IRQ processing. It accepts
 // one pair of ADC1, ADC2 readings, analyzes it, and updates the

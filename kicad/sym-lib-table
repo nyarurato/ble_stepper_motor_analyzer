@@ -1,4 +1,5 @@
 (sym_lib_table
-  (lib (name stepper_probe)(type Legacy)(uri ${KIPRJMOD}/stepper_probe.lib)(options "")(descr ""))
-  (lib (name stepper_probe-rescue)(type Legacy)(uri ${KIPRJMOD}/stepper_probe-rescue.lib)(options "")(descr ""))
+  (lib (name "stepper_probe")(type "KiCad")(uri "${KIPRJMOD}/stepper_probe.kicad_sym")(options "")(descr ""))
+  (lib (name "stepper_probe-rescue")(type "KiCad")(uri "${KIPRJMOD}/stepper_probe-rescue.kicad_sym")(options "")(descr ""))
+  (lib (name "stepper_monitor")(type "KiCad")(uri "C:/projects/esp32/repo/kicad/stepper_monitor.kicad_sym")(options "")(descr ""))
 )

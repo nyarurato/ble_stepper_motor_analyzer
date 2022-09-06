@@ -2,3 +2,5 @@ fp-info-cache
 *.bck
 *.kicad_pcb-bak
 *.sch-bak
+stepper_probe-backups
+

@@ -52,6 +52,7 @@ static void start_led2_blinks(uint16_t n) {
 static uint16_t get_adc_ticks_per_amp(uint8_t hardware_config) {
   switch (hardware_config) {
     case 3:
+    case 0:  // For broken nrf52 boards.
       // R12, R11 not installed.
       return acq_consts::CC6920BSO5A_MV_PER_AMP;
       break;
@@ -82,13 +83,13 @@ static void aqc_setup() {
 //   nrf_gpio_pin_write(25, 1);
 
 //   // const uint32_t pin_num_ = 10;
-//   //  const uint32_t pin_num_ = 9;
+//   const uint32_t pin_num_ = 9;
 //   // const uint32_t pin_num_ = 5;
-//   const uint32_t pin_num_ = 7;
+//   // const uint32_t pin_num_ = 7;
 //   nrf_gpio_cfg_input(pin_num_, NRF_GPIO_PIN_PULLUP);
 
 //   for (;;) {
-//     k_msleep(1000);
+//     k_msleep(500);
 //     nrf_gpio_cfg_input(pin_num_, NRF_GPIO_PIN_PULLUP);
 //     uint32_t val = nrf_gpio_pin_read(pin_num_);
 //     nrf_gpio_pin_write(25, val > 0);

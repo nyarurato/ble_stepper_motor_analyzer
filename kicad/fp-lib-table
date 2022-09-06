@@ -1,3 +1,4 @@
 (fp_lib_table
-  (lib (name stepper_probe)(type KiCad)(uri ${KIPRJMOD}/stepper_probe.pretty)(options "")(descr ""))
+  (lib (name "stepper_probe")(type "KiCad")(uri "${KIPRJMOD}/stepper_probe.pretty")(options "")(descr ""))
+  (lib (name "stepper_monitor")(type "KiCad")(uri "C:/projects/esp32/repo/kicad/stepper_monitor.pretty")(options "")(descr ""))
 )
