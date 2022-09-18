@@ -1,6 +1,8 @@
 fp-info-cache
 *.bck
+*.bak
 *.kicad_pcb-bak
 *.sch-bak
 stepper_probe-backups
+production
 
