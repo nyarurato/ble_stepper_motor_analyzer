@@ -39,7 +39,7 @@ import sys
 #DEFAULT_DEVICE_ADDRESS = "EE:E7:C3:26:42:83"
 #DEFAULT_DEVICE_ADDRESS = "CC:43:20:8C:2F:C3"
 #DEFAULT_DEVICE_ADDRESS = "C3:D0:17:CC:4C:25"
-DEFAULT_DEVICE_ADDRESS = "DE:04:99:5B:41:19"
+DEFAULT_DEVICE_ADDRESS = "EE:E7:C3:26:42:83"
 
 DEFAULT_DEVICE_NAME = "My Stepper"
 
@@ -105,12 +105,14 @@ async def connect_to_probe():
     print(f"Steps per unit: {args.steps_per_unit}", flush=True)
     print(f"Trying to connect to device {device_address}...", flush=True)
     probe = await Probe.find_by_address(device_address, args.steps_per_unit)
+    print("** Debug marker 10.1", flush=True)
     if not probe:
         print(f"Device not found", flush=True)
         return None
     if not await probe.connect():
         print(f"Failed to connect", flush=True)
         return None
+    print("** Debug marker 10.2", flush=True)
     print(f"Connected to probe", flush=True)
     print(f"Model: [{probe.info().model()}]", flush=True)
     print(f"Manufacturer: [{ probe.info().manufacturer()}]", flush=True)

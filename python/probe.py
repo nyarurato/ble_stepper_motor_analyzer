@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 class Probe:
     def __init__(self, client: BleakClient, steps_per_unit: float):
+        print("** Debug marker 30.1", flush=True)
         self.__client = client
         self.__probe_info = None
         self.__stepper_state_chrc = None
@@ -39,6 +40,7 @@ class Probe:
         self.__stepper_command_chrc = None
         self.__capture_signal_chrc = None
         self.__steps_per_unit = steps_per_unit
+        print("** Debug marker 30.2", flush=True)
 
 
     def __str__(self) -> str:
@@ -88,13 +90,18 @@ class Probe:
 
     @classmethod
     async def find_by_address(cls, dev_addr: str, steps_per_unit: float, timeout: float = 30.0) -> Optional[Probe]:
+        print("** Debug marker 20.1, dev_addr={dev_addr} ", flush=True)
         device = await BleakScanner.find_device_by_address(dev_addr, timeout=timeout)
         if not device:
             logger.error(f"Device with address {dev_addr} not found.")
             return None
         logger.info(f"Found device: {device.address}.")
+        print("** Debug marker 20.2 ", flush=True)
         client = BleakClient(device)
-        return Probe(client, steps_per_unit)
+        print("** Debug marker 20.3", flush=True)
+        probe = Probe(client, steps_per_unit)
+        print("** Debug marker 20.4", flush=True)
+        return probe
 
     def is_connected(self) -> bool:
         return self.__client.is_connected
