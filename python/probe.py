@@ -102,7 +102,7 @@ class Probe:
             print(f"** Debug marker 20.1a, dev_addr={dev_addr} ", flush=True)
             logger.error(f"Device with address {dev_addr} not found.")
             return None
-        logger.info(f"Found device: {device.address}.")
+        logger.info(f"Found device: [{device.address}]")
         print("** Debug marker 20.2 ", flush=True)
         client = BleakClient(device)
         print("** Debug marker 20.3", flush=True)
@@ -119,7 +119,7 @@ class Probe:
             print("** Debug marker 10.1.101", flush=True)
             return True
 
-        print("** Debug marker 10.1.100a", flush=True)
+        print(f"** Debug marker 10.1.100a, bleak client: {self.__client}", flush=True)
         await self.__client.connect(timeout=timeout)
         print("** Debug marker 10.1.102", flush=True)
         if not self.is_connected():
