@@ -19,11 +19,11 @@ import asyncio
 from chart import Chart
 import logging
 import time
-from pyqtgraph import QtGui
 import re
 import argparse
 import signal
 import sys
+from pyqtgraph.Qt import QtWidgets
 
 # NOTE: Color names list here https://matplotlib.org/stable/gallery/color/named_colors.html
 
@@ -249,26 +249,26 @@ buttons_layout.setSpacing(20)
 buttons_layout.layout.setHorizontalSpacing(30)
 
 # Button1
-button1_proxy = QtGui.QGraphicsProxyWidget()
-button1 = QtGui.QPushButton('Toggle dir.')
+button1_proxy =  QtWidgets.QGraphicsProxyWidget() 
+button1 = QtWidgets.QPushButton('Toggle dir.')
 button1_proxy.setWidget(button1)
 buttons_layout.addItem(button1_proxy, row=0, col=0)
 
 # Button2
-button2_proxy = QtGui.QGraphicsProxyWidget()
-button2 = QtGui.QPushButton('Reset Data')
+button2_proxy = QtWidgets.QGraphicsProxyWidget()
+button2 = QtWidgets.QPushButton('Reset Data')
 button2_proxy.setWidget(button2)
 buttons_layout.addItem(button2_proxy, row=0, col=1)
 
 # Button3
-button3_proxy = QtGui.QGraphicsProxyWidget()
-button3 = QtGui.QPushButton(f'Time Scale X{capture_divider}')
+button3_proxy = QtWidgets.QGraphicsProxyWidget()
+button3 = QtWidgets.QPushButton(f'Time Scale X{capture_divider}')
 button3_proxy.setWidget(button3)
 buttons_layout.addItem(button3_proxy, row=0, col=2)
 
 # Button4
-button4_proxy = QtGui.QGraphicsProxyWidget()
-button4 = QtGui.QPushButton('Pause')
+button4_proxy = QtWidgets.QGraphicsProxyWidget()
+button4 = QtWidgets.QPushButton('Pause')
 button4_proxy.setWidget(button4)
 buttons_layout.addItem(button4_proxy, row=0, col=3)
 
@@ -360,7 +360,8 @@ async def do_nothing():
 
 def timer_handler():
     global probe, timer_handler_counter, slot_cycle, graph1, graph2, graph3, graph4, graph5, graph6, plot7
-    global capture_signal_fetcher, buttons_layout, pending_reset, pause_enabled
+    global capture_signal_fetcher, pending_reset, pause_enabled
+    global buttons_layout
     global capture_divider, last_set_capture_divider, pending_zero_calibration, pending_direction_toggle
     global main_event_loop
 

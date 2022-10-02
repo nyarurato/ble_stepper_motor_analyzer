@@ -9,8 +9,8 @@ from bleak import discover
 
 
 async def scan():
-    print("Scanning (5 sec)...", flush=True)
-    devices = await discover(timeout=5)
+    print("Scanning...", flush=True)
+    devices = await discover()
     for device in devices:
         # print(device, flush=True)
         name = device.name or "---"
