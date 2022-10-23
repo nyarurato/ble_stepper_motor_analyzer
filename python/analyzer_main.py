@@ -14,8 +14,10 @@ from capture_signal_fetcher import CaptureSignalFetcher
 from probe import Probe
 from probe_state import ProbeState
 from filter import Filter
+import pkg_resources
 import pyqtgraph as pg
 import asyncio
+import platform
 from chart import Chart
 import logging
 import time
@@ -48,6 +50,14 @@ DEFAULT_DEVICE_NAME = "My Stepper"
 
 # Allows to stop the program by typing ctrl-c.
 signal.signal(signal.SIGINT, lambda number, frame: sys.exit())
+
+# Print environment info for debugging.
+print(f"OS: {platform.platform()}")
+print(f"Platform:: {platform.uname()}")
+print(f"Python {sys.version}")
+print("Python packages:")
+for d in pkg_resources.working_set:
+    print(f"* {d}")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device_address", dest="device_address",
