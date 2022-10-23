@@ -85,7 +85,7 @@ pending_direction_toggle = False
 capture_divider = 5
 last_set_capture_divider = 0
 
-capture_signal_fetcher: CaptureSignalFetcher = None
+# capture_signal_fetcher: CaptureSignalFetcher = None
 
 
 # TODO: Fix forward reference to update_from_state. The callback_handler is invoked before
@@ -138,10 +138,20 @@ async def connect_to_probe():
     # loop which is main_event_loop and uses it to post events.
     # Running the event loop periodically in the timer handler
     # below services these events.
-    await probe.state_notifications(callback_handler)
+    #await probe.state_notifications(callback_handler)
+    
     return probe
 
+
+main_event_loop = asyncio.new_event_loop()
+
 logging.basicConfig(level=logging.INFO)
+
+probe = main_event_loop.run_until_complete(connect_to_probe())
+# probe = asyncio.run(connect_to_probe())
+capture_signal_fetcher = CaptureSignalFetcher(probe)
+
+
 
 # ----- Initialize graphics
 
@@ -351,8 +361,6 @@ def on_direction_button():
     pending_direction_toggle = True
 
 
-main_event_loop = asyncio.new_event_loop()
-
 
 async def do_nothing():
     None
@@ -440,15 +448,21 @@ def timer_handler():
     timer_handler_counter += 1
 
 
-probe = main_event_loop.run_until_complete(connect_to_probe())
-# probe = asyncio.run(connect_to_probe())
-capture_signal_fetcher = CaptureSignalFetcher(probe)
+# probe = main_event_loop.run_until_complete(connect_to_probe())
+# # probe = asyncio.run(connect_to_probe())
+# capture_signal_fetcher = CaptureSignalFetcher(probe)
 
 button1.clicked.connect(lambda: on_direction_button())
 button2.clicked.connect(lambda: on_reset_button())
 button3.clicked.connect(lambda: on_scale_button())
 button4.clicked.connect(lambda: on_pause_button())
 
+
+# NOTE: The notification system keeps a reference to the  event
+# loop which is main_event_loop and uses it to post events.
+# Running the event loop periodically in the timer handler
+# below services these events.
+main_event_loop.run_until_complete(probe.state_notifications(callback_handler))
 
 timer = pg.QtCore.QTimer()
 timer.timeout.connect(timer_handler)
